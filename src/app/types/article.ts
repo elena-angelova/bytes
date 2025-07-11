@@ -1,12 +1,11 @@
-import { FirestoreArray, FirestoreString } from "./firestore-values";
-
 export interface Article {
-  authorId: FirestoreString;
-  authorName: FirestoreString;
-  category: FirestoreString;
-  content: FirestoreString;
-  likes: FirestoreArray;
-  preview: FirestoreString;
-  thumbnailUrl: FirestoreString;
-  title: FirestoreString;
+  authorId: string;
+  authorName: string;
+  category: string;
+  content: string;
+  likes: string[];
+  preview: string;
+  thumbnailUrl: string;
+  title: string;
+  // createdAt:
 }
