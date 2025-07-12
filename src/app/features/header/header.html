@@ -1,0 +1,74 @@
+<header>
+  <div class="container container-left">
+    <a class="logo">[bytes]</a>
+    <app-search-bar></app-search-bar>
+  </div>
+
+  <div class="container container-right">
+    <nav>
+      <ul>
+        <li><a>articles</a></li>
+        <li><a>about</a></li>
+        <li><a>log in</a></li>
+      </ul>
+    </nav>
+    <app-cta-button [textContent]="'sign up'"></app-cta-button>
+    <button
+      (click)="toggleTheme()"
+      id="themeToggle"
+      [attr.aria-label]="
+        isDarkMode ? 'Switch to light mode' : 'Switch to dark mode'
+      "
+    >
+      <div
+        class="orbit-mask"
+        [@iconSwap]="{
+          value: theme,
+          params: {
+            rotate: rotation + 'deg'
+          }
+        }"
+      >
+        <span class="theme-toggle">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="15 10 70 80"
+            width="18.5"
+            height="18.5"
+          >
+            <path
+              d="m34.215 14.98c4.418-2.5547 9.2812-4.2461 14.332-4.9805-9.875 12.539-11.711 30.324-3.2422 44.992 8.4688 14.672 24.793 21.977 40.59 19.691l-0.003906 0.003906c-3.1602 4.0039-7.0547 7.3711-11.48 9.918-19.223 11.102-43.809 4.5156-54.91-14.711-11.102-19.23-4.5156-43.816 14.715-54.914"
+              fill-rule="evenodd"
+            />
+          </svg>
+        </span>
+        <span class="theme-toggle">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="20 20 60 60"
+            width="22"
+            height="22"
+            stroke="black"
+            stroke-width="4"
+            stroke-linecap="round"
+          >
+            <circle cx="50" cy="50" r="13" fill="none" />
+            <g>
+              <line x1="50" y1="22" x2="50" y2="30" />
+              <line x1="50" y1="70" x2="50" y2="78" />
+
+              <line x1="78" y1="50" x2="70" y2="50" />
+              <line x1="30" y1="50" x2="22" y2="50" />
+
+              <line x1="64" y1="36" x2="70" y2="30" />
+              <line x1="36" y1="64" x2="30" y2="70" />
+              <line x1="36" y1="36" x2="30" y2="30" />
+              <line x1="64" y1="64" x2="70" y2="70" />
+            </g>
+          </svg>
+        </span>
+      </div>
+    </button>
+  </div>
+</header>
+<!-- !Add router links to the logo and the nav -->

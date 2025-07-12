@@ -1,3 +1,5 @@
+import { Timestamp } from "firebase/firestore";
+
 export interface Article {
   authorId: string;
   authorName: string;
@@ -7,5 +9,5 @@ export interface Article {
   preview: string;
   thumbnailUrl: string;
   title: string;
-  // createdAt:
+  createdAt: Timestamp;
 }

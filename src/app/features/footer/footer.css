@@ -1,0 +1,28 @@
+footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+svg {
+  circle {
+    fill: none;
+  }
+
+  text {
+    fill: var(--text-color);
+  }
+}
+
+.container-left {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.container-right ul {
+  display: flex;
+  gap: 2rem;
+
+  li {
+    display: block;
+  }
+}

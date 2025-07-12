@@ -1,0 +1,36 @@
+.search-bar-wrapper {
+  display: flex;
+  align-items: center;
+  background-color: var(--search-bar-bg);
+  border: none;
+  border-radius: 1.1rem;
+  padding: 0.5rem 0;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+#searchInput {
+  appearance: none;
+  border: none;
+  background-color: transparent;
+  color: var(--search-bar-text);
+  font-weight: 300;
+
+  &::placeholder {
+    font-weight: 300;
+    color: currentColor;
+  }
+
+  &:focus {
+    outline: var(--search-bar-bg);
+  }
+}
+
+.search-icon {
+  display: flex;
+  margin: 0 1rem;
+
+  svg {
+    stroke: #8f8f8f;
+    fill: none;
+  }
+}

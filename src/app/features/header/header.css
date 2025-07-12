@@ -1,0 +1,58 @@
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.container {
+  display: flex;
+  align-items: center;
+
+  &.container-left {
+    gap: 3rem;
+  }
+
+  &.container-right {
+    gap: 2rem;
+  }
+}
+
+.logo {
+  font-size: var(--fs-heading-2);
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: -7px;
+}
+
+nav ul {
+  display: flex;
+  gap: 2.5rem;
+
+  li {
+    display: block;
+    cursor: pointer;
+    height: fit-content;
+
+    a {
+      font-weight: 500;
+    }
+  }
+}
+
+#themeToggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  align-self: flex-end;
+  height: 30px;
+  overflow: hidden;
+}
+
+.orbit-mask {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 0.5rem;
+  padding-block-start: 0.5rem;
+  padding-block-end: 0.3rem;
+}
