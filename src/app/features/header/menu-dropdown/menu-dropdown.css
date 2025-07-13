@@ -1,0 +1,45 @@
+:host {
+  position: absolute;
+  width: 150%;
+  top: 20px;
+  left: 0;
+}
+
+ul {
+  padding-left: 0;
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  li {
+    list-style: none;
+    cursor: pointer;
+    height: fit-content;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 7px;
+    }
+
+    a {
+      font-weight: 500;
+    }
+  }
+
+  li:not(:last-of-type) a {
+    font-weight: 400;
+  }
+}
+
+.logout {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-top: 1rem;
+
+  svg {
+    stroke: var(--text-color);
+    transform: rotate(90deg);
+  }
+}

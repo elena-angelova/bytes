@@ -1,0 +1,123 @@
+<section class="about">
+  <div class="description">
+    <h2>
+      [bytes] is a community-driven blogging platform built by developers, for
+      developers.
+    </h2>
+    <h6>
+      New to code or a seasoned dev, [bytes] gives you the space to share your
+      knowledge, tell your story, and connect with a global community of
+      developers who speak your language—code. From quick insights to deep
+      dives, every voice adds value.
+    </h6>
+
+    <div class="cta">
+      <p>Got something worth sharing?</p>
+      <app-cta-button [textContent]="'Start writing'"></app-cta-button>
+    </div>
+  </div>
+  <div class="expands">
+    <div class="expand-item">
+      <div class="expand-header first-child" (click)="onToggle(0)">
+        <h6 class="expand-title">Why "[bytes]"</h6>
+        <div class="down-arrow-icon" [@iconToggle]="getIconState(0)">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="-1.25 5.75 22.5 12.5"
+            width="13"
+            height="8"
+            stroke="black"
+            fill="none"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          >
+            <line x1="0" y1="7" x2="10" y2="17" />
+            <line x1="20" y1="7" x2="10" y2="17" />
+          </svg>
+        </div>
+      </div>
+      <div class="expand-content" [class.open]="openedIndex === 0">
+        <p class="p-before-ul">
+          The name [bytes] is a nod to the building blocks of everything we do
+          as developers. We chose it because it captures what this platform is
+          all about:
+        </p>
+
+        <ul>
+          <li>Small, digestible pieces of knowledge</li>
+          <li>Real stories and lessons from developers like you</li>
+          <li>Content that's quick to read but long on impact</li>
+        </ul>
+        <p>
+          Whether you're sharing a one-line fix, a deep dive into a framework,
+          or a career reflection, your post is a byte of your journey—and part
+          of a growing ecosystem of dev wisdom.
+        </p>
+      </div>
+    </div>
+
+    <div class="expand-item">
+      <div class="expand-header" (click)="onToggle(1)">
+        <h6 class="expand-title">What we aim to build</h6>
+        <div class="down-arrow-icon" [@iconToggle]="getIconState(1)">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="-1.25 5.75 22.5 12.5"
+            width="13"
+            height="8"
+            stroke="black"
+            fill="none"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          >
+            <line x1="0" y1="7" x2="10" y2="17" />
+            <line x1="20" y1="7" x2="10" y2="17" />
+          </svg>
+        </div>
+      </div>
+      <div class="expand-content" [class.open]="openedIndex === 1">
+        <p>
+          We believe that every small piece of knowledge—every byte—has the
+          power to make a difference. This platform is designed to bring those
+          bytes together into a vibrant, collective story of the developer
+          experience.
+        </p>
+
+        <p>
+          Our goal is simple: to provide a space where developers can share
+          their unique insights, challenges, and breakthroughs in an accessible
+          and meaningful way.
+        </p>
+      </div>
+    </div>
+
+    <div class="expand-item">
+      <div class="expand-header" (click)="onToggle(2)">
+        <h6 class="expand-title">Who can write</h6>
+        <div class="down-arrow-icon" [@iconToggle]="getIconState(2)">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="-1.25 5.75 22.5 12.5"
+            width="13"
+            height="8"
+            stroke="black"
+            fill="none"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          >
+            <line x1="0" y1="7" x2="10" y2="17" />
+            <line x1="20" y1="7" x2="10" y2="17" />
+          </svg>
+        </div>
+      </div>
+      <div class="expand-content" [class.open]="openedIndex === 2">
+        <p>
+          Everyone. From first-time bloggers to tech leads, [bytes] is open to
+          anyone passionate about development. If you've solved a problem, built
+          something cool, or simply want to reflect on your journey—this is the
+          place to do it.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>

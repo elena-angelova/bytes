@@ -30,7 +30,6 @@
   margin: 0 1rem;
 
   svg {
-    stroke: #8f8f8f;
-    fill: none;
+    stroke: var(--search-bar-text);
   }
 }

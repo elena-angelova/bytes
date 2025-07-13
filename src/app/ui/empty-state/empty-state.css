@@ -1,0 +1,22 @@
+:host {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.empty-state-icon {
+  svg {
+    width: 10rem;
+    height: auto;
+    fill: var(--text-color);
+  }
+}
+
+p {
+  font-size: 1.5rem;
+  text-align: center;
+  font-weight: 300;
+}

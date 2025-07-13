@@ -1,3 +1,7 @@
+:host {
+  flex: 0 0 auto;
+}
+
 header {
   display: flex;
   justify-content: space-between;
@@ -24,17 +28,60 @@ header {
   margin-top: -7px;
 }
 
-nav ul {
+nav > ul {
   display: flex;
   gap: 2.5rem;
 
   li {
-    display: block;
+    list-style: none;
     cursor: pointer;
     height: fit-content;
 
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 7px;
+    }
+
     a {
       font-weight: 500;
+    }
+
+    &:last-of-type {
+      position: relative;
+    }
+  }
+}
+
+.menu-header {
+  display: flex;
+  gap: 0.5rem;
+
+  & .down-arrow-icon-wrapper {
+    display: flex;
+    align-items: center;
+
+    svg {
+      stroke: var(--text-color);
+    }
+  }
+}
+
+.create-icon-btn {
+  display: flex;
+  margin-left: 3rem;
+  cursor: pointer;
+
+  svg {
+    fill: var(--button-bg);
+
+    path {
+      stroke-width: 0.5;
+      stroke: var(--button-text);
+      fill: var(--button-text);
+    }
+
+    &:hover {
+      fill: var(--button-hover-bg);
     }
   }
 }
@@ -44,15 +91,29 @@ nav ul {
   border: none;
   cursor: pointer;
   align-self: flex-end;
-  height: 30px;
+  height: 35px;
   overflow: hidden;
-}
 
-.orbit-mask {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-  gap: 0.5rem;
-  padding-block-start: 0.5rem;
-  padding-block-end: 0.3rem;
+  .orbit-mask {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 14px;
+
+    .dark-theme-icon-wrapper {
+      margin-top: 8px;
+
+      svg {
+        fill: var(--text-color);
+      }
+    }
+
+    .light-theme-icon-wrapper {
+      margin-bottom: 4px;
+
+      svg {
+        stroke: var(--text-color);
+      }
+    }
+  }
 }

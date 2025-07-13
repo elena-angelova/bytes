@@ -1,11 +1,20 @@
+:host {
+  flex: 0 0 auto;
+  padding-bottom: 2rem;
+}
+
 footer {
   display: flex;
   justify-content: space-between;
 }
 
+span {
+  display: inline-block;
+}
+
 svg {
   circle {
-    fill: none;
+    stroke: var(--text-color);
   }
 
   text {
@@ -15,7 +24,12 @@ svg {
 
 .container-left {
   display: flex;
+  align-items: center;
   gap: 0.5rem;
+
+  .copyright-icon {
+    display: flex;
+  }
 }
 
 .container-right ul {
@@ -24,5 +38,9 @@ svg {
 
   li {
     display: block;
+
+    a {
+      cursor: pointer;
+    }
   }
 }

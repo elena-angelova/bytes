@@ -1,35 +1,38 @@
 @import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap");
 
 :root {
-  --fs-body: clamp(0.875rem, 0.75rem + 0.5vw, 1.125rem);
+  --fs-body: clamp(0.875rem, 0.5rem + 0.6vw, 1.125rem);
 
-  --fs-heading-6: clamp(0.95rem, 0.8rem + 0.65vw, 1.35rem);
-  --fs-heading-5: clamp(1.05rem, 0.875rem + 0.9vw, 1.6rem);
-  --fs-heading-4: clamp(1.175rem, 0.95rem + 1.2vw, 1.9rem);
-  --fs-heading-3: clamp(1.25rem, 0.98rem + 1.45vw, 2.1rem);
-  --fs-heading-2: clamp(1.5rem, 1.1rem + 2vw, 2.75rem);
-  --fs-heading-1: clamp(3.5rem, 2rem + 7vw, 8rem);
+  --fs-heading-6: clamp(0.9rem, 0.5rem + 0.8vw, 1.2rem);
+  --fs-heading-5: clamp(1rem, 0.6rem + 1vw, 1.5rem);
+  --fs-heading-4: clamp(1.1rem, 0.65rem + 1.2vw, 1.75rem);
+  --fs-heading-3: clamp(1.25rem, 0.7rem + 1.5vw, 2rem);
+  --fs-heading-2: clamp(1.5rem, 0.8rem + 2vw, 2.4rem);
+  --fs-heading-1: clamp(2.5rem, 1rem + 6vw, 7rem);
 
   --bg-color: white;
   --text-color: #2e2e2e;
+  --link-color: #1232ff;
   --button-bg: #1232ff;
   --button-text: white;
   --button-hover-bg: #3451ff;
   --span-text: #1232ff;
   --search-bar-bg: #eee;
   --search-bar-text: #8f8f8f;
+  --border: #ddd;
 }
 
-/* #2146ea */
 body.dark-mode {
   --bg-color: #1f1f1f;
   --text-color: #ededed;
+  --link-color: #3b5beb;
   --button-bg: #3b5beb;
   --button-text: #ededed;
   --button-hover-bg: #0022ff;
   --span-text: #3b5beb;
   --search-bar-bg: #2c2c2c;
   --search-bar-text: #8f8f8f;
+  --border: #404040;
 }
 
 * {
@@ -43,22 +46,30 @@ body.dark-mode {
   box-sizing: inherit;
 }
 
+html,
+body {
+  overflow-y: auto;
+}
+
 html {
   box-sizing: border-box;
   font: var(--fs-body) "Space Grotesk", sans-serif;
 }
 
 body {
-  max-height: 100vh;
-  padding: 2rem 5rem;
+  height: 100vh;
+  padding: 2rem 5rem 0 5rem;
+  display: flex;
+  flex-direction: column;
   background-color: var(--bg-color);
   color: var(--text-color);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-svg {
-  fill: var(--text-color);
-  stroke: var(--text-color);
+app-root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 span.special-text {
@@ -77,6 +88,25 @@ textarea,
 select,
 option {
   font: inherit;
+}
+
+:is(p, ul, ol):not(:last-child) {
+  margin-bottom: 1.2rem;
+}
+
+ul,
+ol {
+  padding-left: 2rem;
+}
+
+ul li,
+ol li {
+  line-height: 1.4;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
 }
 
 h1 {

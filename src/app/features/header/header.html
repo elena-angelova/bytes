@@ -1,18 +1,64 @@
 <header>
   <div class="container container-left">
-    <a class="logo">[bytes]</a>
+    <a routerLink="/" class="logo">[bytes]</a>
     <app-search-bar></app-search-bar>
   </div>
 
   <div class="container container-right">
     <nav>
       <ul>
-        <li><a>articles</a></li>
-        <li><a>about</a></li>
-        <li><a>log in</a></li>
+        <li><a routerLink="/articles">articles</a></li>
+        <li><a routerLink="/about">about</a></li>
+        @if (!isLoggedIn) {
+        <li><a routerLink="/login">log in</a></li>
+        } @else {
+        <li>
+          <div class="menu-header" (click)="toggleMenu()">
+            <a>profile</a>
+            <div
+              class="down-arrow-icon-wrapper"
+              [@menuIconToggle]="getToggleIconState()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="-1.25 5.75 22.5 12.5"
+                width="13"
+                height="8"
+                stroke="black"
+                fill="none"
+                stroke-width="2.5"
+                stroke-linecap="round"
+              >
+                <line x1="0" y1="7" x2="10" y2="17" />
+                <line x1="20" y1="7" x2="10" y2="17" />
+              </svg>
+            </div>
+          </div>
+          @if (isMenuOpened) {
+          <app-menu-dropdown></app-menu-dropdown>
+          }
+        </li>
+        }
       </ul>
     </nav>
+    @if (!isLoggedIn) {
     <app-cta-button [textContent]="'sign up'"></app-cta-button>
+    } @else {
+    <a class="btn create-icon-btn">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="20 17 60 65"
+        width="37"
+        height="37"
+      >
+        <circle cx="50" cy="50" r="30" />
+        <path
+          d="M44,47 L36,47 L36,47 C34.3431458,47 33,48.3431458 33,50 L33,50 L33,50 C33,51.6568542 34.3431458,53 36,53 L44,53 L44,53 C45.6568542,53 47,54.3431458 47,56 L47,64 L47,64 C47,65.6568542 48.3431458,67 50,67 L50,67 L50,67 C51.6568542,67 53,65.6568542 53,64 L53,56 L53,56 C53,54.3431458 54.3431458,53 56,53 L64,53 L64,53 C65.6568542,53 67,51.6568542 67,50 L67,50 L67,50 C67,48.3431458 65.6568542,47 64,47 L56,47 L56,47 C54.3431458,47 53,45.6568542 53,44 L53,36 L53,36 C53,34.3431458 51.6568542,33 50,33 L50,33 L50,33 C48.3431458,33 47,34.3431458 47,36 L47,44 L47,44 C47,45.6568542 45.6568542,47 44,47 Z"
+          fill="black"
+        ></path>
+      </svg>
+    </a>
+    }
     <button
       (click)="toggleTheme()"
       id="themeToggle"
@@ -29,25 +75,25 @@
           }
         }"
       >
-        <span class="theme-toggle">
+        <div class="dark-theme-icon-wrapper">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            viewBox="15 10 70 80"
-            width="18.5"
-            height="18.5"
+            viewBox="15 10 70 85"
+            width="20"
+            height="20"
           >
             <path
               d="m34.215 14.98c4.418-2.5547 9.2812-4.2461 14.332-4.9805-9.875 12.539-11.711 30.324-3.2422 44.992 8.4688 14.672 24.793 21.977 40.59 19.691l-0.003906 0.003906c-3.1602 4.0039-7.0547 7.3711-11.48 9.918-19.223 11.102-43.809 4.5156-54.91-14.711-11.102-19.23-4.5156-43.816 14.715-54.914"
               fill-rule="evenodd"
             />
           </svg>
-        </span>
-        <span class="theme-toggle">
+        </div>
+        <div class="light-theme-icon-wrapper">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="20 20 60 60"
-            width="22"
-            height="22"
+            width="20"
+            height="20"
             stroke="black"
             stroke-width="4"
             stroke-linecap="round"
@@ -66,9 +112,9 @@
               <line x1="64" y1="64" x2="70" y2="70" />
             </g>
           </svg>
-        </span>
+        </div>
       </div>
     </button>
   </div>
 </header>
-<!-- !Add router links to the logo and the nav -->
+<!-- !Add router links/event handlers to the logo and the nav -->

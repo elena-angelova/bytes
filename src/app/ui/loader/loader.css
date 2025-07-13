@@ -1,0 +1,55 @@
+.loader {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: block;
+  margin: 15px auto;
+  position: relative;
+  background: var(--border);
+  box-shadow: -24px 0 var(--border), 24px 0 var(--border);
+  box-sizing: border-box;
+  animation: shadowPulse 2s linear infinite;
+}
+
+@keyframes shadowPulse {
+  33% {
+    background: var(--border);
+    box-shadow: -24px 0 var(--button-bg), 24px 0 var(--border);
+  }
+  66% {
+    background: var(--button-bg);
+    box-shadow: -24px 0 var(--border), 24px 0 var(--border);
+  }
+  100% {
+    background: var(--border);
+    box-shadow: -24px 0 var(--border), 24px 0 var(--button-bg);
+  }
+}
+
+/* .loader {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: block;
+  margin: 15px auto;
+  position: relative;
+  background: var(--text-color);
+  box-shadow: -24px 0 var(--text-color), 24px 0 var(--text-color);
+  box-sizing: border-box;
+  animation: shadowPulse 2s linear infinite;
+}
+
+@keyframes shadowPulse {
+  33% {
+    background: var(--text-color);
+    box-shadow: -24px 0 var(--button-bg), 24px 0 var(--text-color);
+  }
+  66% {
+    background: var(--button-bg);
+    box-shadow: -24px 0 var(--text-color), 24px 0 var(--text-color);
+  }
+  100% {
+    background: var(--text-color);
+    box-shadow: -24px 0 var(--text-color), 24px 0 var(--button-bg);
+  }
+} */
