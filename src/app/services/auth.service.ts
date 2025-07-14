@@ -5,6 +5,7 @@ import {
   UserCredential,
 } from "@angular/fire/auth";
 import { Firestore } from "@angular/fire/firestore";
+import { signInWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
 @Injectable({
@@ -33,5 +34,9 @@ export class AuthService {
     });
 
     return userCredential;
+  }
+
+  async login(email: string, password: string): Promise<UserCredential> {
+    return signInWithEmailAndPassword(this.auth, email, password);
   }
 }

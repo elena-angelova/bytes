@@ -1,5 +1,6 @@
 :host {
   flex: 0 0 auto;
+  padding-top: 2rem;
 }
 
 header {
@@ -109,7 +110,7 @@ nav > ul {
     }
 
     .light-theme-icon-wrapper {
-      margin-bottom: 4px;
+      margin-bottom: 5.5px;
 
       svg {
         stroke: var(--text-color);

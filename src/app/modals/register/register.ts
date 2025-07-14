@@ -10,11 +10,17 @@ import { ModalComponent } from "../../ui/modal/modal";
   styleUrl: "./register.css",
 })
 export class RegisterModalComponent {
+  mode: string = "register";
+  title: string = "Create an account";
+  btnText: string = "Sign up";
+  layoutConfig: string = "row-layout";
+
   fields: FormFieldConfig = {
     firstName: formFields["firstName"],
     lastName: formFields["lastName"],
     email: formFields["email"],
     password: formFields["password"],
     repeatPassword: formFields["repeatPassword"],
+    acceptTerms: formFields["acceptTerms"],
   };
 }

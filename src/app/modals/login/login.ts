@@ -10,6 +10,11 @@ import { ModalComponent } from "../../ui/modal/modal";
   styleUrl: "./login.css",
 })
 export class LoginModalComponent {
+  mode: string = "login";
+  title: string = "Log in";
+  btnText: string = "Log in";
+  layoutConfig: string = "column-layout";
+
   fields: FormFieldConfig = {
     email: formFields["email"],
     password: formFields["password"],

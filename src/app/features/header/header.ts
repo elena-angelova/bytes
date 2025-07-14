@@ -43,7 +43,7 @@ export class HeaderComponent implements OnInit {
   theme: "light" | "dark" = "light";
   rotation: number = 0;
   isMenuOpened: boolean = false;
-  isLoggedIn: boolean = true; // !Remove this when you integrate the auth service
+  isLoggedIn: boolean = false; // !Remove this when you integrate the auth service
 
   constructor() {
     const savedMode: string | null = localStorage.getItem("darkMode");

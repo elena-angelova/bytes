@@ -1,0 +1,22 @@
+<div class="modal-wrapper">
+  <div class="title">{{ title }}</div>
+  <form>
+    @for(fieldConfig of formFieldsArr; track fieldConfig) {
+    @if(fieldConfig[1].type === "checkbox") {
+    <app-form-field class="checkbox" [field]="fieldConfig[1]"></app-form-field>
+    } @else if (fieldConfig[1].type === "password") {
+    <app-form-field
+      [class]="layoutConfig"
+      [field]="fieldConfig[1]"
+    ></app-form-field>
+    } @else {
+    <app-form-field [field]="fieldConfig[1]"></app-form-field>
+    } }
+    <app-primary-button [btnText]="btnText"></app-primary-button>
+  </form>
+  @if (mode === "register") {
+  <p>Already have an account? <a routerLink="/login">Log in</a></p>
+  } @else if (mode === "login") {
+  <p>Don't have an account yet? <a routerLink="/register">Sign up</a></p>
+  }
+</div>

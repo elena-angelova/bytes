@@ -42,7 +42,10 @@
       </ul>
     </nav>
     @if (!isLoggedIn) {
-    <app-cta-button [textContent]="'sign up'"></app-cta-button>
+    <app-cta-button
+      routerLink="/register"
+      [textContent]="'sign up'"
+    ></app-cta-button>
     } @else {
     <a class="btn create-icon-btn">
       <svg

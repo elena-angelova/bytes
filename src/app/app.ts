@@ -3,6 +3,7 @@ import { RouterOutlet } from "@angular/router";
 import { HeaderComponent } from "./features/header/header";
 import { FooterComponent } from "./features/footer/footer";
 import { SectionTitleComponent } from "./ui/section-title/section-title";
+import { RegisterModalComponent } from "./modals/register/register";
 
 @Component({
   selector: "app-root",

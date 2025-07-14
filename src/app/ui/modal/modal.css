@@ -1,0 +1,48 @@
+:host {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--modal-backdrop);
+}
+
+.modal-wrapper {
+  width: 46ch;
+  background-color: var(--modal-bg);
+  border-radius: 1.25rem;
+  padding: 2rem 3rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.title {
+  font-weight: bold;
+  font-size: 1.2rem;
+  margin-bottom: 1.1rem;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+app-primary-button {
+  margin-top: 0.8rem;
+}
+
+p {
+  align-self: center;
+  font-size: 0.75rem;
+  font-weight: 300;
+
+  a {
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--search-bar-text);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4.5px;
+  }
+}
