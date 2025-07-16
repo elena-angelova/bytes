@@ -7,6 +7,7 @@ export const formFields: FormFieldConfig = {
     label: "First name *",
     type: "text",
     placeholder: "First name",
+    required: true,
   },
   lastName: {
     name: "lastName",
@@ -14,6 +15,7 @@ export const formFields: FormFieldConfig = {
     label: "Last name *",
     placeholder: "Last name",
     type: "text",
+    required: true,
   },
   email: {
     name: "email",
@@ -21,6 +23,7 @@ export const formFields: FormFieldConfig = {
     label: "Email *",
     placeholder: "Email",
     type: "email",
+    required: true,
   },
   password: {
     name: "password",
@@ -28,6 +31,7 @@ export const formFields: FormFieldConfig = {
     label: "Password *",
     placeholder: "Password",
     type: "password",
+    required: true,
   },
   repeatPassword: {
     name: "repeatPassword",
@@ -35,6 +39,7 @@ export const formFields: FormFieldConfig = {
     label: "Repeat password *",
     placeholder: "Repeat password",
     type: "password",
+    required: true,
   },
   newPassword: {
     name: "newPassword",
@@ -42,6 +47,7 @@ export const formFields: FormFieldConfig = {
     label: "New password *",
     placeholder: "New password",
     type: "password",
+    required: true,
   },
   repeatNewPassword: {
     name: "repeatNewPassword",
@@ -49,11 +55,13 @@ export const formFields: FormFieldConfig = {
     label: "Repeat new password *",
     placeholder: "Repeat new password",
     type: "password",
+    required: true,
   },
   acceptTerms: {
     name: "acceptTerms",
     id: "acceptTerms",
     label: "I have read and accept the Terms of Use",
     type: "checkbox",
+    required: true,
   },
 };

@@ -1,7 +1,10 @@
-import { Component } from "@angular/core";
+import { Component, ViewChild } from "@angular/core";
+import { FormFieldConfig, RegisterFormValues } from "../../types";
 import { formFields } from "../../config/form-fields.config";
-import { FormFieldConfig } from "../../types";
 import { ModalComponent } from "../../ui/modal/modal";
+import { ModalService } from "../../services/modal.service";
+import { AuthService } from "../../services/auth.service";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-register",
@@ -13,7 +16,8 @@ export class RegisterModalComponent {
   mode: string = "register";
   title: string = "Create an account";
   btnText: string = "Sign up";
-  layoutConfig: string = "row-layout";
+  fieldLayout: string = "row-layout";
+  isLoading: boolean = false;
 
   fields: FormFieldConfig = {
     firstName: formFields["firstName"],
@@ -23,4 +27,40 @@ export class RegisterModalComponent {
     repeatPassword: formFields["repeatPassword"],
     acceptTerms: formFields["acceptTerms"],
   };
+
+  @ViewChild(ModalComponent) modalComponent!: ModalComponent;
+
+  constructor(
+    private modalService: ModalService,
+    private auth: AuthService,
+    private router: Router
+  ) {}
+
+  onSwitchModal() {
+    this.modalService.closeAll();
+    setTimeout(() => this.modalService.openLoginModal(), 200);
+  }
+
+  async onRegister(formData: RegisterFormValues) {
+    try {
+      this.isLoading = true;
+
+      await this.auth.register(
+        formData.email,
+        formData.password,
+        formData.firstName,
+        formData.lastName
+      );
+
+      this.modalComponent.resetForm();
+      this.modalService.closeAll();
+      this.router.navigate(["/about"]);
+    } catch (error) {
+      console.error("Registration error:", error); // !Add error UI
+    } finally {
+      this.isLoading = false;
+    }
+  }
 }
+
+// !The access token is valid for 1 hour only, so you need to create some logic to handle that - either request a new access token with the refresh token, or prompt the user to log in again.

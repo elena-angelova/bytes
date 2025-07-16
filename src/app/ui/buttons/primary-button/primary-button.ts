@@ -8,4 +8,5 @@ import { Component, Input } from "@angular/core";
 })
 export class PrimaryButtonComponent {
   @Input() btnText!: string;
+  @Input() isLoading: boolean = false;
 }

@@ -3,5 +3,6 @@
   [name]="field.name"
   [id]="field.id"
   [placeholder]="field.placeholder"
+  [attr.required]="field.required ? '' : null"
 />
 <label [for]="field.id">{{ field.label }}</label>

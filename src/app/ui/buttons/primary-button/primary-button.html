@@ -1,1 +1,7 @@
-<button type="submit">{{ btnText }}</button>
+<button type="submit" [disabled]="isLoading">
+  @if (!isLoading) {
+  {{ btnText }}
+  } @else {
+  <div class="loader"></div>
+  }
+</button>

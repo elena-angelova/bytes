@@ -1,22 +1,54 @@
 <div class="modal-wrapper">
   <div class="title">{{ title }}</div>
-  <form>
-    @for(fieldConfig of formFieldsArr; track fieldConfig) {
-    @if(fieldConfig[1].type === "checkbox") {
-    <app-form-field class="checkbox" [field]="fieldConfig[1]"></app-form-field>
+
+  <form [formGroup]="form">
+    @for(fieldConfig of fieldsArr; track fieldConfig) { @if(fieldConfig[1].type
+    === "checkbox") {
+    <div class="field-wrapper checkbox">
+      <input
+        [formControlName]="fieldConfig[0]"
+        type="checkbox"
+        [name]="fieldConfig[1].name"
+        [id]="fieldConfig[1].id"
+        [required]="fieldConfig[1].required ? true : false"
+      />
+      <label [for]="fieldConfig[0]">{{ fieldConfig[1].label }}</label>
+    </div>
     } @else if (fieldConfig[1].type === "password") {
-    <app-form-field
-      [class]="layoutConfig"
-      [field]="fieldConfig[1]"
-    ></app-form-field>
+    <div class="field-wrapper" [class]="fieldLayout">
+      <input
+        [formControlName]="fieldConfig[0]"
+        [type]="fieldConfig[1].type"
+        [name]="fieldConfig[1].name"
+        [id]="fieldConfig[1].id"
+        [placeholder]="fieldConfig[1].placeholder"
+        [required]="fieldConfig[1].required ? true : false"
+      />
+      <label [for]="fieldConfig[0]">{{ fieldConfig[1].label }}</label>
+    </div>
     } @else {
-    <app-form-field [field]="fieldConfig[1]"></app-form-field>
+    <div class="field-wrapper">
+      <input
+        [formControlName]="fieldConfig[0]"
+        [type]="fieldConfig[1].type"
+        [name]="fieldConfig[1].name"
+        [id]="fieldConfig[1].id"
+        [placeholder]="fieldConfig[1].placeholder"
+        [required]="fieldConfig[1].required ? true : false"
+      />
+      <label [for]="fieldConfig[0]">{{ fieldConfig[1].label }}</label>
+    </div>
     } }
-    <app-primary-button [btnText]="btnText"></app-primary-button>
+    <app-primary-button
+      (click)="onSubmit()"
+      [btnText]="btnText"
+      [isLoading]="isLoading"
+    ></app-primary-button>
   </form>
+
   @if (mode === "register") {
-  <p>Already have an account? <a routerLink="/login">Log in</a></p>
+  <p>Already have an account? <a (click)="switchToLogin()">Log in</a></p>
   } @else if (mode === "login") {
-  <p>Don't have an account yet? <a routerLink="/register">Sign up</a></p>
+  <p>Don't have an account yet? <a (click)="switchToRegister()">Sign up</a></p>
   }
 </div>

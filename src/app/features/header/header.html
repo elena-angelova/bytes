@@ -10,7 +10,7 @@
         <li><a routerLink="/articles">articles</a></li>
         <li><a routerLink="/about">about</a></li>
         @if (!isLoggedIn) {
-        <li><a routerLink="/login">log in</a></li>
+        <li><a (click)="onLoginClick()">log in</a></li>
         } @else {
         <li>
           <div class="menu-header" (click)="toggleMenu()">
@@ -43,7 +43,7 @@
     </nav>
     @if (!isLoggedIn) {
     <app-cta-button
-      routerLink="/register"
+      (click)="onRegisterClick()"
       [textContent]="'sign up'"
     ></app-cta-button>
     } @else {

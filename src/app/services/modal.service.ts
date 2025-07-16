@@ -1,18 +1,28 @@
 import { Injectable, Type } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
-import { ModalComponent } from "../ui/modal/modal";
+import { LoginModalComponent } from "../modals/login/login";
+import { ComponentType } from "@angular/cdk/overlay";
+import { RegisterModalComponent } from "../modals/register/register";
 
 @Injectable({
   providedIn: "root",
 })
-export class ModalService {}
+export class ModalService {
+  constructor(private dialog: MatDialog) {}
 
-// export class ModalService {
-//   constructor(private dialog: MatDialog) {}
+  open<T>(modal: ComponentType<T>) {
+    this.dialog.open(modal);
+  }
 
-//   open(component: Type<any>, data?: any) {
-//     // !Adjust the correct types and remove any
-//     const dialogRef = this.dialog.open(ModalComponent);
-//     dialogRef.componentInstance.open(component, data);
-//   }
-// }
+  openLoginModal(): void {
+    this.open(LoginModalComponent);
+  }
+
+  openRegisterModal(): void {
+    this.open(RegisterModalComponent);
+  }
+
+  closeAll(): void {
+    this.dialog.closeAll();
+  }
+}

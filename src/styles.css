@@ -150,3 +150,11 @@ h5 {
 h6 {
   font-size: var(--fs-heading-6);
 }
+
+.cdk-overlay-backdrop {
+  background-color: var(--modal-backdrop) !important;
+}
+
+.mat-mdc-dialog-surface {
+  background-color: transparent !important;
+}

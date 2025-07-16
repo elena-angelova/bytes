@@ -3,5 +3,8 @@
   [fields]="fields"
   [title]="title"
   [btnText]="btnText"
-  [layoutConfig]="layoutConfig"
+  [fieldLayout]="fieldLayout"
+  (switchToLoginModal)="onSwitchModal()"
+  (register)="onRegister($event)"
+  [isLoading]="isLoading"
 ></app-modal>

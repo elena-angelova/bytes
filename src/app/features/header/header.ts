@@ -10,6 +10,7 @@ import {
 import { SearchBarComponent } from "./search-bar/search-bar";
 import { MenuDropdownComponent } from "./menu-dropdown/menu-dropdown";
 import { RouterLink } from "@angular/router";
+import { ModalService } from "../../services/modal.service";
 
 @Component({
   selector: "app-header",
@@ -39,13 +40,15 @@ import { RouterLink } from "@angular/router";
   ],
 })
 export class HeaderComponent implements OnInit {
+  // !Move the light/dark mode switch in a separate component
+  // !Move the dropdown menu in a separate component
   isDarkMode: boolean = false;
   theme: "light" | "dark" = "light";
   rotation: number = 0;
   isMenuOpened: boolean = false;
   isLoggedIn: boolean = false; // !Remove this when you integrate the auth service
 
-  constructor() {
+  constructor(private modalService: ModalService) {
     const savedMode: string | null = localStorage.getItem("darkMode");
     if (savedMode === "true") {
       this.isDarkMode = true;
@@ -76,5 +79,13 @@ export class HeaderComponent implements OnInit {
 
   getToggleIconState(): "opened" | "closed" {
     return this.isMenuOpened ? "opened" : "closed";
+  }
+
+  onLoginClick(): void {
+    this.modalService.openLoginModal();
+  }
+
+  onRegisterClick(): void {
+    this.modalService.openRegisterModal();
   }
 }

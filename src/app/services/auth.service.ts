@@ -5,7 +5,11 @@ import {
   UserCredential,
 } from "@angular/fire/auth";
 import { Firestore } from "@angular/fire/firestore";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  browserLocalPersistence,
+  setPersistence,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
 @Injectable({
@@ -20,6 +24,8 @@ export class AuthService {
     firstName: string,
     lastName: string
   ): Promise<UserCredential> {
+    await setPersistence(this.auth, browserLocalPersistence);
+
     const userCredential = await createUserWithEmailAndPassword(
       this.auth,
       email,
