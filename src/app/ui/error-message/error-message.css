@@ -1,0 +1,26 @@
+:host {
+  flex-basis: 100%;
+}
+
+.error-message {
+  padding: 1rem;
+  background-color: var(--error-msg-bg);
+  border-radius: 0.5rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.err-msg-icon {
+  line-height: 0;
+
+  svg {
+    stroke: #d96766;
+  }
+}
+
+.error-text {
+  p {
+    font-size: 0.7rem;
+    margin-bottom: 0;
+  }
+}

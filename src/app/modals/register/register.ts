@@ -28,6 +28,14 @@ export class RegisterModalComponent {
     acceptTerms: formFields["acceptTerms"],
   };
 
+  firebaseErrorMessagesMap: Record<string, string> = {
+    "auth/email-already-in-use": "An account with this email already exists.",
+    "auth/internal-error": "Something went wrong. Please try again.",
+    "auth/network-request-failed":
+      "Network error. Please check your internet connection.",
+  };
+  serverErrorMessage!: string;
+
   @ViewChild(ModalComponent) modalComponent!: ModalComponent;
 
   constructor(
@@ -54,9 +62,9 @@ export class RegisterModalComponent {
 
       this.modalComponent.resetForm();
       this.modalService.closeAll();
-      this.router.navigate(["/about"]);
-    } catch (error) {
-      console.error("Registration error:", error); // !Add error UI
+      this.router.navigate(["/about"]); //!Change to /articles when that page is ready
+    } catch (error: any) {
+      this.serverErrorMessage = this.firebaseErrorMessagesMap[error.code];
     } finally {
       this.isLoading = false;
     }

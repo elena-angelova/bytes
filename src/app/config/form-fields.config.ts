@@ -8,6 +8,10 @@ export const formFields: FormFieldConfig = {
     type: "text",
     placeholder: "First name",
     required: true,
+    errorMessages: {
+      required: "Please enter your first name.",
+      minlength: "First name needs to be at least 2 characters long.",
+    },
   },
   lastName: {
     name: "lastName",
@@ -16,6 +20,10 @@ export const formFields: FormFieldConfig = {
     placeholder: "Last name",
     type: "text",
     required: true,
+    errorMessages: {
+      required: "Please enter your last name.",
+      minlength: "Last name needs to be at least 2 characters long.",
+    },
   },
   email: {
     name: "email",
@@ -24,6 +32,10 @@ export const formFields: FormFieldConfig = {
     placeholder: "Email",
     type: "email",
     required: true,
+    errorMessages: {
+      required: "Please enter an email address.",
+      email: "Please enter a valid email address (e.g., name@example.com).",
+    },
   },
   password: {
     name: "password",
@@ -32,6 +44,12 @@ export const formFields: FormFieldConfig = {
     placeholder: "Password",
     type: "password",
     required: true,
+    errorMessages: {
+      required: "Please enter a password.",
+      minlength: "Password should be at least 8 characters long.",
+      pattern:
+        "Password must include uppercase and lowercase letters, a number, and a special character (e.g., !, @, #).",
+    },
   },
   repeatPassword: {
     name: "repeatPassword",
@@ -40,6 +58,10 @@ export const formFields: FormFieldConfig = {
     placeholder: "Repeat password",
     type: "password",
     required: true,
+    errorMessages: {
+      required: "Please confirm your password.",
+      passwordMismatch: "Passwords don't match.",
+    },
   },
   newPassword: {
     name: "newPassword",
@@ -48,6 +70,12 @@ export const formFields: FormFieldConfig = {
     placeholder: "New password",
     type: "password",
     required: true,
+    errorMessages: {
+      required: "Please enter a new password.",
+      minlength: "New password should be at least 8 characters long.",
+      pattern:
+        "New password must include uppercase and lowercase letters, a number, and a special character (e.g., !, @, #).",
+    },
   },
   repeatNewPassword: {
     name: "repeatNewPassword",
@@ -56,6 +84,10 @@ export const formFields: FormFieldConfig = {
     placeholder: "Repeat new password",
     type: "password",
     required: true,
+    errorMessages: {
+      required: "Please confirm your new password.",
+      passwordMismatch: "Passwords don't match.",
+    },
   },
   acceptTerms: {
     name: "acceptTerms",
@@ -63,5 +95,8 @@ export const formFields: FormFieldConfig = {
     label: "I have read and accept the Terms of Use",
     type: "checkbox",
     required: true,
+    errorMessages: {
+      required: "You need to accept the Terms of Use to continue.",
+    },
   },
 };

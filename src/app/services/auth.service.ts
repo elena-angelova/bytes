@@ -7,16 +7,25 @@ import {
 import { Firestore } from "@angular/fire/firestore";
 import {
   browserLocalPersistence,
+  onAuthStateChanged,
   setPersistence,
   signInWithEmailAndPassword,
+  User,
 } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
+import { BehaviorSubject } from "rxjs";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
-  constructor(private auth: Auth, private firestore: Firestore) {}
+  currentUser = new BehaviorSubject<User | null>(null);
+
+  constructor(private auth: Auth, private firestore: Firestore) {
+    onAuthStateChanged(this.auth, (user) => {
+      this.currentUser.next(user);
+    });
+  }
 
   async register(
     email: string,
@@ -44,5 +53,13 @@ export class AuthService {
 
   async login(email: string, password: string): Promise<UserCredential> {
     return signInWithEmailAndPassword(this.auth, email, password);
+  }
+
+  isLoggedIn() {
+    return this.currentUser.asObservable();
+  }
+
+  getUser() {
+    return this.currentUser.value;
   }
 }

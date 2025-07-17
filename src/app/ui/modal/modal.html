@@ -2,8 +2,8 @@
   <div class="title">{{ title }}</div>
 
   <form [formGroup]="form">
-    @for(fieldConfig of fieldsArr; track fieldConfig) { @if(fieldConfig[1].type
-    === "checkbox") {
+    @for(fieldConfig of fieldsArr; track $index) { @if(fieldConfig[1].type ===
+    "checkbox") {
     <div class="field-wrapper checkbox">
       <input
         [formControlName]="fieldConfig[0]"
@@ -38,7 +38,14 @@
       />
       <label [for]="fieldConfig[0]">{{ fieldConfig[1].label }}</label>
     </div>
-    } }
+    } } @if (isFormInvalid || serverErrorMessage) {
+    <app-error-message
+      [failedValidators]="failedValidators"
+      [errorMessages]="errorMessages"
+      [serverErrorMessage]="serverErrorMessage"
+    ></app-error-message>
+    }
+
     <app-primary-button
       (click)="onSubmit()"
       [btnText]="btnText"

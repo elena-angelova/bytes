@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
 import {
+  ErrorMessages,
   FormAttributes,
   FormFieldConfig,
   LoginFormValues,
@@ -11,11 +12,13 @@ import {
   FormBuilder,
   FormGroup,
   Validators,
+  ValidationErrors,
 } from "@angular/forms";
+import { ErrorMessageComponent } from "../error-message/error-message";
 
 @Component({
   selector: "app-modal",
-  imports: [ReactiveFormsModule, PrimaryButtonComponent],
+  imports: [ReactiveFormsModule, PrimaryButtonComponent, ErrorMessageComponent],
   templateUrl: "./modal.html",
   styleUrl: "./modal.css",
 })
@@ -26,6 +29,7 @@ export class ModalComponent implements OnInit {
   @Input() fields!: FormFieldConfig;
   @Input() fieldLayout!: string;
   @Input() isLoading: boolean = false;
+  @Input() serverErrorMessage!: string;
 
   @Output() switchToLoginModal = new EventEmitter<void>();
   @Output() switchToRegisterModal = new EventEmitter<void>();
@@ -35,6 +39,9 @@ export class ModalComponent implements OnInit {
   fieldsArr!: [string, FormAttributes][];
   form!: FormGroup;
   passwordPattern: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/;
+  isFormInvalid: boolean = false;
+  errorMessages: { [key: string]: ErrorMessages } = {};
+  failedValidators!: { [key: string]: ValidationErrors };
 
   constructor(private formBuilder: FormBuilder) {}
 
@@ -43,6 +50,8 @@ export class ModalComponent implements OnInit {
     const group: { [key: string]: unknown } = {};
 
     for (const [key, config] of this.fieldsArr) {
+      this.errorMessages[key] = config.errorMessages;
+
       const validators = [];
 
       if (config.required && key !== "acceptTerms") {
@@ -58,8 +67,10 @@ export class ModalComponent implements OnInit {
           validators.push(Validators.email);
           break;
         case "password":
-          validators.push(Validators.minLength(8));
-          validators.push(Validators.pattern(this.passwordPattern));
+          if (this.mode === "register") {
+            validators.push(Validators.minLength(8));
+            validators.push(Validators.pattern(this.passwordPattern));
+          }
           break;
         case "acceptTerms":
           validators.push(Validators.requiredTrue);
@@ -70,14 +81,18 @@ export class ModalComponent implements OnInit {
         key === "acceptTerms" ? [false, validators] : ["", validators];
     }
 
-    this.form = this.formBuilder.group(group, {
-      validators: this.passwordMatchValidator,
-    });
+    if (this.mode === "register") {
+      this.form = this.formBuilder.group(group, {
+        validators: this.passwordMatchValidator,
+      });
+    } else {
+      this.form = this.formBuilder.group(group);
+    }
   }
 
   passwordMatchValidator(group: FormGroup) {
-    const password = group.get("password")?.value;
-    const repeatPassword = group.get("repeatPassword")?.value;
+    const password: string = group.get("password")?.value;
+    const repeatPassword: string = group.get("repeatPassword")?.value;
     return password === repeatPassword ? null : { passwordMismatch: true };
   }
 
@@ -89,15 +104,34 @@ export class ModalComponent implements OnInit {
     this.switchToRegisterModal.emit();
   }
 
-  onSubmit() {
+  onSubmit(): void {
+    const failedValidators: { [key: string]: ValidationErrors } = {};
+
     if (this.form.valid) {
+      this.isFormInvalid = false;
+
       if (this.mode === "login") {
         this.login.emit(this.form.value);
       } else if (this.mode === "register") {
         this.register.emit(this.form.value);
       }
     } else {
+      this.isFormInvalid = true;
       this.form.markAllAsTouched();
+
+      Object.keys(this.form.controls).forEach((key: string) => {
+        const controlErrors: ValidationErrors | null | undefined =
+          this.form.get(key)?.errors;
+        if (controlErrors) {
+          failedValidators[key] = controlErrors;
+        }
+      });
+
+      if (this.form.errors) {
+        failedValidators["repeatPassword"] = this.form.errors;
+      }
+
+      this.failedValidators = failedValidators;
     }
   }
 
@@ -105,5 +139,3 @@ export class ModalComponent implements OnInit {
     this.form.reset();
   }
 }
-
-// -------

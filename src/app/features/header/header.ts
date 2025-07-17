@@ -11,6 +11,7 @@ import { SearchBarComponent } from "./search-bar/search-bar";
 import { MenuDropdownComponent } from "./menu-dropdown/menu-dropdown";
 import { RouterLink } from "@angular/router";
 import { ModalService } from "../../services/modal.service";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: "app-header",
@@ -48,12 +49,19 @@ export class HeaderComponent implements OnInit {
   isMenuOpened: boolean = false;
   isLoggedIn: boolean = false; // !Remove this when you integrate the auth service
 
-  constructor(private modalService: ModalService) {
+  constructor(
+    private modalService: ModalService,
+    private authService: AuthService
+  ) {
     const savedMode: string | null = localStorage.getItem("darkMode");
     if (savedMode === "true") {
       this.isDarkMode = true;
       document.body.classList.add("dark-mode");
     }
+
+    this.authService.isLoggedIn().subscribe((user) => {
+      this.isLoggedIn = user ? true : false;
+    });
   }
 
   ngOnInit(): void {

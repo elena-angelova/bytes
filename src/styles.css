@@ -29,23 +29,19 @@
   --input-placeholder: #ddd;
   --input-border: #ccc;
   --input-border-focus: #757575;
+  --error-msg-bg: #f6ebeb;
 }
 
 body.dark-mode {
   --bg-color: #1f1f1f;
   --text-color: #ededed;
-  /* --link-color: #3b5beb; */
   --link-color: #7283f6;
-  /* --button-bg: #3b5beb; */
   --button-bg: #3a4fcb;
   --button-text: #ededed;
-  /* --button-hover-bg: #0022ff; */
   --button-hover-bg: #4257c9;
-  /* --primary-button-bg: #3b5beb; */
   --primary-button-bg: #3a4fcb;
   --primary-button-text: #ededed;
   --primary-button-hover-bg: #4257c9;
-  /* --span-text: #3b5beb; */
   --span-text: #3a4fcb;
   --search-bar-bg: #2c2c2c;
   --search-bar-text: #8f8f8f;
@@ -56,6 +52,7 @@ body.dark-mode {
   --input-placeholder: #5f5f5f;
   --input-border: #373737;
   --input-border-focus: #666666;
+  --error-msg-bg: #381919;
 }
 
 * {
@@ -151,8 +148,17 @@ h6 {
   font-size: var(--fs-heading-6);
 }
 
+/* Modal styles */
 .cdk-overlay-backdrop {
   background-color: var(--modal-backdrop) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  max-height: 100vh;
+}
+
+.cdk-overlay-pane {
+  max-height: 90vh;
+  overflow: auto;
 }
 
 .mat-mdc-dialog-surface {

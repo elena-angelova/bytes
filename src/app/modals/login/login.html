@@ -5,4 +5,7 @@
   [btnText]="btnText"
   [fieldLayout]="fieldLayout"
   (switchToRegisterModal)="onSwitchModal()"
+  (login)="onLogin($event)"
+  [isLoading]="isLoading"
+  [serverErrorMessage]="serverErrorMessage"
 ></app-modal>
