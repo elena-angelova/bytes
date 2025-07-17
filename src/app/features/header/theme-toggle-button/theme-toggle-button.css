@@ -1,0 +1,31 @@
+#themeToggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  align-self: flex-end;
+  height: 35px;
+  overflow: hidden;
+
+  .orbit-mask {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 14px;
+
+    .dark-theme-icon-wrapper {
+      margin-top: 8px;
+
+      svg {
+        fill: var(--text-color);
+      }
+    }
+
+    .light-theme-icon-wrapper {
+      margin-bottom: 5.5px;
+
+      svg {
+        stroke: var(--text-color);
+      }
+    }
+  }
+}

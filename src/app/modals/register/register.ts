@@ -64,7 +64,9 @@ export class RegisterModalComponent {
       this.modalService.closeAll();
       this.router.navigate(["/about"]); //!Change to /articles when that page is ready
     } catch (error: any) {
-      this.serverErrorMessage = this.firebaseErrorMessagesMap[error.code];
+      this.serverErrorMessage =
+        this.firebaseErrorMessagesMap[error.code] ||
+        "An unexpected error occurred. Please try again.";
     } finally {
       this.isLoading = false;
     }

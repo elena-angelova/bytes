@@ -1,53 +1,29 @@
 import { Component, OnInit } from "@angular/core";
-import { CtaButtonComponent } from "../../ui/buttons/cta-button/cta-button";
-import {
-  trigger,
-  state,
-  style,
-  animate,
-  transition,
-} from "@angular/animations";
-import { SearchBarComponent } from "./search-bar/search-bar";
-import { MenuDropdownComponent } from "./menu-dropdown/menu-dropdown";
 import { RouterLink } from "@angular/router";
 import { ModalService } from "../../services/modal.service";
 import { AuthService } from "../../services/auth.service";
+import { SearchBarComponent } from "./search-bar/search-bar";
+import { NavMenuComponent } from "./nav-menu/nav-menu";
+import { ThemeToggleButtonComponent } from "./theme-toggle-button/theme-toggle-button";
 
 @Component({
   selector: "app-header",
   imports: [
     RouterLink,
-    CtaButtonComponent,
     SearchBarComponent,
-    MenuDropdownComponent,
+    NavMenuComponent,
+    ThemeToggleButtonComponent,
   ],
   templateUrl: "./header.html",
   styleUrl: "./header.css",
-  animations: [
-    trigger("iconSwap", [
-      state("light", style({ transform: "rotate({{rotate}})" }), {
-        params: { rotate: "0deg" },
-      }),
-      state("dark", style({ transform: "rotate({{rotate}})" }), {
-        params: { rotate: "180deg" },
-      }),
-      transition("light <=> dark", [animate("400ms ease-in-out")]),
-    ]),
-    trigger("menuIconToggle", [
-      state("opened", style({ transform: "rotate(180deg)" })),
-      state("closed", style({ transform: "rotate(0deg)" })),
-      transition("opened <=> closed", [animate("400ms ease-in-out")]),
-    ]),
-  ],
 })
 export class HeaderComponent implements OnInit {
-  // !Move the light/dark mode switch in a separate component
-  // !Move the dropdown menu in a separate component
-  isDarkMode: boolean = false;
   theme: "light" | "dark" = "light";
+  isDarkMode: boolean = false;
   rotation: number = 0;
+
+  isLoggedIn: boolean = false;
   isMenuOpened: boolean = false;
-  isLoggedIn: boolean = false; // !Remove this when you integrate the auth service
 
   constructor(
     private modalService: ModalService,
@@ -81,19 +57,15 @@ export class HeaderComponent implements OnInit {
     localStorage.setItem("darkMode", this.isDarkMode.toString());
   }
 
-  toggleMenu(): void {
-    this.isMenuOpened = !this.isMenuOpened;
-  }
-
-  getToggleIconState(): "opened" | "closed" {
-    return this.isMenuOpened ? "opened" : "closed";
-  }
-
   onLoginClick(): void {
     this.modalService.openLoginModal();
   }
 
   onRegisterClick(): void {
     this.modalService.openRegisterModal();
+  }
+
+  toggleMenu(): void {
+    this.isMenuOpened = !this.isMenuOpened;
   }
 }

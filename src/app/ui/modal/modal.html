@@ -1,7 +1,7 @@
 <div class="modal-wrapper">
   <div class="title">{{ title }}</div>
 
-  <form [formGroup]="form">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
     @for(fieldConfig of fieldsArr; track $index) { @if(fieldConfig[1].type ===
     "checkbox") {
     <div class="field-wrapper checkbox">
@@ -47,7 +47,7 @@
     }
 
     <app-primary-button
-      (click)="onSubmit()"
+      type="submit"
       [btnText]="btnText"
       [isLoading]="isLoading"
     ></app-primary-button>
