@@ -1,6 +1,6 @@
-import { Component, inject, ViewChild } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { ErrorMessages, FormFieldConfig, LoginFormValues } from "../../types";
-import { formFields } from "../../config/form-fields.config";
+import { formFields } from "../../config";
 import { ModalComponent } from "../../ui/modal/modal";
 import { ModalService } from "../../services/modal.service";
 import { AuthService } from "../../services/auth.service";

@@ -5,6 +5,7 @@ import { PrivacyPolicyComponent } from "./pages/privacy-policy/privacy-policy";
 import { TermsOfUseComponent } from "./pages/terms-of-use/terms-of-use";
 import { RegisterModalComponent } from "./modals/register/register";
 import { LoginModalComponent } from "./modals/login/login";
+import { ArticleEditorComponent } from "./pages/article-editor/article-editor";
 
 export const routes: Routes = [
   { path: "", component: HomePageComponent },
@@ -13,4 +14,5 @@ export const routes: Routes = [
   { path: "terms-of-use", component: TermsOfUseComponent },
   { path: "register", component: RegisterModalComponent },
   { path: "login", component: LoginModalComponent },
+  { path: "articles/create", component: ArticleEditorComponent },
 ];

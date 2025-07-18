@@ -150,7 +150,7 @@ h6 {
   font-size: var(--fs-heading-6);
 }
 
-/* Modal styles */
+/* *Modal styles* */
 .cdk-overlay-backdrop {
   background-color: var(--modal-backdrop) !important;
   overflow-y: auto !important;
@@ -165,4 +165,91 @@ h6 {
 
 .mat-mdc-dialog-surface {
   background-color: transparent !important;
+}
+
+/* *Quill styles* */
+
+/* &Editor */
+.ql-editor.ql-blank::before {
+  color: var(--border) !important;
+  font-style: normal !important;
+  font-size: 1rem;
+  right: 0 !important;
+  left: 0 !important;
+}
+
+.ql-editor {
+  padding: 2rem 0 !important;
+  line-height: 2 !important;
+}
+
+.ql-toolbar.ql-snow {
+  border: none !important;
+  display: flex;
+  justify-content: center;
+  font-family: inherit !important;
+}
+
+/* &Toolbar */
+.ql-toolbar button:hover svg {
+  fill: var(--button-bg) !important;
+}
+
+.ql-toolbar button.ql-active svg {
+  fill: var(--button-bg) !important;
+}
+
+.ql-toolbar.ql-snow .ql-picker.ql-expanded .ql-picker-label {
+  border: none;
+}
+
+/* &Dropdown menu */
+.ql-picker-options {
+  background-color: var(--search-bar-bg) !important;
+  border: none !important;
+  border-radius: 0.5rem;
+  box-shadow: none !important;
+}
+
+.ql-picker-options .ql-picker-item {
+  color: var(--search-bar-text);
+}
+
+.ql-snow .ql-picker-options .ql-picker-item:hover {
+  color: var(--button-hover-bg) !important;
+}
+
+/* &Code block */
+.ql-snow .ql-editor .ql-code-block-container {
+  background-color: var(--search-bar-bg) !important;
+  color: var(--text-color) !important;
+  padding: 2rem 3rem !important;
+  border-radius: 0.8rem !important;
+  font-family: inherit;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* &Link */
+.ql-tooltip {
+  background-color: var(--search-bar-bg) !important;
+  border: none !important;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem !important;
+  color: var(--text-color) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0) !important;
+}
+
+.ql-tooltip input {
+  background-color: var(--search-bar-bg) !important;
+  padding: 0.3rem !important;
+  border-radius: 0.3rem !important;
+  color: var(--text-color);
+}
+
+.ql-tooltip a {
+  color: var(--button-bg) !important;
+}
+
+.ql-tooltip.ql-editing input {
+  background-color: var(--search-bar-bg) !important;
 }

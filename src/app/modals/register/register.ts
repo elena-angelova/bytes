@@ -4,7 +4,7 @@ import {
   FormFieldConfig,
   RegisterFormValues,
 } from "../../types";
-import { formFields } from "../../config/form-fields.config";
+import { formFields } from "../../config";
 import { ModalComponent } from "../../ui/modal/modal";
 import { ModalService } from "../../services/modal.service";
 import { AuthService } from "../../services/auth.service";

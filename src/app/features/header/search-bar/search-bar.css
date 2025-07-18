@@ -3,7 +3,7 @@
   align-items: center;
   background-color: var(--search-bar-bg);
   border: none;
-  border-radius: 1.1rem;
+  border-radius: 1.3rem;
   padding: 0.5rem 0;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
