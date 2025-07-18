@@ -5,3 +5,18 @@
   justify-content: center;
   align-items: center;
 }
+
+p {
+  align-self: center;
+  font-size: 0.75rem;
+  font-weight: 300;
+
+  a {
+    font-weight: 600;
+    text-decoration: underline;
+    text-decoration-color: var(--search-bar-text);
+    text-decoration-thickness: 1.5px;
+    text-underline-offset: 4.5px;
+    cursor: pointer;
+  }
+}

@@ -1,11 +1,15 @@
 <app-modal
-  [mode]="mode"
-  [fields]="fields"
   [title]="title"
   [btnText]="btnText"
+  [form]="registerForm"
+  [fields]="fields"
   [fieldLayout]="fieldLayout"
-  (switchToLoginModal)="onSwitchModal()"
-  (register)="onRegister($event)"
   [isLoading]="isLoading"
+  [errorMessages]="errorMessages"
   [serverErrorMessage]="serverErrorMessage"
-></app-modal>
+  (submit)="onFormSubmit()"
+>
+  <p modal-footer>
+    Already have an account? <a (click)="onSwitchModal()">Log in</a>
+  </p>
+</app-modal>

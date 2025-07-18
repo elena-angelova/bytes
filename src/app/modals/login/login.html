@@ -1,11 +1,9 @@
 <app-modal
-  [mode]="mode"
   [fields]="fields"
   [title]="title"
   [btnText]="btnText"
   [fieldLayout]="fieldLayout"
   (switchToRegisterModal)="onSwitchModal()"
-  (login)="onLogin($event)"
   [isLoading]="isLoading"
   [serverErrorMessage]="serverErrorMessage"
 ></app-modal>

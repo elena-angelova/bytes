@@ -1,5 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { ErrorMessages } from "../../types";
+import { Component, Input } from "@angular/core";
 import { ValidationErrors } from "@angular/forms";
 
 @Component({
@@ -10,29 +9,20 @@ import { ValidationErrors } from "@angular/forms";
 })
 export class ErrorMessageComponent {
   @Input() serverErrorMessage!: string;
-  @Input() errorMessages!: { [key: string]: ErrorMessages };
+  @Input() errorMessages!: string[];
   @Input() failedValidators!: { [key: string]: ValidationErrors } | undefined;
-  failedValidatorsArr: [string, ValidationErrors][] = [];
-  errors: string[] = [];
+
+  errors!: string[];
 
   ngOnChanges(): void {
-    if (this.failedValidators) {
-      const errors: string[] = [];
-      this.failedValidatorsArr = Object.entries(this.failedValidators);
+    this.errors = [];
 
-      for (const [field, validator] of this.failedValidatorsArr) {
-        console.log(field);
-        console.log(this.errorMessages[field]);
-
-        const fieldErrorMessages: ErrorMessages = this.errorMessages[field];
-        const failedValidator: string = Object.keys(validator)[0];
-        errors.push(fieldErrorMessages[failedValidator]);
-      }
-
-      this.errors = errors;
-    } else {
+    if (this.errorMessages.length > 0) {
+      this.errorMessages.forEach((message) => {
+        this.errors.push(message);
+      });
+    } else if (this.serverErrorMessage) {
       this.errors.push(this.serverErrorMessage);
-      console.log(this.errors);
     }
   }
 }

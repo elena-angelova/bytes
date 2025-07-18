@@ -32,7 +32,7 @@ export class AuthService {
     password: string,
     firstName: string,
     lastName: string
-  ): Promise<UserCredential> {
+  ): Promise<void> {
     await setPersistence(this.auth, browserLocalPersistence);
 
     const userCredential = await createUserWithEmailAndPassword(
@@ -47,8 +47,6 @@ export class AuthService {
       lastName,
       dateJoined: new Date(),
     });
-
-    return userCredential;
   }
 
   async login(email: string, password: string): Promise<UserCredential> {

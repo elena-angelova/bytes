@@ -1,61 +1,49 @@
 <div class="modal-wrapper">
   <div class="title">{{ title }}</div>
 
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    @for(fieldConfig of fieldsArr; track $index) { @if(fieldConfig[1].type ===
-    "checkbox") {
+  <form [formGroup]="form">
+    @for(field of fields | keyvalue: preserveOrder; track $index) {
+    @if(field.value.type === "checkbox") {
+
     <div class="field-wrapper checkbox">
       <input
-        [formControlName]="fieldConfig[0]"
+        [formControlName]="field.key"
         type="checkbox"
-        [name]="fieldConfig[1].name"
-        [id]="fieldConfig[1].id"
-        [required]="fieldConfig[1].required ? true : false"
+        [name]="field.value.name"
+        [id]="field.value.id"
+        [required]="field.value.required ? true : false"
       />
-      <label [for]="fieldConfig[0]">{{ fieldConfig[1].label }}</label>
+      <label [for]="field.value.id">{{ field.value.label }}</label>
     </div>
-    } @else if (fieldConfig[1].type === "password") {
-    <div class="field-wrapper" [class]="fieldLayout">
-      <input
-        [formControlName]="fieldConfig[0]"
-        [type]="fieldConfig[1].type"
-        [name]="fieldConfig[1].name"
-        [id]="fieldConfig[1].id"
-        [placeholder]="fieldConfig[1].placeholder"
-        [required]="fieldConfig[1].required ? true : false"
-      />
-      <label [for]="fieldConfig[0]">{{ fieldConfig[1].label }}</label>
-    </div>
+
     } @else {
-    <div class="field-wrapper">
+    <div
+      class="field-wrapper"
+      [class]="field.value.type === 'password' ? fieldLayout : ''"
+    >
       <input
-        [formControlName]="fieldConfig[0]"
-        [type]="fieldConfig[1].type"
-        [name]="fieldConfig[1].name"
-        [id]="fieldConfig[1].id"
-        [placeholder]="fieldConfig[1].placeholder"
-        [required]="fieldConfig[1].required ? true : false"
+        [formControlName]="field.key"
+        [type]="field.value.type"
+        [name]="field.value.name"
+        [id]="field.value.id"
+        [placeholder]="field.value.placeholder"
+        [required]="field.value.required ? true : false"
       />
-      <label [for]="fieldConfig[0]">{{ fieldConfig[1].label }}</label>
+      <label [for]="field.value.id">{{ field.value.label }}</label>
     </div>
-    } } @if (isFormInvalid || serverErrorMessage) {
+    } } @if (errorMessages || serverErrorMessage) {
     <app-error-message
-      [failedValidators]="failedValidators"
       [errorMessages]="errorMessages"
       [serverErrorMessage]="serverErrorMessage"
     ></app-error-message>
     }
 
     <app-primary-button
-      type="submit"
+      (click)="onSubmit()"
       [btnText]="btnText"
       [isLoading]="isLoading"
     ></app-primary-button>
   </form>
 
-  @if (mode === "register") {
-  <p>Already have an account? <a (click)="switchToLogin()">Log in</a></p>
-  } @else if (mode === "login") {
-  <p>Don't have an account yet? <a (click)="switchToRegister()">Sign up</a></p>
-  }
+  <ng-content select="[modal-footer]"></ng-content>
 </div>

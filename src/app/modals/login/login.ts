@@ -52,7 +52,7 @@ export class LoginModalComponent {
 
       await this.auth.login(formData.email, formData.password);
 
-      this.modalComponent.resetForm();
+      // this.modalComponent.resetForm();
       this.modalService.closeAll();
       this.router.navigate(["/about"]); //!Change to /articles when that page is ready
     } catch (error: any) {
