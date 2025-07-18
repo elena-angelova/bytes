@@ -1,9 +1,15 @@
 <app-modal
-  [fields]="fields"
   [title]="title"
   [btnText]="btnText"
+  [form]="loginForm"
+  [fields]="fields"
   [fieldLayout]="fieldLayout"
-  (switchToRegisterModal)="onSwitchModal()"
   [isLoading]="isLoading"
+  [errorMessages]="errorMessages"
   [serverErrorMessage]="serverErrorMessage"
-></app-modal>
+  (submit)="onFormSubmit()"
+>
+  <p modal-footer>
+    Don't have an account yet? <a (click)="onSwitchModal()">Sign up</a>
+  </p>
+</app-modal>

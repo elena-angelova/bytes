@@ -1,10 +1,16 @@
-import { Component, ViewChild } from "@angular/core";
-import { FormFieldConfig, LoginFormValues } from "../../types";
+import { Component, inject, ViewChild } from "@angular/core";
+import { ErrorMessages, FormFieldConfig, LoginFormValues } from "../../types";
 import { formFields } from "../../config/form-fields.config";
 import { ModalComponent } from "../../ui/modal/modal";
 import { ModalService } from "../../services/modal.service";
 import { AuthService } from "../../services/auth.service";
 import { Router } from "@angular/router";
+import {
+  FormBuilder,
+  FormGroup,
+  ValidationErrors,
+  Validators,
+} from "@angular/forms";
 
 @Component({
   selector: "app-login",
@@ -13,16 +19,24 @@ import { Router } from "@angular/router";
   styleUrl: "./login.css",
 })
 export class LoginModalComponent {
-  mode: string = "login";
   title: string = "Log in";
   btnText: string = "Log in";
   fieldLayout: string = "column-layout";
+  serverErrorMessage!: string;
   isLoading: boolean = false;
+  isFormInvalid: boolean = false;
+  errorMessages!: string[];
 
   fields: FormFieldConfig = {
     email: formFields["email"],
     password: formFields["password"],
   };
+
+  private formBuilder = inject(FormBuilder);
+  loginForm: FormGroup = this.formBuilder.group({
+    email: ["", [Validators.required, Validators.email]],
+    password: ["", [Validators.required]],
+  });
 
   firebaseErrorMessagesMap: Record<string, string> = {
     "auth/invalid-credential":
@@ -31,9 +45,6 @@ export class LoginModalComponent {
     "auth/network-request-failed":
       "Network error. Please check your internet connection.",
   };
-  serverErrorMessage!: string;
-
-  @ViewChild(ModalComponent) modalComponent!: ModalComponent;
 
   constructor(
     private modalService: ModalService,
@@ -46,17 +57,48 @@ export class LoginModalComponent {
     setTimeout(() => this.modalService.openRegisterModal(), 200);
   }
 
+  onFormSubmit(): void {
+    this.errorMessages = [];
+    const formErrors: { [key: string]: ValidationErrors } = {};
+
+    if (this.loginForm.valid) {
+      this.isFormInvalid = false;
+      this.onLogin(this.loginForm.value);
+    } else {
+      this.isFormInvalid = true;
+      this.loginForm.markAllAsTouched();
+
+      Object.keys(this.loginForm.controls).forEach((key: string) => {
+        const controlErrors: ValidationErrors | null | undefined =
+          this.loginForm.get(key)?.errors;
+        if (controlErrors) {
+          formErrors[key] = controlErrors;
+        }
+      });
+
+      for (const field in formErrors) {
+        const failedValidatorsObj: ValidationErrors = formErrors[field];
+        const uiErrorMessages: ErrorMessages = this.fields[field].errorMessages;
+        const failedValidator: string = Object.keys(failedValidatorsObj)[0];
+
+        this.errorMessages.push(uiErrorMessages[failedValidator]);
+      }
+    }
+  }
+
   async onLogin(formData: LoginFormValues) {
     try {
       this.isLoading = true;
 
       await this.auth.login(formData.email, formData.password);
 
-      // this.modalComponent.resetForm();
+      this.loginForm.reset();
       this.modalService.closeAll();
       this.router.navigate(["/about"]); //!Change to /articles when that page is ready
     } catch (error: any) {
-      this.serverErrorMessage = this.firebaseErrorMessagesMap[error.code];
+      this.serverErrorMessage =
+        this.firebaseErrorMessagesMap[error.code] ||
+        "An unexpected error occurred. Please try again.";
     } finally {
       this.isLoading = false;
     }

@@ -32,21 +32,6 @@ app-primary-button {
   margin-top: 0.7rem;
 }
 
-p {
-  align-self: center;
-  font-size: 0.75rem;
-  font-weight: 300;
-
-  a {
-    font-weight: 600;
-    text-decoration: underline;
-    text-decoration-color: var(--search-bar-text);
-    text-decoration-thickness: 1.5px;
-    text-underline-offset: 4.5px;
-    cursor: pointer;
-  }
-}
-
 /* Input field styles */
 .field-wrapper {
   flex-basis: 100%;
