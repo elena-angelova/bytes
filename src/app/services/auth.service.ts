@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import {
   Auth,
   createUserWithEmailAndPassword,
+  signOut,
   UserCredential,
 } from "@angular/fire/auth";
 import { Firestore } from "@angular/fire/firestore";
@@ -49,8 +50,12 @@ export class AuthService {
     });
   }
 
-  async login(email: string, password: string): Promise<UserCredential> {
-    return signInWithEmailAndPassword(this.auth, email, password);
+  async login(email: string, password: string): Promise<void> {
+    await signInWithEmailAndPassword(this.auth, email, password);
+  }
+
+  async logout(): Promise<void> {
+    await signOut(this.auth);
   }
 
   isLoggedIn() {

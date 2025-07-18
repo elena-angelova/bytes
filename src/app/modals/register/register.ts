@@ -29,7 +29,7 @@ export class RegisterModalComponent {
   serverErrorMessage!: string;
   isLoading: boolean = false;
   isFormInvalid: boolean = false;
-  errorMessages!: string[];
+  errorMessages: string[] = [];
   passwordPattern: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/;
 
   fields: FormFieldConfig = {
@@ -133,7 +133,8 @@ export class RegisterModalComponent {
 
       this.registerForm.reset();
       this.modalService.closeAll();
-      this.router.navigate(["/about"]); //!Change to /articles when that page is ready
+
+      await this.router.navigate(["/about"]); //!Change to /articles when that page is ready
     } catch (error: any) {
       this.serverErrorMessage =
         this.firebaseErrorMessagesMap[error.code] ||

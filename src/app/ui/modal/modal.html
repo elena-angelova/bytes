@@ -31,7 +31,7 @@
       />
       <label [for]="field.value.id">{{ field.value.label }}</label>
     </div>
-    } } @if (errorMessages || serverErrorMessage) {
+    } } @if (errorMessages.length > 0 || serverErrorMessage) {
     <app-error-message
       [errorMessages]="errorMessages"
       [serverErrorMessage]="serverErrorMessage"

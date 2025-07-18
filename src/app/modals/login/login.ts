@@ -25,7 +25,7 @@ export class LoginModalComponent {
   serverErrorMessage!: string;
   isLoading: boolean = false;
   isFormInvalid: boolean = false;
-  errorMessages!: string[];
+  errorMessages: string[] = [];
 
   fields: FormFieldConfig = {
     email: formFields["email"],
@@ -94,7 +94,8 @@ export class LoginModalComponent {
 
       this.loginForm.reset();
       this.modalService.closeAll();
-      this.router.navigate(["/about"]); //!Change to /articles when that page is ready
+
+      await this.router.navigate(["/about"]); //!Change to /articles when that page is ready
     } catch (error: any) {
       this.serverErrorMessage =
         this.firebaseErrorMessagesMap[error.code] ||

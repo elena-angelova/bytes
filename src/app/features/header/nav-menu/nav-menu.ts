@@ -30,6 +30,7 @@ export class NavMenuComponent {
   @Output() loginClick = new EventEmitter<void>();
   @Output() registerClick = new EventEmitter<void>();
   @Output() toggleMenu = new EventEmitter<void>();
+  @Output() logoutClick = new EventEmitter<void>();
 
   onLogin(): void {
     this.loginClick.emit();

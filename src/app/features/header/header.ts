@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { RouterLink } from "@angular/router";
+import { Router, RouterLink } from "@angular/router";
 import { ModalService } from "../../services/modal.service";
 import { AuthService } from "../../services/auth.service";
 import { SearchBarComponent } from "./search-bar/search-bar";
@@ -27,7 +27,8 @@ export class HeaderComponent implements OnInit {
 
   constructor(
     private modalService: ModalService,
-    private authService: AuthService
+    private authService: AuthService,
+    private router: Router
   ) {
     const savedMode: string | null = localStorage.getItem("darkMode");
     if (savedMode === "true") {
@@ -67,5 +68,16 @@ export class HeaderComponent implements OnInit {
 
   toggleMenu(): void {
     this.isMenuOpened = !this.isMenuOpened;
+  }
+
+  async onLogoutClick() {
+    this.toggleMenu();
+
+    try {
+      await this.authService.logout();
+      await this.router.navigate(["/about"]); //!Change to /articles when that page is ready
+    } catch (error) {
+      // !See how you'll visualise the error if logout fails
+    }
   }
 }

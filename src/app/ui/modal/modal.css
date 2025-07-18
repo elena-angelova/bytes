@@ -38,6 +38,7 @@ app-primary-button {
   display: flex;
   flex-direction: column;
   font-size: 0.7rem;
+  gap: 0.3rem;
 }
 
 label {
@@ -67,6 +68,14 @@ input {
 
   &:focus {
     border-bottom: 1px solid var(--input-border-focus);
+  }
+
+  &:is(:-webkit-autofill, :autofill) {
+    box-shadow: 0 0 0 1000px var(--input-autofill-bg) inset;
+    -webkit-text-fill-color: var(--text-color);
+    border-radius: 0.5rem;
+    caret-color: var(--input-autofill-bg);
+    transition: background-color 5000s ease-in-out 0s;
   }
 }
 
