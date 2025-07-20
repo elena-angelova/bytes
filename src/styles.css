@@ -223,7 +223,7 @@ h6 {
 .ql-snow .ql-editor .ql-code-block-container {
   background-color: var(--search-bar-bg) !important;
   color: var(--text-color) !important;
-  padding: 2rem 3rem !important;
+  padding: 1.5rem 2rem !important;
   border-radius: 0.8rem !important;
   font-family: inherit;
   transition: background-color 0.3s ease, color 0.3s ease;
@@ -236,7 +236,7 @@ h6 {
   border-radius: 0.5rem;
   padding: 0.5rem 1rem !important;
   color: var(--text-color) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0) !important;
+  box-shadow: none !important;
 }
 
 .ql-tooltip input {

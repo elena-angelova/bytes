@@ -1,1 +1,4 @@
-<div #editor class="quill-editor"></div>
+<form [formGroup]="form">
+  <div #editor class="quill-editor"></div>
+  <input type="hidden" formControlName="content" />
+</form>

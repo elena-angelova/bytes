@@ -1,5 +1,4 @@
 import { Component, Input } from "@angular/core";
-import { ValidationErrors } from "@angular/forms";
 
 @Component({
   selector: "app-error-message",
@@ -9,8 +8,7 @@ import { ValidationErrors } from "@angular/forms";
 })
 export class ErrorMessageComponent {
   @Input() serverErrorMessage!: string;
-  @Input() errorMessages!: string[];
-  @Input() failedValidators!: { [key: string]: ValidationErrors } | undefined;
+  @Input() errorMessages: string[] = [];
 
   errors!: string[];
 

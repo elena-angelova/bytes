@@ -15,4 +15,5 @@ export const routes: Routes = [
   { path: "register", component: RegisterModalComponent },
   { path: "login", component: LoginModalComponent },
   { path: "articles/create", component: ArticleEditorComponent },
+  { path: "articles/:id", component: AboutPageComponent }, // !Change this once the article details component is ready
 ];

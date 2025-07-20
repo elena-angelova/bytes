@@ -1,5 +1,8 @@
 :host {
   width: 100%;
+}
+
+.container {
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -53,8 +56,8 @@
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 0.7rem;
-  cursor: pointer;
+  gap: 1.5rem;
+  max-width: 250px;
   transition: background-color 0.3s ease, color 0.3s ease;
 
   .upload-icon-btn {
@@ -64,6 +67,12 @@
     svg {
       stroke: var(--search-bar-text);
     }
+  }
+
+  span {
+    overflow-x: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
   }
 }
 
@@ -83,5 +92,55 @@
 
   &::placeholder {
     color: var(--input-border);
+  }
+}
+
+.publish-btn {
+  position: relative;
+}
+
+.popup-error {
+  background-color: var(--search-bar-bg);
+  color: var(--search-bar-text);
+  text-align: center;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  position: absolute;
+  z-index: 1;
+  top: -125%;
+  left: -60%;
+  text-wrap: nowrap;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.fade {
+  animation: fadeIn 4s;
+  animation-fill-mode: forwards;
+}
+
+.popup-error::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: var(--search-bar-bg) transparent transparent transparent;
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }

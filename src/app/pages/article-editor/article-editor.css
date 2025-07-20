@@ -1,8 +1,11 @@
 :host {
   flex: 1 0 auto;
+  margin: 7.5rem auto;
+  width: 80ch;
+}
+
+form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
-  margin: 7.5rem auto;
-  width: 80ch;
 }

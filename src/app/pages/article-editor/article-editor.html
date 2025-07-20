@@ -1,2 +1,22 @@
-<app-article-meta [articleCategories]="articleCategories"></app-article-meta>
-<app-text-editor></app-text-editor>
+@if (isLoading) {
+<app-loader></app-loader>
+} @else if (serverErrorMessage) {
+<app-error-message
+  [serverErrorMessage]="serverErrorMessage"
+></app-error-message>
+} @else {
+<form [formGroup]="createArticleForm">
+  <app-article-meta
+    [articleCategories]="articleCategories"
+    [form]="createArticleForm"
+    [isFormInvalid]="isFormInvalid"
+    (fileSelected)="onFileSelected($event)"
+    (submit)="onFormSubmit()"
+  ></app-article-meta>
+
+  <app-text-editor
+    [form]="createArticleForm"
+    (getRawHTML)="getRawHTML($event)"
+  ></app-text-editor>
+</form>
+}

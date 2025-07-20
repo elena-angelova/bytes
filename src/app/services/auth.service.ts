@@ -1,19 +1,15 @@
 import { Injectable } from "@angular/core";
 import {
   Auth,
-  createUserWithEmailAndPassword,
-  signOut,
-  UserCredential,
-} from "@angular/fire/auth";
-import { Firestore } from "@angular/fire/firestore";
-import {
   browserLocalPersistence,
+  createUserWithEmailAndPassword,
   onAuthStateChanged,
   setPersistence,
   signInWithEmailAndPassword,
+  signOut,
   User,
-} from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+} from "@angular/fire/auth";
+import { doc, Firestore, setDoc, Timestamp } from "@angular/fire/firestore";
 import { BehaviorSubject } from "rxjs";
 
 @Injectable({
@@ -42,11 +38,12 @@ export class AuthService {
       password
     );
 
+    // *Consider moving this to UserService and injecting it here in order to call it
     await setDoc(doc(this.firestore, "users", userCredential.user.uid), {
       email,
       firstName,
       lastName,
-      dateJoined: new Date(),
+      dateJoined: Timestamp.now(),
     });
   }
 

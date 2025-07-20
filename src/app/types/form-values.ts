@@ -11,3 +11,10 @@ export interface LoginFormValues {
   email: string;
   password: string;
 }
+
+export interface CreateFormValues {
+  title: string;
+  category: string;
+  thumbnailUrl: string;
+  content: string;
+}
