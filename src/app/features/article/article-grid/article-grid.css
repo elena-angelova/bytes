@@ -1,0 +1,4 @@
+.article-grid {
+  display: grid;
+  gap: 4rem;
+}

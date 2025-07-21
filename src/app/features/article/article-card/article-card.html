@@ -1,0 +1,46 @@
+<div class="header">
+  <div class="createdDate">
+    {{ article.createdAt.toDate() | date : "MMM d, y" }}
+  </div>
+  <h5 routerLink="/article/{{ article.id }}" class="title">
+    {{ article.title }}
+  </h5>
+</div>
+
+<div class="thumbnail">
+  <img
+    routerLink="/article/{{ article.id }}"
+    src="{{ article.thumbnailUrl }}"
+    alt="Article thumbnail"
+  />
+</div>
+
+<div class="footer">
+  <div class="author">
+    by
+    <span (click)="onAuthorClick(article.authorId)">{{
+      article.authorName
+    }}</span>
+  </div>
+
+  <div class="preview">{{ article.preview }}</div>
+
+  <div routerLink="/article/{{ article.id }}" class="btn-wrapper">
+    <svg
+      class="arrow-icon"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="-0.25 -1.25 31.5 22.5"
+      width="25"
+      height="15"
+      stroke="black"
+      fill="none"
+      stroke-width="2.5"
+      stroke-linecap="round"
+    >
+      <line x1="21" y1="0" x2="31" y2="10" />
+      <line x1="21" y1="20" x2="31" y2="10" />
+      <line x1="0" y1="10" x2="31" y2="10" />
+    </svg>
+    <a class="btn read-article-btn">Read Article</a>
+  </div>
+</div>

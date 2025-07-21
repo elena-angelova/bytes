@@ -15,5 +15,3 @@ export class MenuDropdownComponent {
     this.logoutClick.emit();
   }
 }
-
-// !Dropdown menu should close after login

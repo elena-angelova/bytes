@@ -1,0 +1,14 @@
+@if (isLoading) {
+<app-loader></app-loader>
+} @else {
+<app-article-category-filter
+  [isMenuOpened]="isMenuOpened"
+  (filter)="onFilter($event)"
+  (toggleMenu)="toggleMenu()"
+></app-article-category-filter>
+<app-article-grid
+  [articles]="articles"
+  [columns]="3"
+  (openAuthorDetail)="onAuthorClick($event)"
+></app-article-grid>
+}

@@ -11,6 +11,7 @@ import {
 } from "@angular/fire/firestore";
 import { Article } from "../types";
 import { Observable } from "rxjs";
+import { orderBy } from "firebase/firestore";
 
 @Injectable({
   providedIn: "root",
@@ -18,28 +19,45 @@ import { Observable } from "rxjs";
 export class ArticlesService {
   constructor(private firestore: Firestore) {}
 
-  // !Check if getArticles() and getArticlesByCategory() methods work correctly and actually get the information you want
+  // !Check if getArticles() and getArticlesByCategory() methods are causing listening channel issues
 
-  // getArticles(): Observable<Article[]> {
-  //   const articlesRef = collection(
-  //     this.firestore,
-  //     "articles"
-  //   ) as CollectionReference<Article>;
+  getArticles(): Observable<Article[]> {
+    const articlesRef = collection(
+      this.firestore,
+      "articles"
+    ) as CollectionReference<Article>;
+    const articlesQuery = query(articlesRef, orderBy("createdAt", "desc"));
 
-  //   return collectionData(articlesRef);
-  // }
+    return collectionData(articlesQuery, { idField: "id" });
+  }
 
-  // getArticlesByCategory(category: string): Observable<Article[]> {
-  //   const articlesRef = collection(
-  //     this.firestore,
-  //     "articles"
-  //   ) as CollectionReference<Article>;
-  //   const categoryQuery = query(articlesRef, where("category", "==", category));
+  getArticlesByCategory(category: string): Observable<Article[]> {
+    const articlesRef = collection(
+      this.firestore,
+      "articles"
+    ) as CollectionReference<Article>;
+    const categoryQuery = query(
+      articlesRef,
+      where("category", "==", category),
+      orderBy("createdAt", "desc")
+    );
 
-  //   return collectionData(categoryQuery);
-  // }
+    return collectionData(categoryQuery, { idField: "id" });
+  }
 
-  // !
+  getArticlesByAuthor(authorId: string): Observable<Article[]> {
+    const articlesRef = collection(
+      this.firestore,
+      "articles"
+    ) as CollectionReference<Article>;
+    const authorQuery = query(
+      articlesRef,
+      where("authorId", "==", authorId),
+      orderBy("createdAt", "desc")
+    );
+
+    return collectionData(authorQuery, { idField: "id" });
+  }
 
   async createArticle(data: Article): Promise<DocumentReference> {
     const articlesRef = collection(this.firestore, "articles");

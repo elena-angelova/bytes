@@ -1,0 +1,31 @@
+<app-section-title [content]="authorName"></app-section-title>
+<div class="content">
+  <app-article-grid [articles]="articles" [columns]="2"></app-article-grid>
+  <aside>
+    <h5>Hello!</h5>
+    <p class="bio">
+      @if (authorDetails?.bio) {
+      {{ authorDetails?.bio }}
+      } @else { This author hasn't written a bio yet — probably too busy
+      refactoring code or breaking production at 3 a.m. We'll update this as
+      soon as they come up for air. }
+    </p>
+    <div class="details">
+      @if (authorDetails?.techStack) {
+      <p>
+        <strong>Tech stack:</strong>
+        {{ authorDetails?.techStack }}
+      </p>
+      } @if (authorDetails?.currentRole) {
+      <p>
+        <strong>Current role:</strong>
+        {{ authorDetails?.currentRole }}
+      </p>
+      }
+      <p>
+        <strong>Member since:</strong>
+        {{ authorDetails?.dateJoined?.toDate() | date : "MMM d, y" }}
+      </p>
+    </div>
+  </aside>
+</div>

@@ -10,4 +10,5 @@ export interface Article {
   thumbnailUrl: string;
   title: string;
   createdAt: Timestamp;
+  id?: string;
 }

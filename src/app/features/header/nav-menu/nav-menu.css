@@ -49,7 +49,6 @@ nav {
 
 .create-icon-btn {
   display: flex;
-  /* margin-left: 3rem; */
   cursor: pointer;
 
   svg {

@@ -1,0 +1,38 @@
+:host {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3.3rem;
+  margin: 5rem auto;
+  width: 100%;
+}
+
+.content {
+  display: flex;
+  gap: 4rem;
+}
+
+aside {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border-left: 2px solid var(--border);
+  padding-left: 4rem;
+
+  h5 {
+    margin-top: 2rem;
+  }
+
+  p {
+    font-weight: 300;
+    margin-bottom: 0.5rem;
+  }
+
+  .bio {
+    color: #8f8f8f;
+  }
+
+  .details {
+    font-size: 0.8rem;
+  }
+}

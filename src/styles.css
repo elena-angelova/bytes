@@ -150,7 +150,7 @@ h6 {
   font-size: var(--fs-heading-6);
 }
 
-/* *Modal styles* */
+/** Modal styles **/
 .cdk-overlay-backdrop {
   background-color: var(--modal-backdrop) !important;
   overflow-y: auto !important;
@@ -167,9 +167,9 @@ h6 {
   background-color: transparent !important;
 }
 
-/* *Quill styles* */
+/** Quill styles **/
 
-/* &Editor */
+/*& Editor */
 .ql-editor.ql-blank::before {
   color: var(--border) !important;
   font-style: normal !important;
@@ -181,6 +181,10 @@ h6 {
 .ql-editor {
   padding: 2rem 0 !important;
   line-height: 2 !important;
+
+  li {
+    line-height: 2;
+  }
 }
 
 .ql-toolbar.ql-snow {
@@ -190,7 +194,7 @@ h6 {
   font-family: inherit !important;
 }
 
-/* &Toolbar */
+/*& Toolbar */
 .ql-toolbar button:hover svg {
   fill: var(--button-bg) !important;
 }
@@ -203,7 +207,7 @@ h6 {
   border: none;
 }
 
-/* &Dropdown menu */
+/*& Dropdown menu */
 .ql-picker-options {
   background-color: var(--search-bar-bg) !important;
   border: none !important;
@@ -219,7 +223,7 @@ h6 {
   color: var(--button-hover-bg) !important;
 }
 
-/* &Code block */
+/*& Code block */
 .ql-snow .ql-editor .ql-code-block-container {
   background-color: var(--search-bar-bg) !important;
   color: var(--text-color) !important;
@@ -229,7 +233,18 @@ h6 {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* &Link */
+/*& Inline code */
+.ql-editor code {
+  background-color: var(--search-bar-bg) !important;
+  color: var(--button-bg);
+  font-family: inherit;
+  font-size: inherit !important;
+  padding: 0.1rem 0.5rem !important;
+  border-radius: 0.5rem !important;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/*& Link */
 .ql-tooltip {
   background-color: var(--search-bar-bg) !important;
   border: none !important;

@@ -22,7 +22,7 @@ import { LoaderComponent } from "../../ui/loader/loader";
 import { ErrorMessageComponent } from "../../ui/error-message/error-message";
 import DOMPurify from "dompurify";
 import { UploadService } from "../../services/upload.service";
-import { map, Observable, switchMap } from "rxjs";
+import { first, map, Observable, switchMap } from "rxjs";
 
 @Component({
   selector: "app-article-editor",
@@ -78,7 +78,10 @@ export class ArticleEditorComponent {
       const content: string = cleanHTML;
       const category: string = formValues.category;
       const title: string = formValues.title;
-      const preview: string = formValues.content.substring(0, 101);
+      const preview: string = formValues.content
+        .split(/\s+/)
+        .slice(0, 50)
+        .join(" ");
       const likes: string[] = [];
       const createdAt = Timestamp.now();
       const authorId: string | undefined = this.authService.getUser()?.uid;
@@ -89,8 +92,10 @@ export class ArticleEditorComponent {
 
         this.uploadThumbnail()
           .pipe(
+            first(),
             switchMap((thumbnailUrl) =>
               this.userService.getUserData(authorId).pipe(
+                first(),
                 map((user) => {
                   const authorName = user
                     ? `${user.firstName} ${user.lastName}`
@@ -115,7 +120,6 @@ export class ArticleEditorComponent {
           )
           .subscribe({
             next: (articleData) => {
-              console.log(articleData); //& Test
               this.onCreate(articleData);
             },
             error: (err) => {}, //*

@@ -1,0 +1,37 @@
+<div class="category-filter">
+  <ul>
+    @for (category of visibleCategories; track $index) {
+    <li>
+      <a (click)="onClick(category)">{{ category }}</a>
+    </li>
+    }
+    <li (click)="onToggleMenu()">
+      <svg
+        class="more-icon"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="20 20 60 60"
+        width="20"
+        height="10"
+      >
+        &gt;
+        <circle cx="8" cy="50" r="15" />
+        <circle cx="50" cy="50" r="15" />
+        <circle cx="92" cy="50" r="15" />
+      </svg>
+    </li>
+  </ul>
+
+  @if (isMenuOpened) {
+  <div class="dropdown-container">
+    <ul>
+      @for (category of hiddenCategories; track $index) {
+      <li>
+        <a (click)="onClick(category)">{{ category }}</a>
+      </li>
+      }
+    </ul>
+  </div>
+  }
+
+  <hr />
+</div>

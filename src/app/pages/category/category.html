@@ -1,0 +1,9 @@
+@if (isLoading) {
+<app-loader></app-loader>
+} @else {
+<app-section-title [content]="category"></app-section-title>
+@if (articles.length > 0) {
+<app-article-grid [articles]="articles" [columns]="3"></app-article-grid>
+} @else {
+<app-empty-state></app-empty-state>
+} }

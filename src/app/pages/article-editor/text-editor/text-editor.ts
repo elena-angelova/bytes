@@ -29,6 +29,7 @@ export class TextEditorComponent {
           [{ header: [1, 2, 3, false] }],
           ["bold", "italic", "underline", "strike"],
           ["link", "blockquote", "code-block"],
+          ["code"],
           [{ list: "ordered" }, { list: "bullet" }],
           ["clean"],
         ],

@@ -1,0 +1,11 @@
+<div
+  class="article-grid"
+  [style]="{ 'grid-template-columns': 'repeat(' + columns + ', 1fr)' }"
+>
+  @for (article of articles; track $index) {
+  <app-article-card
+    [article]="article"
+    (openAuthorDetail)="onAuthorClick($event)"
+  ></app-article-card>
+  }
+</div>
