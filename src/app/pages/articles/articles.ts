@@ -1,8 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
 import { Article } from "../../types";
 import { ArticlesService } from "../../services/articles.service";
 import { Router } from "@angular/router";
-import { tap } from "rxjs";
+import { take } from "rxjs";
 import { ArticleCategoryFilterComponent } from "../../features/article/article-category-filter/article-category-filter";
 import { ArticleGridComponent } from "../../features/article/article-grid/article-grid";
 import { LoaderComponent } from "../../ui/loader/loader";
@@ -19,8 +19,16 @@ import { LoaderComponent } from "../../ui/loader/loader";
 })
 export class ArticlesComponent implements OnInit {
   articles: Article[] = [];
+
   isMenuOpened: boolean = false;
   isLoading: boolean = true;
+  isLoadingMore: boolean = false;
+  hasMore: boolean = true;
+  private readonly pageSize = 9;
+
+  observer!: IntersectionObserver;
+
+  @ViewChild("scrollAnchor") scrollAnchor!: ElementRef;
 
   constructor(
     private articleService: ArticlesService,
@@ -28,17 +36,60 @@ export class ArticlesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.articleService.resetPagination();
+
     this.articleService
       .getArticles()
-      .pipe(tap(() => (this.isLoading = false)))
+      .pipe(take(1))
       .subscribe({
-        next: (articles) => (this.articles = articles),
+        next: (articles) => {
+          this.articles = articles;
+          this.isLoading = false;
+          this.hasMore = articles.length === this.pageSize;
+
+          setTimeout(() => {
+            this.observer.observe(this.scrollAnchor.nativeElement);
+          });
+        },
         error: (err) => console.error(err), //! Add error handling
       });
   }
 
+  ngAfterViewInit() {
+    this.observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !this.isLoadingMore) {
+        this.loadMore();
+      }
+    });
+  }
+
+  //! Consider unsubsribing from the observables in ngOnDestroy
+  ngOnDestroy() {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
+
+  loadMore() {
+    if (!this.hasMore || this.isLoadingMore) {
+      return;
+    }
+
+    this.isLoadingMore = true;
+    this.articleService
+      .getArticles()
+      .pipe(take(1))
+      .subscribe({
+        next: (newArticles) => {
+          this.articles = [...this.articles, ...newArticles];
+          this.isLoadingMore = false;
+          this.hasMore = newArticles.length === this.pageSize;
+        },
+      });
+  }
+
   onFilter(category: string) {
-    this.router.navigate(["/category", category]);
+    this.router.navigate(["/articles/category", category]);
   }
 
   onAuthorClick(authorId: string) {

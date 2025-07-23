@@ -18,9 +18,22 @@ aside {
   gap: 1rem;
   border-left: 2px solid var(--border);
   padding-left: 4rem;
+  min-width: 36ch;
 
-  h5 {
-    margin-top: 2rem;
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1.5rem;
+
+    .edit-btn {
+      padding: 0.25rem;
+      border-radius: 0.5rem;
+      font-size: 0.7rem;
+      font-weight: 400;
+      cursor: pointer;
+      fill: var(--search-bar-text);
+    }
   }
 
   p {

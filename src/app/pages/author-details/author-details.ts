@@ -2,15 +2,23 @@ import { Component, OnInit } from "@angular/core";
 import { SectionTitleComponent } from "../../ui/section-title/section-title";
 import { ArticleGridComponent } from "../../features/article/article-grid/article-grid";
 import { ArticlesService } from "../../services/articles.service";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, RouterLink } from "@angular/router";
 import { UsersService } from "../../services/users.service";
 import { tap } from "rxjs";
 import { Article, User } from "../../types";
 import { DatePipe } from "@angular/common";
+import { LoaderComponent } from "../../ui/loader/loader";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: "app-author-details",
-  imports: [DatePipe, SectionTitleComponent, ArticleGridComponent],
+  imports: [
+    DatePipe,
+    RouterLink,
+    SectionTitleComponent,
+    ArticleGridComponent,
+    LoaderComponent,
+  ],
   templateUrl: "./author-details.html",
   styleUrl: "./author-details.css",
 })
@@ -18,35 +26,41 @@ export class AuthorDetailsComponent implements OnInit {
   authorId!: string;
   authorName!: string;
   authorDetails!: User | undefined;
-  isLoading: boolean = true;
   articles: Article[] = [];
+  isLoading: boolean = true;
+  currentUserId!: string | undefined;
 
   constructor(
     private route: ActivatedRoute,
+    private authService: AuthService,
     private articleService: ArticlesService,
     private userService: UsersService
   ) {}
 
   ngOnInit(): void {
-    this.authorId = this.route.snapshot.paramMap.get("userId")!;
+    this.currentUserId = this.authService.getUser()?.uid;
 
-    this.userService
-      .getUserData(this.authorId)
-      .pipe(tap(() => (this.isLoading = false)))
-      .subscribe({
-        next: (data) => {
-          this.authorDetails = data;
-          this.authorName = `${data?.firstName} ${data?.lastName}`;
-        },
-        error: (err) => console.log(err), //! Add error handling
-      });
+    this.route.paramMap.subscribe((params) => {
+      this.authorId = params.get("userId")!;
 
-    this.articleService
-      .getArticlesByAuthor(this.authorId)
-      .pipe(tap(() => (this.isLoading = false)))
-      .subscribe({
-        next: (articles) => (this.articles = articles),
-        error: (err) => console.log(err), //! Add error handling
-      });
+      this.userService
+        .getUserData(this.authorId)
+        .pipe(tap(() => (this.isLoading = false)))
+        .subscribe({
+          next: (data) => {
+            this.authorDetails = data;
+            this.authorName = `${data?.firstName} ${data?.lastName}`;
+          },
+          error: (err) => console.log(err), //! Add error handling
+        });
+
+      this.articleService
+        .getArticlesByAuthor(this.authorId)
+        .pipe(tap(() => (this.isLoading = false)))
+        .subscribe({
+          next: (articles) => (this.articles = articles),
+          error: (err) => console.log(err), //! Add error handling
+        });
+    });
   }
 }

@@ -1,0 +1,12 @@
+@if (isLoading) {
+<app-loader></app-loader>
+} @else {
+<app-article-header
+  [article]="article"
+  [isLoggedIn]="isLoggedIn"
+  (openAuthorDetails)="onAuthorClick($event)"
+></app-article-header>
+<app-article-content
+  [sanitizedContent]="sanitizedContent"
+></app-article-content>
+}

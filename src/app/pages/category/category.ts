@@ -30,13 +30,16 @@ export class CategoryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.category = this.route.snapshot.paramMap.get("category")!;
-    this.articleService
-      .getArticlesByCategory(this.category)
-      .pipe(tap(() => (this.isLoading = false)))
-      .subscribe({
-        next: (articles) => (this.articles = articles),
-        error: (err) => console.log(err), //! Add error handling
-      });
+    this.route.paramMap.subscribe((params) => {
+      this.category = params.get("category")!;
+
+      this.articleService
+        .getArticlesByCategory(this.category)
+        .pipe(tap(() => (this.isLoading = false)))
+        .subscribe({
+          next: (articles) => (this.articles = articles),
+          error: (err) => console.log(err), //! Add error handling
+        });
+    });
   }
 }

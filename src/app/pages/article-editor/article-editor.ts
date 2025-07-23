@@ -113,6 +113,8 @@ export class ArticleEditorComponent {
                     createdAt,
                   };
 
+                  console.log(articleData.content);
+
                   return articleData;
                 })
               )

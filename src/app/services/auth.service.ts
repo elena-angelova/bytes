@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import {
   Auth,
+  authState,
   browserLocalPersistence,
   createUserWithEmailAndPassword,
-  onAuthStateChanged,
   setPersistence,
   signInWithEmailAndPassword,
   signOut,
@@ -19,7 +19,7 @@ export class AuthService {
   currentUser = new BehaviorSubject<User | null>(null);
 
   constructor(private auth: Auth, private firestore: Firestore) {
-    onAuthStateChanged(this.auth, (user) => {
+    authState(this.auth).subscribe((user) => {
       this.currentUser.next(user);
     });
   }
@@ -40,7 +40,7 @@ export class AuthService {
 
     // *Consider moving this to UserService and injecting it here in order to call it
     await setDoc(doc(this.firestore, "users", userCredential.user.uid), {
-      email,
+      email, //! You shouldn't record the email in this collection as it can be read by anyone. For the user profile page, you can get it from Firebase Auth.
       firstName,
       lastName,
       dateJoined: Timestamp.now(),

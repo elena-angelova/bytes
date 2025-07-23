@@ -2,14 +2,14 @@
   <div class="createdDate">
     {{ article.createdAt.toDate() | date : "MMM d, y" }}
   </div>
-  <h5 routerLink="/article/{{ article.id }}" class="title">
+  <h5 routerLink="/articles/{{ article.id }}" class="title">
     {{ article.title }}
   </h5>
 </div>
 
 <div class="thumbnail">
   <img
-    routerLink="/article/{{ article.id }}"
+    routerLink="/articles/{{ article.id }}"
     src="{{ article.thumbnailUrl }}"
     alt="Article thumbnail"
   />
@@ -25,7 +25,7 @@
 
   <div class="preview">{{ article.preview }}</div>
 
-  <div routerLink="/article/{{ article.id }}" class="btn-wrapper">
+  <div routerLink="/articles/{{ article.id }}" class="btn-wrapper">
     <svg
       class="arrow-icon"
       xmlns="http://www.w3.org/2000/svg"

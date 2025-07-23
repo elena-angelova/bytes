@@ -8,10 +8,13 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 })
 export class MenuDropdownComponent {
   @Output() logoutClick = new EventEmitter<void>();
-  @Output() closeMenu = new EventEmitter<void>();
+  @Output() myArticlesClick = new EventEmitter<void>();
 
   onLogout(): void {
-    this.closeMenu.emit();
     this.logoutClick.emit();
+  }
+
+  loadMyArticles() {
+    this.myArticlesClick.emit();
   }
 }

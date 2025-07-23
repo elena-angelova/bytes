@@ -11,9 +11,9 @@ import { RouterLink } from "@angular/router";
 })
 export class ArticleCardComponent {
   @Input() article!: Article;
-  @Output() openAuthorDetail = new EventEmitter<string>();
+  @Output() openAuthorDetails = new EventEmitter<string>();
 
   onAuthorClick(authorId: string) {
-    this.openAuthorDetail.emit(authorId);
+    this.openAuthorDetails.emit(authorId);
   }
 }

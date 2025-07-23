@@ -75,9 +75,16 @@ export class HeaderComponent implements OnInit {
 
     try {
       await this.authService.logout();
-      await this.router.navigate(["/about"]); //!Change to /articles when that page is ready
+      await this.router.navigate([""]);
     } catch (error) {
       // !See how you'll visualise the error if logout fails
     }
+  }
+
+  onMyArticlesClick() {
+    this.toggleMenu();
+
+    const userId: string | undefined = this.authService.getUser()?.uid;
+    this.router.navigate(["/users", userId]);
   }
 }

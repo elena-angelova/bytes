@@ -13,7 +13,10 @@
 
     <div class="cta">
       <p>Got something worth sharing?</p>
-      <app-cta-button [textContent]="'Start writing'"></app-cta-button>
+      <app-cta-button
+        [textContent]="'Start writing'"
+        (click)="onCtaClick()"
+      ></app-cta-button>
     </div>
   </div>
   <div class="expands">

@@ -12,9 +12,9 @@ export class ArticleGridComponent {
   @Input() articles!: Article[];
   @Input() columns!: number;
 
-  @Output() openAuthorDetail = new EventEmitter<string>();
+  @Output() openAuthorDetails = new EventEmitter<string>();
 
   onAuthorClick(authorId: string) {
-    this.openAuthorDetail.emit(authorId);
+    this.openAuthorDetails.emit(authorId);
   }
 }

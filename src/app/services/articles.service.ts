@@ -4,31 +4,65 @@ import {
   collection,
   collectionData,
   CollectionReference,
+  doc,
+  docData,
   DocumentReference,
   Firestore,
+  getDocs,
+  limit,
+  orderBy,
   query,
+  startAfter,
   where,
 } from "@angular/fire/firestore";
+import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
 import { Article } from "../types";
-import { Observable } from "rxjs";
-import { orderBy } from "firebase/firestore";
+import { from, map, Observable } from "rxjs";
 
 @Injectable({
   providedIn: "root",
 })
 export class ArticlesService {
-  constructor(private firestore: Firestore) {}
+  private readonly pageSize = 9;
+  private lastDoc: QueryDocumentSnapshot<DocumentData> | null = null;
 
-  // !Check if getArticles() and getArticlesByCategory() methods are causing listening channel issues
+  constructor(private firestore: Firestore) {}
 
   getArticles(): Observable<Article[]> {
     const articlesRef = collection(
       this.firestore,
       "articles"
     ) as CollectionReference<Article>;
-    const articlesQuery = query(articlesRef, orderBy("createdAt", "desc"));
 
-    return collectionData(articlesQuery, { idField: "id" });
+    let articlesQuery = query(
+      articlesRef,
+      orderBy("createdAt", "desc"),
+      limit(this.pageSize)
+    );
+
+    if (this.lastDoc) {
+      articlesQuery = query(
+        articlesRef,
+        orderBy("createdAt", "desc"),
+        startAfter(this.lastDoc),
+        limit(this.pageSize)
+      );
+    }
+
+    return from(getDocs(articlesQuery)).pipe(
+      map((querySnapshot) => {
+        const articles = querySnapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...(doc.data() as Article),
+        }));
+
+        if (querySnapshot.docs.length > 0) {
+          this.lastDoc = querySnapshot.docs[querySnapshot.docs.length - 1];
+        }
+
+        return articles;
+      })
+    );
   }
 
   getArticlesByCategory(category: string): Observable<Article[]> {
@@ -59,9 +93,19 @@ export class ArticlesService {
     return collectionData(authorQuery, { idField: "id" });
   }
 
+  getSingleArticle(articleId: string): Observable<Article | undefined> {
+    const articleDocRef = doc(this.firestore, "articles", articleId);
+
+    return docData(articleDocRef) as Observable<Article | undefined>;
+  }
+
   async createArticle(data: Article): Promise<DocumentReference> {
     const articlesRef = collection(this.firestore, "articles");
 
     return addDoc(articlesRef, data);
+  }
+
+  resetPagination() {
+    this.lastDoc = null;
   }
 }

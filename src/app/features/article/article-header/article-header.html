@@ -1,0 +1,56 @@
+<div class="container">
+  <div class="created-date">
+    {{ article?.createdAt?.toDate() | date : "MMM d, y" }}
+  </div>
+
+  <div class="wrapper">
+    <h2 class="title">
+      {{ article?.title }}
+    </h2>
+
+    <div class="author-actions">
+      <div class="author">
+        by
+        <span (click)="onAuthorClick(article?.authorId)">{{
+          article?.authorName
+        }}</span>
+      </div>
+
+      <div class="likes">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          version="1.1"
+          width="18"
+          height="18"
+          viewBox="10 23 80 55"
+          id="heartIcon"
+          class="heart unliked"
+        >
+          <g transform="translate(0,-952.36218)">
+            <path
+              d="m 18.356844,974.98986 c -7.1459,7.50345 -7.139,19.5777 0,27.08854 l 31.6235,33.2838 c 10.5534,-11.0817 21.1069,-22.1634 31.6603,-33.2453 7.1458,-7.50359 7.1458,-19.58504 0,-27.08864 -7.1458,-7.50358 -18.6513,-7.50375 -25.7972,0 l -5.8264,6.11805 -5.863,-6.15645 c -7.1459,-7.50359 -18.6515,-7.50359 -25.7972,0 z"
+            />
+          </g>
+        </svg>
+        <div class="likes-count">
+          {{ article?.likes?.length }}
+        </div>
+      </div>
+
+      <div class="bookmark">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 640 640"
+          width="20"
+          height="20"
+          id="bookmarkIcon"
+          class="bookmark unchecked"
+        >
+          <path
+            d="M192 64C156.7 64 128 92.7 128 128L128 544C128 555.5 134.2 566.2 144.2 571.8C154.2 577.4 166.5 577.3 176.4 571.4L320 485.3L463.5 571.4C473.4 577.3 485.7 577.5 495.7 571.8C505.7 566.1 512 555.5 512 544L512 128C512 92.7 483.3 64 448 64L192 64z"
+          />
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>

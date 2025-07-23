@@ -95,7 +95,7 @@ export class LoginModalComponent {
       this.loginForm.reset();
       this.modalService.closeAll();
 
-      await this.router.navigate(["/about"]); //!Change to /articles when that page is ready
+      await this.router.navigate(["/articles"]);
     } catch (error: any) {
       this.serverErrorMessage =
         this.firebaseErrorMessagesMap[error.code] ||

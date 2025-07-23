@@ -81,7 +81,7 @@
   resize: none;
   width: 100%;
   padding-bottom: 20px;
-  font-size: calc(var(--fs-heading-2) + 1.2rem);
+  font-size: var(--fs-heading-2);
   font-family: "Space Mono", monospace;
   border: none;
   border-bottom: 2px solid var(--button-bg);
@@ -89,6 +89,7 @@
   background-color: var(--bg-color);
   outline: 1px solid transparent;
   transition: background-color 0.3s ease, color 0.3s ease;
+  line-height: 1.4;
 
   &::placeholder {
     color: var(--input-border);

@@ -29,7 +29,10 @@
         </div>
       </div>
       @if (isMenuOpened) {
-      <app-menu-dropdown (logoutClick)="logoutClick.emit()"></app-menu-dropdown>
+      <app-menu-dropdown
+        (logoutClick)="logoutClick.emit()"
+        (myArticlesClick)="myArticlesClick.emit()"
+      ></app-menu-dropdown>
       }
     </li>
     }
