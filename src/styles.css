@@ -303,12 +303,14 @@ h6 {
   }
 
   a {
-    color: var(--link-color);
+    /* color: var(--link-color); */
+    color: var(--button-bg);
   }
 
   code {
     background-color: var(--search-bar-bg);
-    color: var(--link-color);
+    /* color: var(--link-color); */
+    color: var(--button-bg);
     font-family: inherit;
     font-size: inherit;
     padding: 0.1rem 0.5rem;
