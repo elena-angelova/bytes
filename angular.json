@@ -13,6 +13,7 @@
         "build": {
           "builder": "@angular/build:application",
           "options": {
+            "allowedCommonJsDependencies": ["quill-delta"],
             "browser": "src/main.ts",
             "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
@@ -33,7 +34,7 @@
                 {
                   "type": "initial",
                   "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumError": "1.01MB"
                 },
                 {
                   "type": "anyComponentStyle",

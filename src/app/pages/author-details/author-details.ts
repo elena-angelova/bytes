@@ -8,7 +8,7 @@ import { tap } from "rxjs";
 import { Article, User } from "../../types";
 import { DatePipe } from "@angular/common";
 import { LoaderComponent } from "../../ui/loader/loader";
-import { AuthService } from "../../services/auth.service";
+import { EmptyStateComponent } from "../../ui/empty-state/empty-state";
 
 @Component({
   selector: "app-author-details",
@@ -18,6 +18,7 @@ import { AuthService } from "../../services/auth.service";
     SectionTitleComponent,
     ArticleGridComponent,
     LoaderComponent,
+    EmptyStateComponent,
   ],
   templateUrl: "./author-details.html",
   styleUrl: "./author-details.css",
@@ -32,14 +33,12 @@ export class AuthorDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private authService: AuthService,
     private articleService: ArticlesService,
     private userService: UsersService
   ) {}
 
+  //! Implement infinite scroll
   ngOnInit(): void {
-    this.currentUserId = this.authService.getUser()?.uid;
-
     this.route.paramMap.subscribe((params) => {
       this.authorId = params.get("userId")!;
 

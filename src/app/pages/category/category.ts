@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { Article } from "../../types";
 import { ArticlesService } from "../../services/articles.service";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { tap } from "rxjs";
 import { SectionTitleComponent } from "../../ui/section-title/section-title";
 import { ArticleGridComponent } from "../../features/article/article-grid/article-grid";
@@ -26,9 +26,11 @@ export class CategoryComponent implements OnInit {
 
   constructor(
     private articleService: ArticlesService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
+  //! Implement infinite scroll
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       this.category = params.get("category")!;
@@ -41,5 +43,9 @@ export class CategoryComponent implements OnInit {
           error: (err) => console.log(err), //! Add error handling
         });
     });
+  }
+
+  onAuthorClick(authorId: string) {
+    this.router.navigate(["/users", authorId]);
   }
 }

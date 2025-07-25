@@ -8,6 +8,7 @@
 }
 
 .content {
+  height: 100%;
   display: flex;
   gap: 4rem;
 }
@@ -18,7 +19,7 @@ aside {
   gap: 1rem;
   border-left: 2px solid var(--border);
   padding-left: 4rem;
-  min-width: 36ch;
+  flex: 0 0 auto;
 
   .header {
     display: flex;
@@ -43,6 +44,7 @@ aside {
 
   .bio {
     color: #8f8f8f;
+    max-width: 30ch;
   }
 
   .details {

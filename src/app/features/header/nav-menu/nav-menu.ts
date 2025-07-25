@@ -9,10 +9,13 @@ import {
   trigger,
 } from "@angular/animations";
 import { RouterLink } from "@angular/router";
+import { Observable } from "rxjs";
+import { User } from "firebase/auth";
+import { AsyncPipe } from "@angular/common";
 
 @Component({
   selector: "app-nav-menu",
-  imports: [RouterLink, MenuDropdownComponent, CtaButtonComponent],
+  imports: [AsyncPipe, RouterLink, MenuDropdownComponent, CtaButtonComponent],
   templateUrl: "./nav-menu.html",
   styleUrl: "./nav-menu.css",
   animations: [
@@ -24,7 +27,7 @@ import { RouterLink } from "@angular/router";
   ],
 })
 export class NavMenuComponent {
-  @Input() isLoggedIn!: boolean;
+  @Input() currentUser$!: Observable<User | null>;
   @Input() isMenuOpened!: boolean;
 
   @Output() loginClick = new EventEmitter<void>();

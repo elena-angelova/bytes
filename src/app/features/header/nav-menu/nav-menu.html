@@ -3,9 +3,7 @@
     <li><a routerLink="/articles">articles</a></li>
     <li><a routerLink="/about">about</a></li>
 
-    @if (!isLoggedIn) {
-    <li><a (click)="onLogin()">log in</a></li>
-    } @else {
+    @if (currentUser$ | async) {
     <li>
       <div class="menu-header" (click)="onToggleMenu()">
         <a>profile</a>
@@ -35,16 +33,13 @@
       ></app-menu-dropdown>
       }
     </li>
+    } @else {
+    <li><a (click)="onLogin()">log in</a></li>
     }
   </ul>
 </nav>
 
-@if (!isLoggedIn) {
-<app-cta-button
-  (click)="onRegister()"
-  [textContent]="'sign up'"
-></app-cta-button>
-} @else {
+@if (currentUser$ | async) {
 <a routerLink="/articles/create" class="btn create-icon-btn">
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -59,4 +54,9 @@
     ></path>
   </svg>
 </a>
+} @else {
+<app-cta-button
+  (click)="onRegister()"
+  [textContent]="'sign up'"
+></app-cta-button>
 }

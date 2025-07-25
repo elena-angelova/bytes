@@ -3,7 +3,11 @@
 } @else {
 <app-section-title [content]="authorName"></app-section-title>
 <div class="content">
+  @if (articles.length > 0) {
   <app-article-grid [articles]="articles" [columns]="2"></app-article-grid>
+  } @else {
+  <app-empty-state></app-empty-state>
+  }
   <aside>
     <div class="header">
       <h5>Hello!</h5>

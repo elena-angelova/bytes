@@ -1,27 +1,24 @@
 import { Injectable } from "@angular/core";
 import {
   Auth,
-  authState,
-  browserLocalPersistence,
   createUserWithEmailAndPassword,
-  setPersistence,
   signInWithEmailAndPassword,
   signOut,
+  updateProfile,
+  user,
   User,
 } from "@angular/fire/auth";
-import { doc, Firestore, setDoc, Timestamp } from "@angular/fire/firestore";
-import { BehaviorSubject } from "rxjs";
+import { Observable } from "rxjs";
+import { UsersService } from "./users.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class AuthService {
-  currentUser = new BehaviorSubject<User | null>(null);
+  readonly currentUser$!: Observable<User | null>;
 
-  constructor(private auth: Auth, private firestore: Firestore) {
-    authState(this.auth).subscribe((user) => {
-      this.currentUser.next(user);
-    });
+  constructor(private auth: Auth, private usersService: UsersService) {
+    this.currentUser$ = user(this.auth);
   }
 
   async register(
@@ -30,21 +27,23 @@ export class AuthService {
     firstName: string,
     lastName: string
   ): Promise<void> {
-    await setPersistence(this.auth, browserLocalPersistence);
-
     const userCredential = await createUserWithEmailAndPassword(
       this.auth,
       email,
       password
     );
 
-    // *Consider moving this to UserService and injecting it here in order to call it
-    await setDoc(doc(this.firestore, "users", userCredential.user.uid), {
-      email, //! You shouldn't record the email in this collection as it can be read by anyone. For the user profile page, you can get it from Firebase Auth.
+    const displayName = `${firstName} ${lastName}`;
+
+    if (userCredential.user) {
+      await updateProfile(userCredential.user, { displayName: displayName });
+    }
+
+    await this.usersService.createUserData(
+      userCredential.user.uid,
       firstName,
-      lastName,
-      dateJoined: Timestamp.now(),
-    });
+      lastName
+    );
   }
 
   async login(email: string, password: string): Promise<void> {
@@ -55,11 +54,7 @@ export class AuthService {
     await signOut(this.auth);
   }
 
-  isLoggedIn() {
-    return this.currentUser.asObservable();
-  }
-
-  getUser() {
-    return this.currentUser.value;
+  getCurrentUser(): User | null {
+    return this.auth.currentUser;
   }
 }

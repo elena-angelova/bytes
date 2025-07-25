@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -15,7 +16,7 @@ import { FormGroup, ReactiveFormsModule } from "@angular/forms";
   templateUrl: "./article-meta.html",
   styleUrl: "./article-meta.css",
 })
-export class ArticleMetaComponent {
+export class ArticleMetaComponent implements AfterViewInit {
   @Input() articleCategories!: string[];
   @Input() fileName!: string;
   @Input() form!: FormGroup;

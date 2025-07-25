@@ -36,7 +36,7 @@
 body.dark-mode {
   --bg-color: #1f1f1f;
   --text-color: #ededed;
-  --link-color: #7283f6;
+  --link-color: #3a4fcb;
   --button-bg: #3a4fcb;
   --button-text: #ededed;
   --button-hover-bg: #4257c9;
@@ -170,10 +170,15 @@ h6 {
 /** Quill styles **/
 
 /*& Editor */
+
+.ql-container {
+  font-size: inherit !important;
+}
+
+/*^ Placeholder ^*/
 .ql-editor.ql-blank::before {
   color: var(--border) !important;
   font-style: normal !important;
-  font-size: 1rem;
   right: 0 !important;
   left: 0 !important;
 }
@@ -192,6 +197,8 @@ h6 {
   }
 }
 
+/*& Toolbar */
+
 .ql-toolbar.ql-snow {
   border: none !important;
   display: flex;
@@ -199,7 +206,6 @@ h6 {
   font-family: inherit !important;
 }
 
-/*& Toolbar */
 .ql-toolbar button:hover svg {
   fill: var(--button-bg) !important;
 }
@@ -241,7 +247,7 @@ h6 {
 /*& Inline code */
 .ql-editor code {
   background-color: var(--search-bar-bg) !important;
-  color: var(--link-color);
+  color: var(--button-bg);
   font-family: inherit;
   font-size: inherit !important;
   padding: 0.1rem 0.5rem !important;
@@ -279,7 +285,6 @@ h6 {
   width: 100%;
   height: 100%;
   font-family: "Space Mono", monospace;
-  font-size: 0.9rem;
   line-height: 2;
 
   li {
@@ -303,13 +308,11 @@ h6 {
   }
 
   a {
-    /* color: var(--link-color); */
-    color: var(--button-bg);
+    color: var(--link-color);
   }
 
   code {
     background-color: var(--search-bar-bg);
-    /* color: var(--link-color); */
     color: var(--button-bg);
     font-family: inherit;
     font-size: inherit;

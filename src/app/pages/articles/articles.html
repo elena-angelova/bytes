@@ -6,13 +6,16 @@
   (filter)="onFilter($event)"
   (toggleMenu)="toggleMenu()"
 ></app-article-category-filter>
+
+@if (articles.length > 0) {
 <app-article-grid
   [articles]="articles"
   [columns]="3"
   (openAuthorDetails)="onAuthorClick($event)"
 ></app-article-grid>
-}
 <div #scrollAnchor class="scroll-anchor"></div>
 @if (isLoadingMore) {
 <app-loader></app-loader>
-}
+} } @else {
+<app-empty-state></app-empty-state>
+} }

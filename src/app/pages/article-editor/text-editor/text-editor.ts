@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   Component,
   ElementRef,
   EventEmitter,
@@ -7,7 +8,6 @@ import {
   ViewChild,
 } from "@angular/core";
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
-import Quill from "quill";
 
 @Component({
   selector: "app-text-editor",
@@ -15,15 +15,16 @@ import Quill from "quill";
   templateUrl: "./text-editor.html",
   styleUrl: "./text-editor.css",
 })
-export class TextEditorComponent {
+export class TextEditorComponent implements AfterViewInit {
   @Input() form!: FormGroup;
   @Output() getRawHTML = new EventEmitter<string>();
   @ViewChild("editor", { static: true }) editorContainer!: ElementRef;
 
-  quill!: Quill;
+  async ngAfterViewInit() {
+    const quillModule = await import("quill");
+    const Quill = quillModule.default;
 
-  ngAfterViewInit() {
-    this.quill = new Quill(this.editorContainer.nativeElement, {
+    const editor = new Quill(this.editorContainer.nativeElement, {
       modules: {
         toolbar: [
           [{ header: [1, 2, 3, false] }],
@@ -40,13 +41,13 @@ export class TextEditorComponent {
 
     const initialContent = this.form.get("content")?.value;
     if (initialContent) {
-      this.quill.setContents(this.quill.clipboard.convert(initialContent));
+      editor.setContents(editor.clipboard.convert(initialContent));
     }
 
-    this.quill.on("text-change", () => {
-      this.getRawHTML.emit(this.quill.root.innerHTML); // *This emits events every time the input changes which isn't efficient. Think how you can be sure the user has finished editing and wants to publish (by clicking the Publish button) and how you can get the quill editor to that function (in ArticleMetaComponent)
+    editor.on("text-change", () => {
+      this.getRawHTML.emit(editor.root.innerHTML); // *This emits events every time the input changes which isn't efficient. Think how you can be sure the user has finished editing and wants to publish (by clicking the Publish button) and how you can get the quill editor to that function (in ArticleMetaComponent)
 
-      const textContent = this.quill.getText().trim();
+      const textContent = editor.getText().trim();
       this.form.get("content")?.setValue(textContent);
     });
   }

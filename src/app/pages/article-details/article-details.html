@@ -2,9 +2,10 @@
 <app-loader></app-loader>
 } @else {
 <app-article-header
-  [article]="article"
-  [isLoggedIn]="isLoggedIn"
+  [article$]="article$"
+  [hasLiked]="hasLiked"
   (openAuthorDetails)="onAuthorClick($event)"
+  (likeClick)="onLikeClick($event)"
 ></app-article-header>
 <app-article-content
   [sanitizedContent]="sanitizedContent"

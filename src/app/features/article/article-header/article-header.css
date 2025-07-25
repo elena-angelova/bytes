@@ -49,13 +49,11 @@
     .likes-count {
       font-size: 0.8rem;
       font-weight: bold;
+      min-width: 3ch;
     }
 
     .heart {
       cursor: pointer;
-    }
-
-    .heart.unliked {
       fill: none;
       stroke: var(--text-color);
       stroke-width: 6;

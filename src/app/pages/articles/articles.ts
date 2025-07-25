@@ -1,4 +1,10 @@
-import { Component, ElementRef, OnInit, ViewChild } from "@angular/core";
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  ViewChild,
+} from "@angular/core";
 import { Article } from "../../types";
 import { ArticlesService } from "../../services/articles.service";
 import { Router } from "@angular/router";
@@ -6,6 +12,7 @@ import { take } from "rxjs";
 import { ArticleCategoryFilterComponent } from "../../features/article/article-category-filter/article-category-filter";
 import { ArticleGridComponent } from "../../features/article/article-grid/article-grid";
 import { LoaderComponent } from "../../ui/loader/loader";
+import { EmptyStateComponent } from "../../ui/empty-state/empty-state";
 
 @Component({
   selector: "app-articles",
@@ -13,11 +20,12 @@ import { LoaderComponent } from "../../ui/loader/loader";
     ArticleCategoryFilterComponent,
     ArticleGridComponent,
     LoaderComponent,
+    EmptyStateComponent,
   ],
   templateUrl: "./articles.html",
   styleUrl: "./articles.css",
 })
-export class ArticlesComponent implements OnInit {
+export class ArticlesComponent implements OnInit, AfterViewInit {
   articles: Article[] = [];
 
   isMenuOpened: boolean = false;

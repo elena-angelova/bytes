@@ -4,7 +4,7 @@ import { ArticleContentComponent } from "../../features/article/article-content/
 import { ArticlesService } from "../../services/articles.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Article } from "../../types";
-import { tap } from "rxjs";
+import { Observable, Subscription, tap } from "rxjs";
 import { LoaderComponent } from "../../ui/loader/loader";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { AuthService } from "../../services/auth.service";
@@ -16,11 +16,16 @@ import { AuthService } from "../../services/auth.service";
   styleUrl: "./article-details.css",
 })
 export class ArticleDetailsComponent implements OnInit {
+  article$!: Observable<Article | undefined>;
   article!: Article | undefined;
   articleId!: string;
-  isLoading: boolean = true;
   sanitizedContent: SafeHtml | null = null;
-  isLoggedIn: boolean = false;
+
+  isLoading: boolean = true;
+  hasLiked: boolean = false;
+
+  private routeSub!: Subscription;
+  private articleSub!: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -31,30 +36,71 @@ export class ArticleDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.authService.isLoggedIn().subscribe((user) => {
-      this.isLoggedIn = user ? true : false;
-    });
-
-    this.route.paramMap.subscribe((params) => {
+    this.routeSub = this.route.paramMap.subscribe((params) => {
       this.articleId = params.get("articleId")!;
 
-      this.articleService
-        .getSingleArticle(this.articleId)
-        .pipe(tap(() => (this.isLoading = false)))
-        .subscribe({
-          next: (data) => {
-            this.article = data;
+      this.article$ = this.articleService.getSingleArticle(this.articleId).pipe(
+        tap((data) => {
+          this.isLoading = false;
 
-            this.sanitizedContent = this.sanitizer.bypassSecurityTrustHtml(
-              this.article?.content || ""
-            );
-          },
-          error: (err) => console.log(err), //! Add error handling
-        });
+          this.sanitizedContent = this.sanitizer.bypassSecurityTrustHtml(
+            data?.content || ""
+          );
+        })
+      );
+
+      this.articleSub = this.article$.subscribe((articleData) => {
+        this.article = articleData;
+
+        const currentUserId = this.authService.getCurrentUser()?.uid;
+
+        if (!articleData || !currentUserId) {
+          //! Add error handling
+          return;
+        }
+
+        this.hasLiked = articleData.likedBy?.includes(currentUserId);
+      });
     });
+  }
+
+  ngOnDestroy() {
+    this.routeSub.unsubscribe();
+    this.articleSub.unsubscribe();
   }
 
   onAuthorClick(authorId: string | undefined) {
     this.router.navigate(["/users", authorId]);
+  }
+
+  async onLikeClick(data: {
+    likedBy: string[] | undefined;
+    heartIcon: HTMLElement;
+  }) {
+    const currentUserId = this.authService.getCurrentUser()?.uid;
+
+    if (!data.likedBy || !currentUserId) {
+      //! Add error handling
+      return;
+    }
+
+    if (currentUserId === this.article?.authorId) {
+      //! Add error handling
+      return;
+    }
+
+    this.hasLiked = data.likedBy.includes(currentUserId);
+
+    try {
+      if (this.hasLiked) {
+        await this.articleService.unlikeArticle(this.articleId, currentUserId);
+        data.heartIcon.classList.remove("liked");
+      } else {
+        await this.articleService.likeArticle(this.articleId, currentUserId);
+        data.heartIcon.classList.add("liked");
+      }
+    } catch (error) {
+      //! Add error handling
+    }
   }
 }

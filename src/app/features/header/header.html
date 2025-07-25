@@ -6,7 +6,7 @@
 
   <div class="container container-right">
     <app-nav-menu
-      [isLoggedIn]="isLoggedIn"
+      [currentUser$]="currentUser$"
       [isMenuOpened]="isMenuOpened"
       (loginClick)="onLoginClick()"
       (registerClick)="onRegisterClick()"

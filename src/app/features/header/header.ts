@@ -5,6 +5,8 @@ import { AuthService } from "../../services/auth.service";
 import { SearchBarComponent } from "./search-bar/search-bar";
 import { NavMenuComponent } from "./nav-menu/nav-menu";
 import { ThemeToggleButtonComponent } from "./theme-toggle-button/theme-toggle-button";
+import { Observable } from "rxjs";
+import { User } from "firebase/auth";
 
 @Component({
   selector: "app-header",
@@ -18,11 +20,12 @@ import { ThemeToggleButtonComponent } from "./theme-toggle-button/theme-toggle-b
   styleUrl: "./header.css",
 })
 export class HeaderComponent implements OnInit {
+  currentUser$!: Observable<User | null>;
+
   theme: "light" | "dark" = "light";
   isDarkMode: boolean = false;
   rotation: number = 0;
 
-  isLoggedIn: boolean = false;
   isMenuOpened: boolean = false;
 
   constructor(
@@ -36,9 +39,7 @@ export class HeaderComponent implements OnInit {
       document.body.classList.add("dark-mode");
     }
 
-    this.authService.isLoggedIn().subscribe((user) => {
-      this.isLoggedIn = user ? true : false;
-    });
+    this.currentUser$ = authService.currentUser$;
   }
 
   ngOnInit(): void {
@@ -84,7 +85,9 @@ export class HeaderComponent implements OnInit {
   onMyArticlesClick() {
     this.toggleMenu();
 
-    const userId: string | undefined = this.authService.getUser()?.uid;
-    this.router.navigate(["/users", userId]);
+    this.currentUser$.subscribe((user) => {
+      const userId: string | undefined = user?.uid;
+      this.router.navigate(["/users", userId]);
+    });
   }
 }

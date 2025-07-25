@@ -10,6 +10,8 @@ import {
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 import { ModalService } from "../../services/modal.service";
+import { Observable } from "rxjs";
+import { User } from "firebase/auth";
 
 @Component({
   selector: "app-about",
@@ -42,14 +44,12 @@ export class AboutPageComponent {
   }
 
   onCtaClick() {
-    this.authService.isLoggedIn().subscribe((user) => {
-      const isLoggedIn = user ? true : false;
+    const userId: string | undefined = this.authService.getCurrentUser()?.uid;
 
-      if (isLoggedIn) {
-        this.router.navigate(["/articles/create"]);
-      } else {
-        this.modalService.openLoginModal();
-      }
-    });
+    if (userId) {
+      this.router.navigate(["/articles/create"]);
+    } else {
+      this.modalService.openLoginModal();
+    }
   }
 }

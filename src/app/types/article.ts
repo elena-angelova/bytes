@@ -5,7 +5,8 @@ export interface Article {
   authorName: string;
   category: string;
   content: string;
-  likes: string[];
+  likes: number;
+  likedBy: string[];
   preview: string;
   thumbnailUrl: string;
   title: string;

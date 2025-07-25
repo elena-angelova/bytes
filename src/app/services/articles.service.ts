@@ -9,13 +9,20 @@ import {
   DocumentReference,
   Firestore,
   getDocs,
+  increment,
   limit,
   orderBy,
   query,
   startAfter,
+  updateDoc,
   where,
 } from "@angular/fire/firestore";
-import { DocumentData, QueryDocumentSnapshot } from "firebase/firestore";
+import {
+  arrayRemove,
+  arrayUnion,
+  DocumentData,
+  QueryDocumentSnapshot,
+} from "firebase/firestore";
 import { Article } from "../types";
 import { from, map, Observable } from "rxjs";
 
@@ -99,13 +106,31 @@ export class ArticlesService {
     return docData(articleDocRef) as Observable<Article | undefined>;
   }
 
-  async createArticle(data: Article): Promise<DocumentReference> {
+  createArticle(data: Article): Promise<DocumentReference> {
     const articlesRef = collection(this.firestore, "articles");
 
     return addDoc(articlesRef, data);
   }
 
-  resetPagination() {
+  likeArticle(articleId: string, userId: string) {
+    const articleDocRef = doc(this.firestore, "articles", articleId);
+
+    return updateDoc(articleDocRef, {
+      likes: increment(1),
+      likedBy: arrayUnion(userId),
+    });
+  }
+
+  unlikeArticle(articleId: string, userId: string): Promise<void> {
+    const articleDocRef = doc(this.firestore, "articles", articleId);
+
+    return updateDoc(articleDocRef, {
+      likes: increment(-1),
+      likedBy: arrayRemove(userId),
+    });
+  }
+
+  resetPagination(): void {
     this.lastDoc = null;
   }
 }
