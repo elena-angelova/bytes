@@ -15,7 +15,7 @@ import {
 } from "../../types";
 import { AuthService } from "../../services/auth.service";
 import { Timestamp } from "@angular/fire/firestore";
-import { ArticlesService } from "../../services/articles.service";
+import { ArticleService } from "../../services/article.service";
 import { Router } from "@angular/router";
 import { LoaderComponent } from "../../shared/loader/loader";
 import { ErrorMessageComponent } from "../../shared/error-message/error-message";
@@ -56,14 +56,18 @@ export class ArticleCreateComponent {
   });
 
   firebaseErrorMessagesMap: Record<string, string> = {
-    "auth/internal-error": "Something went wrong. Please try again.",
-    "auth/network-request-failed":
-      "Network error. Please check your internet connection.",
+    internal: "Something went wrong. Please try again.",
+    "permission-denied": "You don't have permission to perform this action.",
+    "deadline-exceeded":
+      "Request timed out. Please check your connection and try again.",
+    unavailable:
+      "Service is temporarily unavailable. Please check your connection or try again later.",
+    unauthenticated: "You need to be signed in to perform this action.",
   };
 
   constructor(
     private authService: AuthService,
-    private articleService: ArticlesService,
+    private articleService: ArticleService,
     private uploadService: UploadService,
     private router: Router
   ) {}

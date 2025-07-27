@@ -1,9 +1,9 @@
 import { Component, OnInit } from "@angular/core";
 import { SectionTitleComponent } from "../../shared/section-title/section-title";
 import { ArticleGridComponent } from "../../features/article/article-grid/article-grid";
-import { ArticlesService } from "../../services/articles.service";
+import { ArticleService } from "../../services/article.service";
 import { ActivatedRoute, RouterLink } from "@angular/router";
-import { UsersService } from "../../services/users.service";
+import { UserService } from "../../services/user.service";
 import { tap } from "rxjs";
 import { Article, User } from "../../types";
 import { DatePipe } from "@angular/common";
@@ -34,8 +34,8 @@ export class AuthorDetailsComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private articleService: ArticlesService,
-    private userService: UsersService,
+    private articleService: ArticleService,
+    private userService: UserService,
     private authService: AuthService
   ) {}
 

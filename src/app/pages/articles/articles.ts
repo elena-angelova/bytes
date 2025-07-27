@@ -6,7 +6,7 @@ import {
   ViewChild,
 } from "@angular/core";
 import { Article } from "../../types";
-import { ArticlesService } from "../../services/articles.service";
+import { ArticleService } from "../../services/article.service";
 import { Router } from "@angular/router";
 import { take } from "rxjs";
 import { ArticleCategoryFilterComponent } from "../../features/article/article-category-filter/article-category-filter";
@@ -38,10 +38,7 @@ export class ArticlesComponent implements OnInit, AfterViewInit {
 
   @ViewChild("scrollAnchor") scrollAnchor!: ElementRef;
 
-  constructor(
-    private articleService: ArticlesService,
-    private router: Router
-  ) {}
+  constructor(private articleService: ArticleService, private router: Router) {}
 
   ngOnInit(): void {
     this.articleService.resetPagination();

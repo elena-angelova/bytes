@@ -21,6 +21,7 @@ export class ArticleHeaderComponent {
     likedBy: string[] | undefined;
     heartIcon: HTMLElement;
   }>();
+  @Output() delete = new EventEmitter<void>();
 
   onAuthorClick(authorId: string | undefined) {
     this.openAuthorDetails.emit(authorId);
@@ -28,5 +29,9 @@ export class ArticleHeaderComponent {
 
   onLikeClick(likedBy: string[] | undefined, heartIcon: HTMLElement): void {
     this.likeClick.emit({ likedBy, heartIcon });
+  }
+
+  onDelete() {
+    this.delete.emit();
   }
 }

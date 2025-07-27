@@ -1,0 +1,23 @@
+:host {
+  flex: 1 1 100%;
+}
+
+button {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 3.7rem;
+  border: none;
+  border-radius: 0.5rem;
+  color: var(--secondary-button-text);
+  background-color: var(--secondary-button-bg);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    background-color: var(--secondary-button-hover-bg);
+  }
+}

@@ -9,7 +9,7 @@ import {
   User,
 } from "@angular/fire/auth";
 import { Observable } from "rxjs";
-import { UsersService } from "./users.service";
+import { UserService } from "./user.service";
 
 @Injectable({
   providedIn: "root",
@@ -17,7 +17,7 @@ import { UsersService } from "./users.service";
 export class AuthService {
   readonly currentUser$!: Observable<User | null>;
 
-  constructor(private auth: Auth, private usersService: UsersService) {
+  constructor(private auth: Auth, private usersService: UserService) {
     this.currentUser$ = user(this.auth);
   }
 

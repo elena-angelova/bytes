@@ -4,6 +4,7 @@ import {
   collection,
   collectionData,
   CollectionReference,
+  deleteDoc,
   doc,
   docData,
   DocumentReference,
@@ -29,7 +30,7 @@ import { from, map, Observable } from "rxjs";
 @Injectable({
   providedIn: "root",
 })
-export class ArticlesService {
+export class ArticleService {
   private readonly pageSize = 9;
   private lastDoc: QueryDocumentSnapshot<DocumentData> | null = null;
 
@@ -136,6 +137,12 @@ export class ArticlesService {
     return updateDoc(articleDocRef, {
       ...data,
     });
+  }
+
+  deleteArticle(articleId: string): Promise<void> {
+    const articleDocRef = doc(this.firestore, "articles", articleId);
+
+    return deleteDoc(articleDocRef);
   }
 
   resetPagination(): void {

@@ -1,6 +1,7 @@
 <div class="modal-wrapper">
   <div class="title">{{ title }}</div>
 
+  @if (form && fields) {
   <form [formGroup]="form">
     @for(field of fields | keyvalue: preserveOrder; track $index) {
     @if(field.value.type === "checkbox") {
@@ -39,11 +40,29 @@
     }
 
     <app-primary-button
-      (click)="onSubmit()"
       [btnText]="btnText"
       [isLoading]="isLoading"
+      (click)="onSubmit()"
     ></app-primary-button>
   </form>
+  } @else {
+  <p class="confirmation-message" [innerHTML]="confirmationMessage"></p>
+
+  @if (serverErrorMessage) {
+  <app-error-message
+    [serverErrorMessage]="serverErrorMessage"
+  ></app-error-message>
+  }
+
+  <div class="actions">
+    <app-secondary-button (click)="onCancel()"></app-secondary-button>
+    <app-primary-button
+      [btnText]="btnText"
+      [isLoading]="isLoading"
+      (click)="onSubmit()"
+    ></app-primary-button>
+  </div>
+  }
 
   <ng-content select="[modal-footer]"></ng-content>
 </div>

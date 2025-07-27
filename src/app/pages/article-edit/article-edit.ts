@@ -7,7 +7,7 @@ import {
   Validators,
 } from "@angular/forms";
 import { AuthService } from "../../services/auth.service";
-import { ArticlesService } from "../../services/articles.service";
+import { ArticleService } from "../../services/article.service";
 import { UploadService } from "../../services/upload.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { map, Observable, tap } from "rxjs";
@@ -62,14 +62,18 @@ export class ArticleEditComponent implements OnInit {
   });
 
   firebaseErrorMessagesMap: Record<string, string> = {
-    "auth/internal-error": "Something went wrong. Please try again.",
-    "auth/network-request-failed":
-      "Network error. Please check your internet connection.",
+    internal: "Something went wrong. Please try again.",
+    "permission-denied": "You don't have permission to perform this action.",
+    "deadline-exceeded":
+      "Request timed out. Please check your connection and try again.",
+    unavailable:
+      "Service is temporarily unavailable. Please check your connection or try again later.",
+    unauthenticated: "You need to be signed in to perform this action.",
   };
 
   constructor(
     private authService: AuthService,
-    private articleService: ArticlesService,
+    private articleService: ArticleService,
     private uploadService: UploadService,
     private router: Router,
     private route: ActivatedRoute,
@@ -143,6 +147,7 @@ export class ArticleEditComponent implements OnInit {
 
       const currentUser = this.authService.getCurrentUser();
       const authorId: string | undefined = currentUser?.uid;
+      //! Do I need this check as well? I will have a route guard for the buttons and the Firestore rules also don't allow non-authors to update.
       const isOwner = authorId === this.article.authorId;
 
       if (authorId && isOwner) {
@@ -173,10 +178,10 @@ export class ArticleEditComponent implements OnInit {
               next: (articleData) => {
                 this.onEdit(articleData);
               },
-              error: (err) => {}, //! Add error handling if there's no authorId (no logged in user) and for Cloudinary errors
+              error: (err) => {}, //! Add error handling for Cloudinary errors
             });
         }
-      }
+      } //! Add error handling if there's no authorId (no logged in user)
     } else {
       this.isFormInvalid = true;
       this.editArticleForm.markAllAsTouched();

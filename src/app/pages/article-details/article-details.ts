@@ -1,13 +1,14 @@
 import { Component, OnInit } from "@angular/core";
 import { ArticleHeaderComponent } from "../../features/article/article-header/article-header";
 import { ArticleContentComponent } from "../../features/article/article-content/article-content";
-import { ArticlesService } from "../../services/articles.service";
+import { ArticleService } from "../../services/article.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Article } from "../../types";
 import { Observable, Subscription, tap } from "rxjs";
 import { LoaderComponent } from "../../shared/loader/loader";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { AuthService } from "../../services/auth.service";
+import { ModalService } from "../../services/modal.service";
 
 @Component({
   selector: "app-article-details",
@@ -30,10 +31,11 @@ export class ArticleDetailsComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private articleService: ArticlesService,
+    private articleService: ArticleService,
+    private modalService: ModalService,
     private route: ActivatedRoute,
-    private sanitizer: DomSanitizer,
-    private router: Router
+    private router: Router,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
@@ -104,5 +106,9 @@ export class ArticleDetailsComponent implements OnInit {
     } catch (error) {
       //! Add error handling
     }
+  }
+
+  onDeleteClick(): void {
+    this.modalService.openArticleDeleteModal(this.articleId);
   }
 }

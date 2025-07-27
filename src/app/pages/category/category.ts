@@ -1,6 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { Article } from "../../types";
-import { ArticlesService } from "../../services/articles.service";
+import { ArticleService } from "../../services/article.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { tap } from "rxjs";
 import { SectionTitleComponent } from "../../shared/section-title/section-title";
@@ -25,7 +25,7 @@ export class CategoryComponent implements OnInit {
   isLoading: boolean = true;
 
   constructor(
-    private articleService: ArticlesService,
+    private articleService: ArticleService,
     private route: ActivatedRoute,
     private router: Router
   ) {}

@@ -8,6 +8,7 @@
   [articleId]="articleId"
   (openAuthorDetails)="onAuthorClick($event)"
   (likeClick)="onLikeClick($event)"
+  (delete)="onDeleteClick()"
 ></app-article-header>
 <app-article-content
   [sanitizedContent]="sanitizedContent"

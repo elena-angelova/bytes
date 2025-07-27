@@ -6,4 +6,6 @@ import { Component } from "@angular/core";
   templateUrl: "./secondary-button.html",
   styleUrl: "./secondary-button.css",
 })
-export class SecondaryButtonComponent {}
+export class SecondaryButtonComponent {
+  btnText: string = "Cancel";
+}

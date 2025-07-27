@@ -4,12 +4,14 @@ import { PrimaryButtonComponent } from "../buttons/primary-button/primary-button
 import { ReactiveFormsModule, FormGroup } from "@angular/forms";
 import { ErrorMessageComponent } from "../error-message/error-message";
 import { KeyValuePipe } from "@angular/common";
+import { SecondaryButtonComponent } from "../buttons/secondary-button/secondary-button";
 
 @Component({
   selector: "app-modal",
   imports: [
     ReactiveFormsModule,
     PrimaryButtonComponent,
+    SecondaryButtonComponent,
     ErrorMessageComponent,
     KeyValuePipe,
   ],
@@ -21,18 +23,25 @@ export class ModalComponent {
   @Input() btnText!: string;
   @Input() isLoading: boolean = false;
 
-  @Input() form!: FormGroup;
-  @Input() fields!: FormFields;
-  @Input() fieldLayout!: string;
+  @Input() confirmationMessage?: string;
 
-  @Input() errorMessages!: string[];
+  @Input() form?: FormGroup;
+  @Input() fields?: FormFields;
+  @Input() fieldLayout?: string;
+
+  @Input() errorMessages: string[] = [];
   @Input() serverErrorMessage!: string;
 
   @Output() submit = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
 
   preserveOrder = () => 0;
 
   onSubmit(): void {
     this.submit.emit();
+  }
+
+  onCancel(): void {
+    this.cancel.emit();
   }
 }

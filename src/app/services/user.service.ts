@@ -7,7 +7,7 @@ import { setDoc, Timestamp } from "firebase/firestore";
 @Injectable({
   providedIn: "root",
 })
-export class UsersService {
+export class UserService {
   constructor(private firestore: Firestore) {}
 
   getUserData(uid: string): Observable<User | undefined> {

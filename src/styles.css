@@ -19,6 +19,9 @@
   --primary-button-bg: #2e2e2e;
   --primary-button-text: white;
   --primary-button-hover-bg: #373737;
+  --secondary-button-bg: #ccc;
+  --secondary-button-text: #2e2e2e;
+  --secondary-button-hover-bg: #ddd;
   --span-text: #1232ff;
   --search-bar-bg: #eee;
   --search-bar-text: #8f8f8f;
@@ -43,6 +46,9 @@ body.dark-mode {
   --primary-button-bg: #3a4fcb;
   --primary-button-text: #ededed;
   --primary-button-hover-bg: #4257c9;
+  --secondary-button-bg: #2e2e2e;
+  --secondary-button-text: white;
+  --secondary-button-hover-bg: #373737;
   --span-text: #3a4fcb;
   --search-bar-bg: #2c2c2c;
   --search-bar-text: #8f8f8f;
