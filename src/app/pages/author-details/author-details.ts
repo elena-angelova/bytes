@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { SectionTitleComponent } from "../../ui/section-title/section-title";
+import { SectionTitleComponent } from "../../shared/section-title/section-title";
 import { ArticleGridComponent } from "../../features/article/article-grid/article-grid";
 import { ArticlesService } from "../../services/articles.service";
 import { ActivatedRoute, RouterLink } from "@angular/router";
@@ -7,8 +7,9 @@ import { UsersService } from "../../services/users.service";
 import { tap } from "rxjs";
 import { Article, User } from "../../types";
 import { DatePipe } from "@angular/common";
-import { LoaderComponent } from "../../ui/loader/loader";
-import { EmptyStateComponent } from "../../ui/empty-state/empty-state";
+import { LoaderComponent } from "../../shared/loader/loader";
+import { EmptyStateComponent } from "../../shared/empty-state/empty-state";
+import { AuthService } from "../../services/auth.service";
 
 @Component({
   selector: "app-author-details",
@@ -34,13 +35,15 @@ export class AuthorDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private articleService: ArticlesService,
-    private userService: UsersService
+    private userService: UsersService,
+    private authService: AuthService
   ) {}
 
   //! Implement infinite scroll
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       this.authorId = params.get("userId")!;
+      this.currentUserId = this.authService.getCurrentUser()?.uid;
 
       this.userService
         .getUserData(this.authorId)

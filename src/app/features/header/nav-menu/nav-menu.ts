@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { MenuDropdownComponent } from "../menu-dropdown/menu-dropdown";
-import { CtaButtonComponent } from "../../../ui/buttons/cta-button/cta-button";
+import { CtaButtonComponent } from "../../../shared/buttons/cta-button/cta-button";
 import {
   animate,
   state,

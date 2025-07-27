@@ -1,7 +1,7 @@
 import { Component, inject } from "@angular/core";
-import { ErrorMessages, FormFieldConfig, LoginFormValues } from "../../types";
+import { ErrorMessages, FormFields, LoginFormValues } from "../../types";
 import { formFields } from "../../config";
-import { ModalComponent } from "../../ui/modal/modal";
+import { ModalComponent } from "../../shared/modal/modal";
 import { ModalService } from "../../services/modal.service";
 import { AuthService } from "../../services/auth.service";
 import { Router } from "@angular/router";
@@ -27,7 +27,7 @@ export class LoginModalComponent {
   isFormInvalid: boolean = false;
   errorMessages: string[] = [];
 
-  fields: FormFieldConfig = {
+  fields: FormFields = {
     email: formFields["email"],
     password: formFields["password"],
   };

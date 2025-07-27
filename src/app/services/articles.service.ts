@@ -23,7 +23,7 @@ import {
   DocumentData,
   QueryDocumentSnapshot,
 } from "firebase/firestore";
-import { Article } from "../types";
+import { Article, ArticleUpdate } from "../types";
 import { from, map, Observable } from "rxjs";
 
 @Injectable({
@@ -112,7 +112,7 @@ export class ArticlesService {
     return addDoc(articlesRef, data);
   }
 
-  likeArticle(articleId: string, userId: string) {
+  likeArticle(articleId: string, userId: string): Promise<void> {
     const articleDocRef = doc(this.firestore, "articles", articleId);
 
     return updateDoc(articleDocRef, {
@@ -127,6 +127,14 @@ export class ArticlesService {
     return updateDoc(articleDocRef, {
       likes: increment(-1),
       likedBy: arrayRemove(userId),
+    });
+  }
+
+  editArticle(data: ArticleUpdate, articleId: string): Promise<void> {
+    const articleDocRef = doc(this.firestore, "articles", articleId);
+
+    return updateDoc(articleDocRef, {
+      ...data,
     });
   }
 

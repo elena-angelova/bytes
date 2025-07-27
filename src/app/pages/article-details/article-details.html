@@ -4,6 +4,8 @@
 <app-article-header
   [article$]="article$"
   [hasLiked]="hasLiked"
+  [currentUserId]="currentUserId"
+  [articleId]="articleId"
   (openAuthorDetails)="onAuthorClick($event)"
   (likeClick)="onLikeClick($event)"
 ></app-article-header>

@@ -1,11 +1,7 @@
 import { Component, inject } from "@angular/core";
-import {
-  ErrorMessages,
-  FormFieldConfig,
-  RegisterFormValues,
-} from "../../types";
+import { ErrorMessages, FormFields, RegisterFormValues } from "../../types";
 import { formFields } from "../../config";
-import { ModalComponent } from "../../ui/modal/modal";
+import { ModalComponent } from "../../shared/modal/modal";
 import { ModalService } from "../../services/modal.service";
 import { AuthService } from "../../services/auth.service";
 import { Router } from "@angular/router";
@@ -32,7 +28,7 @@ export class RegisterModalComponent {
   errorMessages: string[] = [];
   passwordPattern: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/;
 
-  fields: FormFieldConfig = {
+  fields: FormFields = {
     firstName: formFields["firstName"],
     lastName: formFields["lastName"],
     email: formFields["email"],

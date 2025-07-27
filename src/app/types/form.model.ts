@@ -12,7 +12,7 @@ export interface LoginFormValues {
   password: string;
 }
 
-export interface CreateFormValues {
+export interface ArticleFormValues {
   title: string;
   category: string;
   thumbnailUrl: string;

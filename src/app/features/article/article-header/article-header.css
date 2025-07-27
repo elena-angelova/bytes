@@ -1,4 +1,4 @@
-.container {
+.header-container {
   display: flex;
   flex-direction: column;
   gap: 1.3rem;
@@ -9,11 +9,75 @@
   color: var(--button-bg);
 }
 
-.wrapper {
+.author-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.controls {
+  display: flex;
+  gap: 1rem;
+
+  .edit,
+  .delete {
+    display: flex;
+    gap: 0.4rem;
+    align-items: center;
+    cursor: pointer;
+    color: var(--search-bar-text);
+    padding: 0.5rem 0.7rem;
+    border-radius: 0.5rem;
+
+    svg {
+      font-weight: 400;
+      fill: var(--search-bar-text);
+      width: 0.9rem;
+      height: 0.9rem;
+    }
+
+    span {
+      font-size: 0.7rem;
+      font-weight: 500;
+    }
+  }
+
+  .edit:hover {
+    color: var(--button-hover-bg);
+
+    svg {
+      fill: var(--button-hover-bg);
+    }
+  }
+
+  .delete:hover {
+    color: #d96766;
+
+    svg {
+      fill: #d96766;
+    }
+  }
+
+  .edit-wrapper {
+    position: relative;
+
+    &::after {
+      content: "";
+      display: block;
+      width: 1px;
+      height: 1.3rem;
+      background-color: var(--search-bar-text);
+      position: absolute;
+      top: 5px;
+      right: -10px;
+    }
+  }
+}
+
+.title-toolbar-wrapper {
   display: flex;
   flex-direction: column;
   gap: 1.2rem;
-  border-bottom: 2px solid var(--button-bg);
   padding-bottom: 2rem;
 }
 
@@ -23,7 +87,7 @@
   line-height: 1.4;
 }
 
-.author-actions {
+.toolbar {
   display: flex;
   align-items: center;
   gap: 2rem;
@@ -49,38 +113,47 @@
     .likes-count {
       font-size: 0.8rem;
       font-weight: bold;
-      min-width: 3ch;
+      min-width: 1ch;
     }
 
-    .heart {
+    .heart-icon {
       cursor: pointer;
       fill: none;
       stroke: var(--text-color);
       stroke-width: 6;
-    }
 
-    .heart.liked {
-      fill: var(--button-bg);
-      stroke: var(--button-bg);
-      stroke-width: 6;
+      &.liked {
+        fill: var(--button-bg);
+        stroke: var(--button-bg);
+        stroke-width: 6;
+      }
     }
   }
 
-  .bookmark {
+  .bookmark-icon {
     cursor: pointer;
     display: flex;
     align-items: center;
+    fill: none;
+    stroke: var(--text-color);
+    stroke-width: 45;
 
-    .bookmark.unchecked {
-      fill: none;
-      stroke: var(--text-color);
-      stroke-width: 45;
-    }
-
-    .bookmark.checked {
+    &.checked {
       fill: var(--button-bg);
       stroke: var(--button-bg);
       stroke-width: 45;
     }
+  }
+}
+
+.cover-img-wrapper {
+  width: 100%;
+  aspect-ratio: 1.7;
+  border-radius: 1rem;
+  overflow: hidden;
+
+  img {
+    height: 100%;
+    object-fit: cover;
   }
 }

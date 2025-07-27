@@ -1,6 +1,6 @@
-import { FormFieldConfig } from "../types";
+import { FormFields } from "../types";
 
-export const formFields: FormFieldConfig = {
+export const formFields: FormFields = {
   firstName: {
     name: "firstName",
     id: "firstName",

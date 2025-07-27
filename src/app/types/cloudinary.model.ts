@@ -16,6 +16,7 @@ export interface CloudinaryUploadResponse {
   placeholder: boolean;
   url: string;
   secure_url: string;
-  folder?: string;
+  asset_folder?: string;
   original_filename: string;
+  display_name: string;
 }

@@ -1,5 +1,5 @@
 import { Component, input, Input } from "@angular/core";
-import { FormAttributes } from "../../types";
+import { FieldAttributes } from "../../types";
 
 @Component({
   selector: "app-form-field",
@@ -8,5 +8,5 @@ import { FormAttributes } from "../../types";
   styleUrl: "./form-field.css",
 })
 export class FormFieldComponent {
-  @Input() field!: FormAttributes;
+  @Input() field!: FieldAttributes;
 }

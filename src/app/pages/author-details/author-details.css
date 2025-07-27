@@ -27,13 +27,15 @@ aside {
     align-items: center;
     margin-top: 1.5rem;
 
-    .edit-btn {
-      padding: 0.25rem;
-      border-radius: 0.5rem;
-      font-size: 0.7rem;
-      font-weight: 400;
+    .edit-icon-btn {
       cursor: pointer;
       fill: var(--search-bar-text);
+      width: 1rem;
+      height: 1rem;
+    }
+
+    .edit-icon-btn:hover {
+      fill: var(--button-hover-bg);
     }
   }
 

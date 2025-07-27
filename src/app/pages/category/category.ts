@@ -3,10 +3,10 @@ import { Article } from "../../types";
 import { ArticlesService } from "../../services/articles.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { tap } from "rxjs";
-import { SectionTitleComponent } from "../../ui/section-title/section-title";
+import { SectionTitleComponent } from "../../shared/section-title/section-title";
 import { ArticleGridComponent } from "../../features/article/article-grid/article-grid";
-import { EmptyStateComponent } from "../../ui/empty-state/empty-state";
-import { LoaderComponent } from "../../ui/loader/loader";
+import { EmptyStateComponent } from "../../shared/empty-state/empty-state";
+import { LoaderComponent } from "../../shared/loader/loader";
 
 @Component({
   selector: "app-category",

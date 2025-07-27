@@ -25,7 +25,7 @@
 
       <div class="upload-input">
         <label for="file-upload">
-          <span>{{ fileName || "Upload a thumbnail" }}</span>
+          <span>{{ fileName || "Upload a cover image" }}</span>
           <div class="btn upload-icon-btn">
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -47,12 +47,10 @@
           </div>
         </label>
         <input
-          #fileUpload
           id="file-upload"
           type="file"
           hidden
           accept="image/*"
-          formControlName="thumbnailUrl"
           (change)="onFileSelected($event)"
         />
       </div>
@@ -69,15 +67,27 @@
     </div>
   </div>
 
-  <div class="title-input">
-    <textarea
-      formControlName="title"
-      #titleTextarea
-      rows="1"
-      name="title"
-      id="title"
-      placeholder="Title"
-      (input)="resizeTitleField()"
-    ></textarea>
+  <div class="title-image-container">
+    <div class="title-container">
+      <textarea
+        formControlName="title"
+        #titleTextarea
+        rows="1"
+        name="title"
+        id="title"
+        placeholder="Title"
+        (input)="resizeTitleField()"
+      ></textarea>
+    </div>
+
+    <div class="image-container">
+      @if (previewFileUrl) {
+      <div class="cover-img-wrapper">
+        <img [src]="previewFileUrl" alt="Article cover image" />
+      </div>
+      }
+
+      <hr />
+    </div>
   </div>
 </div>

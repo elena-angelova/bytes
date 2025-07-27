@@ -1,8 +1,8 @@
-export interface FormFieldConfig {
-  [attribute: string]: FormAttributes;
+export interface FormFields {
+  [field: string]: FieldAttributes;
 }
 
-export interface FormAttributes {
+export interface FieldAttributes {
   name: string;
   id: string;
   label: string;

@@ -1,0 +1,21 @@
+@if (isLoading) {
+<app-loader></app-loader>
+} @else if (serverErrorMessage) {
+<app-error-message
+  [serverErrorMessage]="serverErrorMessage"
+></app-error-message>
+} @else {
+<form [formGroup]="createArticleForm">
+  <app-article-header-form
+    [articleCategories]="articleCategories"
+    [form]="createArticleForm"
+    [isFormInvalid]="isFormInvalid"
+    [fileName]="fileName"
+    [previewFileUrl]="previewFileUrl"
+    (fileSelected)="onFileSelected($event)"
+    (submit)="onFormSubmit()"
+  ></app-article-header-form>
+
+  <app-text-editor [form]="createArticleForm"></app-text-editor>
+</form>
+}

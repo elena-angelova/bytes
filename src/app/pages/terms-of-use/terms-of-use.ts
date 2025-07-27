@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { SectionTitleComponent } from "../../ui/section-title/section-title";
+import { SectionTitleComponent } from "../../shared/section-title/section-title";
 import { RouterLink } from "@angular/router";
 
 @Component({

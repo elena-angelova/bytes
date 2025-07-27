@@ -13,3 +13,11 @@ export interface Article {
   createdAt: Timestamp;
   id?: string;
 }
+
+export interface ArticleUpdate {
+  category: string;
+  content: string;
+  preview: string;
+  thumbnailUrl: string;
+  title: string;
+}

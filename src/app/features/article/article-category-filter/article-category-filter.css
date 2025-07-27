@@ -12,7 +12,10 @@
 
     li {
       display: block;
-      cursor: pointer;
+
+      a {
+        cursor: pointer;
+      }
 
       a:hover {
         color: #8f8f8f;
@@ -56,8 +59,11 @@ hr {
 
     li {
       list-style: none;
-      cursor: pointer;
       height: fit-content;
+
+      a {
+        cursor: pointer;
+      }
 
       a:hover {
         color: #8f8f8f;

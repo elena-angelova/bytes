@@ -1,15 +1,51 @@
 <ng-container *ngIf="article$ | async as article">
-  <div class="container">
-    <div class="created-date">
-      {{ article?.createdAt?.toDate() | date : "MMM d, y" }}
+  <div class="header-container">
+    <div class="author-controls">
+      <div class="created-date">
+        {{ article?.createdAt?.toDate() | date : "MMM d, y" }}
+      </div>
+
+      @if (currentUserId === article.authorId) {
+      <div class="controls">
+        <div class="edit-wrapper">
+          <div class="edit" [routerLink]="['/articles', articleId, 'edit']">
+            <svg
+              class="edit-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="1 1 22 22"
+            >
+              <path
+                d="M11.007,9.815l-.956,2.869a1.007,1.007,0,0,0,1.265,1.264l2.869-.956a1.007,1.007,0,0,0,.39-.241l6.736-6.736a2.354,2.354,0,0,0,0-3.327h0a2.356,2.356,0,0,0-3.326,0L11.249,9.425A1,1,0,0,0,11.007,9.815Z"
+              />
+              <path
+                d="M21,9a1,1,0,0,0-1,1v7a3,3,0,0,1-3,3H7a3,3,0,0,1-3-3V7A3,3,0,0,1,7,4h7a1,1,0,0,0,0-2H7A5.006,5.006,0,0,0,2,7V17a5.006,5.006,0,0,0,5,5H17a5.006,5.006,0,0,0,5-5V10A1,1,0,0,0,21,9Z"
+              />
+            </svg>
+            <span>Edit</span>
+          </div>
+        </div>
+        <div class="delete">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            version="1.1"
+            viewBox="2 3 28 26"
+          >
+            <path
+              d="M27,6h-2h-4V5c0-1.6542969-1.3457031-3-3-3h-4c-1.6542969,0-3,1.3457031-3,3v1H7H5C4.4477539,6,4,6.4477539,4,7  s0.4477539,1,1,1h1v16c0,3.3085938,2.6914063,6,6,6h8c3.3085938,0,6-2.6914063,6-6V8h1c0.5522461,0,1-0.4477539,1-1  S27.5522461,6,27,6z M13,5c0-0.5512695,0.4487305-1,1-1h4c0.5512695,0,1,0.4487305,1,1v1h-6V5z M24,24c0,2.2055664-1.7944336,4-4,4  h-8c-2.2055664,0-4-1.7944336-4-4V8h4h8h4V24z M20,12v12c0,0.5522461-0.4477539,1-1,1s-1-0.4477539-1-1V12  c0-0.5522461,0.4477539-1,1-1S20,11.4477539,20,12z M14,12v12c0,0.5522461-0.4477539,1-1,1s-1-0.4477539-1-1V12  c0-0.5522461,0.4477539-1,1-1S14,11.4477539,14,12z"
+            />
+          </svg>
+          <span>Delete</span>
+        </div>
+      </div>
+      }
     </div>
 
-    <div class="wrapper">
+    <div class="title-toolbar-wrapper">
       <h2 class="title">
         {{ article?.title }}
       </h2>
 
-      <div class="author-actions">
+      <div class="toolbar">
         <div class="author">
           by
           <span (click)="onAuthorClick(article?.authorId)">{{
@@ -26,8 +62,7 @@
             width="18"
             height="18"
             viewBox="10 23 80 55"
-            id="heartIcon"
-            [class]="hasLiked ? 'heart liked' : 'heart'"
+            [class]="hasLiked ? 'heart-icon liked' : 'heart-icon'"
           >
             <g transform="translate(0,-952.36218)">
               <path
@@ -46,8 +81,7 @@
             viewBox="0 0 640 640"
             width="19"
             height="19"
-            id="bookmarkIcon"
-            class="bookmark unchecked"
+            class="bookmark-icon unchecked"
           >
             <path
               d="M192 64C156.7 64 128 92.7 128 128L128 544C128 555.5 134.2 566.2 144.2 571.8C154.2 577.4 166.5 577.3 176.4 571.4L320 485.3L463.5 571.4C473.4 577.3 485.7 577.5 495.7 571.8C505.7 566.1 512 555.5 512 544L512 128C512 92.7 483.3 64 448 64L192 64z"
@@ -56,65 +90,9 @@
         </div>
       </div>
     </div>
-  </div>
-</ng-container>
 
-<!-- @if(article()) {
-<div class="container">
-  <div class="created-date">
-    {{ article()?.createdAt?.toDate() | date : "MMM d, y" }}
-  </div>
-
-  <div class="wrapper">
-    <h2 class="title">
-      {{ article()?.title }}
-    </h2>
-
-    <div class="author-actions">
-      <div class="author">
-        by
-        <span (click)="onAuthorClick(article()?.authorId)">{{
-          article()?.authorName
-        }}</span>
-      </div>
-
-      <div class="likes">
-        <svg
-          (click)="onLikeClick(article()?.likedBy)"
-          xmlns="http://www.w3.org/2000/svg"
-          version="1.1"
-          width="18"
-          height="18"
-          viewBox="10 23 80 55"
-          id="heartIcon"
-          class="heart unliked"
-        >
-          <g transform="translate(0,-952.36218)">
-            <path
-              d="m 18.356844,974.98986 c -7.1459,7.50345 -7.139,19.5777 0,27.08854 l 31.6235,33.2838 c 10.5534,-11.0817 21.1069,-22.1634 31.6603,-33.2453 7.1458,-7.50359 7.1458,-19.58504 0,-27.08864 -7.1458,-7.50358 -18.6513,-7.50375 -25.7972,0 l -5.8264,6.11805 -5.863,-6.15645 c -7.1459,-7.50359 -18.6515,-7.50359 -25.7972,0 z"
-            />
-          </g>
-        </svg>
-        <div class="likes-count">
-          {{ article()?.likes }}
-        </div>
-      </div>
-
-      <div class="bookmark">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 640 640"
-          width="19"
-          height="19"
-          id="bookmarkIcon"
-          class="bookmark unchecked"
-        >
-          <path
-            d="M192 64C156.7 64 128 92.7 128 128L128 544C128 555.5 134.2 566.2 144.2 571.8C154.2 577.4 166.5 577.3 176.4 571.4L320 485.3L463.5 571.4C473.4 577.3 485.7 577.5 495.7 571.8C505.7 566.1 512 555.5 512 544L512 128C512 92.7 483.3 64 448 64L192 64z"
-          />
-        </svg>
-      </div>
+    <div class="cover-img-wrapper">
+      <img [src]="article.thumbnailUrl" alt="Article cover image" />
     </div>
   </div>
-</div>
-} -->
+</ng-container>

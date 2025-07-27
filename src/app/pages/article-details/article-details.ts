@@ -5,7 +5,7 @@ import { ArticlesService } from "../../services/articles.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Article } from "../../types";
 import { Observable, Subscription, tap } from "rxjs";
-import { LoaderComponent } from "../../ui/loader/loader";
+import { LoaderComponent } from "../../shared/loader/loader";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { AuthService } from "../../services/auth.service";
 
@@ -17,10 +17,11 @@ import { AuthService } from "../../services/auth.service";
 })
 export class ArticleDetailsComponent implements OnInit {
   article$!: Observable<Article | undefined>;
-  article!: Article | undefined;
+  article!: Article;
   articleId!: string;
   sanitizedContent: SafeHtml | null = null;
 
+  currentUserId!: string | undefined;
   isLoading: boolean = true;
   hasLiked: boolean = false;
 
@@ -38,6 +39,7 @@ export class ArticleDetailsComponent implements OnInit {
   ngOnInit(): void {
     this.routeSub = this.route.paramMap.subscribe((params) => {
       this.articleId = params.get("articleId")!;
+      this.currentUserId = this.authService.getCurrentUser()?.uid;
 
       this.article$ = this.articleService.getSingleArticle(this.articleId).pipe(
         tap((data) => {
@@ -50,8 +52,6 @@ export class ArticleDetailsComponent implements OnInit {
       );
 
       this.articleSub = this.article$.subscribe((articleData) => {
-        this.article = articleData;
-
         const currentUserId = this.authService.getCurrentUser()?.uid;
 
         if (!articleData || !currentUserId) {
@@ -59,26 +59,28 @@ export class ArticleDetailsComponent implements OnInit {
           return;
         }
 
+        this.article = articleData;
         this.hasLiked = articleData.likedBy?.includes(currentUserId);
       });
     });
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.routeSub.unsubscribe();
     this.articleSub.unsubscribe();
   }
 
-  onAuthorClick(authorId: string | undefined) {
+  onAuthorClick(authorId: string | undefined): void {
     this.router.navigate(["/users", authorId]);
   }
 
   async onLikeClick(data: {
     likedBy: string[] | undefined;
     heartIcon: HTMLElement;
-  }) {
+  }): Promise<void> {
     const currentUserId = this.authService.getCurrentUser()?.uid;
 
+    //* Make sure that when a user updates the likes, they can only arrayUnion() their own UID
     if (!data.likedBy || !currentUserId) {
       //! Add error handling
       return;

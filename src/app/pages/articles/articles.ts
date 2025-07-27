@@ -11,8 +11,8 @@ import { Router } from "@angular/router";
 import { take } from "rxjs";
 import { ArticleCategoryFilterComponent } from "../../features/article/article-category-filter/article-category-filter";
 import { ArticleGridComponent } from "../../features/article/article-grid/article-grid";
-import { LoaderComponent } from "../../ui/loader/loader";
-import { EmptyStateComponent } from "../../ui/empty-state/empty-state";
+import { LoaderComponent } from "../../shared/loader/loader";
+import { EmptyStateComponent } from "../../shared/empty-state/empty-state";
 
 @Component({
   selector: "app-articles",

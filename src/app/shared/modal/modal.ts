@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { FormFieldConfig } from "../../types";
+import { FormFields } from "../../types";
 import { PrimaryButtonComponent } from "../buttons/primary-button/primary-button";
 import { ReactiveFormsModule, FormGroup } from "@angular/forms";
 import { ErrorMessageComponent } from "../error-message/error-message";
@@ -22,7 +22,7 @@ export class ModalComponent {
   @Input() isLoading: boolean = false;
 
   @Input() form!: FormGroup;
-  @Input() fields!: FormFieldConfig;
+  @Input() fields!: FormFields;
   @Input() fieldLayout!: string;
 
   @Input() errorMessages!: string[];

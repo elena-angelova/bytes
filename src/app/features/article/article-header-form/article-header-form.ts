@@ -3,22 +3,24 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   Output,
   ViewChild,
 } from "@angular/core";
-import { CtaButtonComponent } from "../../../ui/buttons/cta-button/cta-button";
+import { CtaButtonComponent } from "../../../shared/buttons/cta-button/cta-button";
 import { FormGroup, ReactiveFormsModule } from "@angular/forms";
 
 @Component({
-  selector: "app-article-meta",
+  selector: "app-article-header-form",
   imports: [ReactiveFormsModule, CtaButtonComponent],
-  templateUrl: "./article-meta.html",
-  styleUrl: "./article-meta.css",
+  templateUrl: "./article-header-form.html",
+  styleUrl: "./article-header-form.css",
 })
-export class ArticleMetaComponent implements AfterViewInit {
+export class ArticleHeaderFormComponent implements AfterViewInit {
   @Input() articleCategories!: string[];
   @Input() fileName!: string;
+  @Input() previewFileUrl!: string;
   @Input() form!: FormGroup;
   @Input() isFormInvalid!: boolean;
 
@@ -26,8 +28,6 @@ export class ArticleMetaComponent implements AfterViewInit {
   @Output() fileSelected = new EventEmitter<File>();
 
   @ViewChild("titleTextarea") textarea!: ElementRef<HTMLTextAreaElement>;
-
-  // *Consider moving this logic to the ArticleEditorComponent
   @ViewChild("popUp") popUp!: ElementRef<HTMLSpanElement>;
 
   ngAfterViewInit(): void {
@@ -35,11 +35,15 @@ export class ArticleMetaComponent implements AfterViewInit {
     this.resizeTitleField();
   }
 
-  // !The field doesn't resize when the viewport width is changed - see how you can fix that
   resizeTitleField() {
     const el = this.textarea.nativeElement;
     el.style.height = "auto";
     el.style.height = el.scrollHeight + "px";
+  }
+
+  @HostListener("window:resize")
+  onWindowResize() {
+    this.resizeTitleField();
   }
 
   onFileSelected(event: Event) {
@@ -47,12 +51,9 @@ export class ArticleMetaComponent implements AfterViewInit {
     const file: File | undefined = input.files?.[0];
 
     if (file) {
-      this.fileName = file.name;
       this.fileSelected.emit(file);
     }
   }
-
-  // *
 
   onSubmit() {
     if (this.isFormInvalid) {

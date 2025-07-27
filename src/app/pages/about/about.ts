@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { CtaButtonComponent } from "../../ui/buttons/cta-button/cta-button";
+import { CtaButtonComponent } from "../../shared/buttons/cta-button/cta-button";
 import {
   animate,
   state,

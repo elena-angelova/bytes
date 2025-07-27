@@ -5,18 +5,20 @@
   [serverErrorMessage]="serverErrorMessage"
 ></app-error-message>
 } @else {
-<form [formGroup]="createArticleForm">
-  <app-article-meta
+<form [formGroup]="editArticleForm">
+  <app-article-header-form
     [articleCategories]="articleCategories"
-    [form]="createArticleForm"
+    [form]="editArticleForm"
     [isFormInvalid]="isFormInvalid"
+    [fileName]="fileName"
+    [previewFileUrl]="previewFileUrl"
     (fileSelected)="onFileSelected($event)"
     (submit)="onFormSubmit()"
-  ></app-article-meta>
+  ></app-article-header-form>
 
   <app-text-editor
-    [form]="createArticleForm"
-    (getRawHTML)="getRawHTML($event)"
+    [form]="editArticleForm"
+    [content]="contentSignal"
   ></app-text-editor>
 </form>
 }

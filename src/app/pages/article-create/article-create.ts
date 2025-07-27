@@ -1,7 +1,7 @@
-import { Component, inject } from "@angular/core";
+import { Component, inject, ViewChild } from "@angular/core";
 import { articleCategories } from "../../config";
-import { ArticleMetaComponent } from "./article-meta/article-meta";
-import { TextEditorComponent } from "./text-editor/text-editor";
+import { ArticleHeaderFormComponent } from "../../features/article/article-header-form/article-header-form";
+import { TextEditorComponent } from "../../features/article/text-editor/text-editor";
 import {
   FormBuilder,
   FormGroup,
@@ -11,14 +11,14 @@ import {
 import {
   Article,
   CloudinaryUploadResponse,
-  CreateFormValues,
+  ArticleFormValues,
 } from "../../types";
 import { AuthService } from "../../services/auth.service";
 import { Timestamp } from "@angular/fire/firestore";
 import { ArticlesService } from "../../services/articles.service";
 import { Router } from "@angular/router";
-import { LoaderComponent } from "../../ui/loader/loader";
-import { ErrorMessageComponent } from "../../ui/error-message/error-message";
+import { LoaderComponent } from "../../shared/loader/loader";
+import { ErrorMessageComponent } from "../../shared/error-message/error-message";
 import DOMPurify from "dompurify";
 import { UploadService } from "../../services/upload.service";
 import { map, Observable } from "rxjs";
@@ -27,20 +27,23 @@ import { map, Observable } from "rxjs";
   selector: "app-article-editor",
   imports: [
     ReactiveFormsModule,
-    ArticleMetaComponent,
+    ArticleHeaderFormComponent,
     TextEditorComponent,
     LoaderComponent,
     ErrorMessageComponent,
   ],
-  templateUrl: "./article-editor.html",
-  styleUrl: "./article-editor.css",
+  templateUrl: "./article-create.html",
+  styleUrl: "./article-create.css",
 })
-export class ArticleEditorComponent {
+export class ArticleCreateComponent {
+  @ViewChild(TextEditorComponent) textEditor!: TextEditorComponent;
+
   articleCategories: string[] = articleCategories;
   isLoading: boolean = false;
 
-  rawHTML!: string;
   thumbnailFile!: File;
+  fileName!: string;
+  previewFileUrl!: string;
 
   isFormInvalid: boolean = false;
   serverErrorMessage!: string;
@@ -49,7 +52,6 @@ export class ArticleEditorComponent {
   createArticleForm: FormGroup = this.formBuilder.group({
     title: ["", Validators.required],
     category: ["", Validators.required],
-    thumbnailUrl: ["", Validators.required],
     content: ["", Validators.required],
   });
 
@@ -66,12 +68,10 @@ export class ArticleEditorComponent {
     private router: Router
   ) {}
 
-  getRawHTML(html: string) {
-    this.rawHTML = html;
-  }
-
   onFileSelected(file: File) {
+    this.fileName = file.name;
     this.thumbnailFile = file;
+    this.previewFileUrl = URL.createObjectURL(file);
   }
 
   uploadThumbnail(): Observable<string> {
@@ -81,12 +81,14 @@ export class ArticleEditorComponent {
   }
 
   onFormSubmit(): void {
-    if (this.createArticleForm.valid) {
+    const content: string = this.textEditor.getHtml();
+
+    if (this.createArticleForm.valid && this.thumbnailFile) {
       this.isFormInvalid = false;
 
-      const formValues: CreateFormValues = this.createArticleForm.value;
+      const sanitizedContent: string = DOMPurify.sanitize(content);
 
-      const content: string = DOMPurify.sanitize(this.rawHTML);
+      const formValues: ArticleFormValues = this.createArticleForm.value;
       const category: string = formValues.category;
       const title: string = formValues.title;
       const preview: string = formValues.content
@@ -98,10 +100,6 @@ export class ArticleEditorComponent {
       const authorId: string | undefined = currentUser?.uid;
       const authorName: string = currentUser?.displayName ?? "";
 
-      console.log(currentUser);
-      console.log(authorName);
-      console.log(authorId);
-
       if (authorId) {
         this.isLoading = true;
 
@@ -109,7 +107,7 @@ export class ArticleEditorComponent {
           authorId,
           authorName,
           category,
-          content,
+          content: sanitizedContent,
           likes: 0,
           likedBy: [],
           preview,
