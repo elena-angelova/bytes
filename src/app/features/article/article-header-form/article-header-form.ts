@@ -25,6 +25,7 @@ export class ArticleHeaderFormComponent implements AfterViewInit {
   @Input() isFormInvalid!: boolean;
 
   @Output() submit = new EventEmitter<void>();
+  @Output() cancel = new EventEmitter<void>();
   @Output() fileSelected = new EventEmitter<File>();
 
   @ViewChild("titleTextarea") textarea!: ElementRef<HTMLTextAreaElement>;
@@ -35,15 +36,15 @@ export class ArticleHeaderFormComponent implements AfterViewInit {
     this.resizeTitleField();
   }
 
+  @HostListener("window:resize")
+  onWindowResize() {
+    this.resizeTitleField();
+  }
+
   resizeTitleField() {
     const el = this.textarea.nativeElement;
     el.style.height = "auto";
     el.style.height = el.scrollHeight + "px";
-  }
-
-  @HostListener("window:resize")
-  onWindowResize() {
-    this.resizeTitleField();
   }
 
   onFileSelected(event: Event) {
@@ -64,5 +65,9 @@ export class ArticleHeaderFormComponent implements AfterViewInit {
     }
 
     this.submit.emit();
+  }
+
+  onCancel() {
+    this.cancel.emit();
   }
 }

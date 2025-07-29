@@ -1,7 +1,7 @@
 <ul>
-  <li (click)="loadMyArticles()"><a>view profile</a></li>
+  <li><a (click)="loadMyArticles()">view profile</a></li>
   <li><a>reading list</a></li>
-  <li><a>settings</a></li>
+  <li><a routerLink="/settings">settings</a></li>
   <li class="logout" (click)="onLogout()">
     <div class="btn logout-icon-btn">
       <svg

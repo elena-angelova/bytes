@@ -13,7 +13,8 @@
     li {
       display: block;
 
-      a {
+      a,
+      svg {
         cursor: pointer;
       }
 

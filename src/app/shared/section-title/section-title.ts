@@ -7,5 +7,5 @@ import { Component, Input } from "@angular/core";
   styleUrl: "./section-title.css",
 })
 export class SectionTitleComponent {
-  @Input() content!: string;
+  @Input() content!: string | null;
 }

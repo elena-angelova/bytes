@@ -9,3 +9,9 @@ export interface User {
   techStack: string;
   currentRole: string;
 }
+
+export interface UserUpdate {
+  bio: string;
+  techStack: string;
+  currentRole: string;
+}

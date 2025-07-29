@@ -1,0 +1,22 @@
+@if (isLoading) {
+<app-loader></app-loader>
+} @else {
+<app-section-title [content]="displayName"></app-section-title>
+<div class="container">
+  <app-profile-details-form
+    [form]="profileDetailsForm"
+    [bio]="bio"
+    [currentRole]="currentRole"
+    [techStack]="techStack"
+    [isEditing]="isEditing"
+    (submit)="onSubmit($event)"
+  ></app-profile-details-form>
+  <app-profile-stats
+    [email]="email"
+    [dateJoined]="dateJoined"
+    [articleCount]="articleCount"
+    [favoriteCategory]="favoriteCategory"
+    [totalLikes]="totalLikes"
+  ></app-profile-stats>
+</div>
+}

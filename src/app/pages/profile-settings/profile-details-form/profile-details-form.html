@@ -1,0 +1,74 @@
+@if(isEditing) {
+<form [formGroup]="form">
+  <div class="inputs">
+    <div class="item">
+      <textarea
+        rows="5"
+        type="text"
+        id="bio"
+        name="bio"
+        formControlName="bio"
+        placeholder="Import your personality here..."
+      ></textarea>
+    </div>
+
+    <div class="item">
+      <label for="currentRole">Current role</label>
+      <input
+        type="text"
+        id="currentRole"
+        name="currentRole"
+        formControlName="currentRole"
+        placeholder="Enter your current role"
+      />
+    </div>
+
+    <div class="item">
+      <label for="techStack">Tech stack</label>
+      <input
+        type="text"
+        id="techStack"
+        name="techStack"
+        formControlName="techStack"
+        placeholder="Enter your tech stack"
+      />
+    </div>
+  </div>
+
+  <div class="buttons">
+    <div class="btn cancel-btn">
+      <a (click)="onCancel()">Cancel</a>
+    </div>
+    <app-cta-button textContent="Update" (click)="onSubmit()"></app-cta-button>
+  </div>
+</form>
+} @else {
+<dl>
+  <div class="item bio">
+    @if (bio) {
+    <dd>{{ bio }}</dd>
+    } @else {
+    <dd class="empty-bio">
+      You write code — now write your story. What inspired you to start? What
+      keeps you building? Whether it's your go-to stack, the bug that haunted
+      your dreams, or the side project that turned into something real — this is
+      your space. Share the bits and bytes of your journey and let your fellow
+      devs get to know you.
+    </dd>
+    }
+  </div>
+
+  <div class="details">
+    <div class="item">
+      <dt>Current role</dt>
+      <dd>{{ currentRole ? currentRole : "—" }}</dd>
+    </div>
+
+    <div class="item">
+      <dt>Tech stack</dt>
+      <dd>{{ techStack ? techStack : "—" }}</dd>
+    </div>
+  </div>
+</dl>
+<app-cta-button textContent="Edit" (click)="onEdit()"></app-cta-button>
+}

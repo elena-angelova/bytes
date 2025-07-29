@@ -19,7 +19,7 @@ aside {
   gap: 1rem;
   border-left: 2px solid var(--border);
   padding-left: 4rem;
-  flex: 0 0 auto;
+  flex: 0 0 30%;
 
   .header {
     display: flex;
@@ -50,6 +50,13 @@ aside {
   }
 
   .details {
-    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+
+    p {
+      margin-bottom: 0;
+      font-size: 0.8rem;
+    }
   }
 }

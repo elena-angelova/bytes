@@ -1,0 +1,47 @@
+:host {
+  flex-basis: 50%;
+}
+
+hr {
+  border: none;
+  border: 1px solid var(--border);
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+dl {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+dt {
+  font-weight: 500;
+}
+
+dd {
+  font-weight: 300;
+}
+
+.user-profile {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.name {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.password-icon {
+  fill: var(--text-color);
+  width: 3.2rem;
+}

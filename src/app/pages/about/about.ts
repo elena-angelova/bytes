@@ -49,7 +49,7 @@ export class AboutPageComponent {
     if (userId) {
       this.router.navigate(["/articles/create"]);
     } else {
-      this.modalService.openLoginModal();
+      this.modalService.openRegisterModal();
     }
   }
 }

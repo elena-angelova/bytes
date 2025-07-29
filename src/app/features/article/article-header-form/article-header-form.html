@@ -56,14 +56,20 @@
       </div>
     </div>
 
-    <div class="btn publish-btn">
-      @if (isFormInvalid) {
-      <span #popUp class="popup-error fade">All fields are required</span>
-      }
-      <app-cta-button
-        [textContent]="'Publish'"
-        (click)="onSubmit()"
-      ></app-cta-button>
+    <div class="buttons">
+      <div class="btn cancel-btn">
+        <a (click)="onCancel()">Cancel</a>
+      </div>
+
+      <div class="btn publish-btn">
+        @if (isFormInvalid) {
+        <span #popUp class="popup-error fade">All fields are required</span>
+        }
+        <app-cta-button
+          [textContent]="'Publish'"
+          (click)="onSubmit()"
+        ></app-cta-button>
+      </div>
     </div>
   </div>
 

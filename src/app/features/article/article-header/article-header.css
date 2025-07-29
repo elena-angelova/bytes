@@ -32,12 +32,12 @@
     svg {
       font-weight: 400;
       fill: var(--search-bar-text);
-      width: 0.9rem;
-      height: 0.9rem;
+      width: 1rem;
+      height: 1rem;
     }
 
     span {
-      font-size: 0.7rem;
+      font-size: 0.9rem;
       font-weight: 500;
     }
   }
@@ -68,7 +68,7 @@
       height: 1.3rem;
       background-color: var(--search-bar-text);
       position: absolute;
-      top: 5px;
+      top: 7px;
       right: -10px;
     }
   }

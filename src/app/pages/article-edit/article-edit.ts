@@ -201,4 +201,8 @@ export class ArticleEditComponent implements OnInit {
       this.isLoading = false;
     }
   }
+
+  onCancel() {
+    this.router.navigate(["/articles", this.articleId]);
+  }
 }

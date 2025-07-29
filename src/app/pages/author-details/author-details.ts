@@ -41,6 +41,7 @@ export class AuthorDetailsComponent implements OnInit {
 
   //! Implement infinite scroll
   ngOnInit(): void {
+    //! Merge these into one pipe
     this.route.paramMap.subscribe((params) => {
       this.authorId = params.get("userId")!;
       this.currentUserId = this.authService.getCurrentUser()?.uid;

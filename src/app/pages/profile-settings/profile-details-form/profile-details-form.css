@@ -1,0 +1,134 @@
+:host {
+  flex-basis: 50%;
+  display: flex;
+  flex-direction: column;
+  gap: 2.3rem;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  transition: border-color 0.3s ease, color 0.3s ease;
+}
+
+dl {
+  display: flex;
+  flex-direction: column;
+  gap: 4rem;
+}
+
+dt {
+  font-weight: 500;
+}
+
+dd {
+  font-weight: 300;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.item.bio {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.8rem;
+}
+
+.empty-bio {
+  font-weight: 300;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  color: var(--bio-placeholder);
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 2.25rem;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.9rem;
+
+  label {
+    font-weight: 500;
+  }
+
+  textarea,
+  input {
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--input-border);
+    color: inherit;
+    outline: none;
+    transition: border 0.3s ease-in-out;
+    font-weight: 300;
+
+    &::placeholder {
+      color: var(--input-placeholder);
+      font-weight: 300;
+    }
+
+    &:focus {
+      border-bottom: 1px solid var(--input-border-focus);
+    }
+
+    &:is(:-webkit-autofill, :autofill) {
+      box-shadow: 0 0 0 1000px var(--input-autofill-bg) inset;
+      -webkit-text-fill-color: var(--text-color);
+      border-radius: 0.5rem;
+      caret-color: var(--input-autofill-bg);
+      transition: background-color 5000s ease-in-out 0s;
+    }
+  }
+
+  textarea {
+    width: 100%;
+    resize: none;
+    padding-bottom: 1rem;
+    margin-bottom: 1.08rem;
+  }
+
+  input {
+    padding-bottom: 0.75rem;
+    appearance: none;
+    min-width: 25ch;
+  }
+}
+
+.inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 1.45rem;
+}
+
+.buttons {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+app-cta-button {
+  align-self: center;
+}
+
+.cancel-btn a {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  background-color: var(--search-bar-bg);
+  border-radius: 2rem;
+  color: var(--search-bar-text);
+  font-weight: 500;
+
+  &:hover {
+    color: #bbb;
+  }
+}

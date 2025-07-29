@@ -9,6 +9,7 @@ import { CategoryComponent } from "./pages/category/category";
 import { AuthorDetailsComponent } from "./pages/author-details/author-details";
 import { ArticleDetailsComponent } from "./pages/article-details/article-details";
 import { ArticleEditComponent } from "./pages/article-edit/article-edit";
+import { ProfileSettingsComponent } from "./pages/profile-settings/profile-settings";
 
 export const routes: Routes = [
   { path: "", component: HomePageComponent },
@@ -21,5 +22,5 @@ export const routes: Routes = [
   { path: "articles/:articleId", component: ArticleDetailsComponent },
   { path: "articles/:articleId/edit", component: ArticleEditComponent },
   { path: "users/:userId", component: AuthorDetailsComponent },
-  { path: "settings", component: AboutPageComponent }, // !Change this once the settings component is ready
+  { path: "settings", component: ProfileSettingsComponent },
 ];
