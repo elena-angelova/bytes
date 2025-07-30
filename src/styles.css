@@ -337,7 +337,7 @@ h6 {
   }
 
   .ql-code-block {
-    white-space: pre;
+    white-space: pre-wrap;
     font-size: 0.9rem;
   }
 }

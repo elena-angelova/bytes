@@ -8,6 +8,7 @@ export interface User {
   bio: string;
   techStack: string;
   currentRole: string;
+  readingList: string[];
 }
 
 export interface UserUpdate {

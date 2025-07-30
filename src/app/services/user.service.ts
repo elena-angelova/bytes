@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { doc, docData, Firestore, updateDoc } from "@angular/fire/firestore";
 import { from, Observable } from "rxjs";
 import { User, UserUpdate } from "../types";
-import { setDoc, Timestamp } from "firebase/firestore";
+import { arrayRemove, arrayUnion, setDoc, Timestamp } from "firebase/firestore";
 
 @Injectable({
   providedIn: "root",
@@ -26,6 +26,7 @@ export class UserService {
       firstName,
       lastName,
       dateJoined: Timestamp.now(),
+      readingList: [],
     });
   }
 
@@ -37,5 +38,21 @@ export class UserService {
         ...data,
       })
     );
+  }
+
+  addBookmark(userId: string, articleId: string): Promise<void> {
+    const userDocRef = doc(this.firestore, "users", userId);
+
+    return updateDoc(userDocRef, {
+      readingList: arrayUnion(articleId),
+    });
+  }
+
+  removeBookmark(userId: string, articleId: string): Promise<void> {
+    const userDocRef = doc(this.firestore, "users", userId);
+
+    return updateDoc(userDocRef, {
+      readingList: arrayRemove(articleId),
+    });
   }
 }

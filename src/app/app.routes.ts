@@ -10,6 +10,7 @@ import { AuthorDetailsComponent } from "./pages/author-details/author-details";
 import { ArticleDetailsComponent } from "./pages/article-details/article-details";
 import { ArticleEditComponent } from "./pages/article-edit/article-edit";
 import { ProfileSettingsComponent } from "./pages/profile-settings/profile-settings";
+import { ReadingListComponent } from "./pages/reading-list/reading-list";
 
 export const routes: Routes = [
   { path: "", component: HomePageComponent },
@@ -23,4 +24,5 @@ export const routes: Routes = [
   { path: "articles/:articleId/edit", component: ArticleEditComponent },
   { path: "users/:userId", component: AuthorDetailsComponent },
   { path: "settings", component: ProfileSettingsComponent },
+  { path: "reading-list", component: ReadingListComponent },
 ];

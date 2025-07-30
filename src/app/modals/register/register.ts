@@ -4,7 +4,6 @@ import { formFields } from "../../config";
 import { ModalComponent } from "../../shared/modal/modal";
 import { ModalService } from "../../services/modal.service";
 import { AuthService } from "../../services/auth.service";
-import { Router } from "@angular/router";
 import {
   FormBuilder,
   FormGroup,
@@ -66,11 +65,7 @@ export class RegisterModalComponent {
       "Network error. Please check your internet connection.",
   };
 
-  constructor(
-    private modalService: ModalService,
-    private auth: AuthService,
-    private router: Router
-  ) {}
+  constructor(private modalService: ModalService, private auth: AuthService) {}
 
   passwordMatchValidator(group: FormGroup) {
     const password: string = group.get("password")?.value;
@@ -129,8 +124,6 @@ export class RegisterModalComponent {
 
       this.registerForm.reset();
       this.modalService.closeAll();
-
-      await this.router.navigate(["/articles"]);
     } catch (error: any) {
       this.serverErrorMessage =
         this.firebaseErrorMessagesMap[error.code] ||

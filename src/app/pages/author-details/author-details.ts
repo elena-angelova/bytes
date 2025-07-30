@@ -2,7 +2,7 @@ import { Component, OnInit } from "@angular/core";
 import { SectionTitleComponent } from "../../shared/section-title/section-title";
 import { ArticleGridComponent } from "../../features/article/article-grid/article-grid";
 import { ArticleService } from "../../services/article.service";
-import { ActivatedRoute, RouterLink } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { UserService } from "../../services/user.service";
 import { tap } from "rxjs";
 import { Article, User } from "../../types";
@@ -15,7 +15,6 @@ import { AuthService } from "../../services/auth.service";
   selector: "app-author-details",
   imports: [
     DatePipe,
-    RouterLink,
     SectionTitleComponent,
     ArticleGridComponent,
     LoaderComponent,

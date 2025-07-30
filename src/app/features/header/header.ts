@@ -59,35 +59,45 @@ export class HeaderComponent implements OnInit {
     localStorage.setItem("darkMode", this.isDarkMode.toString());
   }
 
-  onLoginClick(): void {
-    this.modalService.openLoginModal();
-  }
-
-  onRegisterClick(): void {
-    this.modalService.openRegisterModal();
-  }
-
   toggleMenu(): void {
     this.isMenuOpened = !this.isMenuOpened;
   }
 
-  async onLogoutClick() {
+  onLogin(): void {
+    this.modalService.openLoginModal();
+  }
+
+  onRegister(): void {
+    this.modalService.openRegisterModal();
+  }
+
+  async onLogout() {
     this.toggleMenu();
 
     try {
       await this.authService.logout();
       await this.router.navigate([""]);
     } catch (error) {
-      // !See how you'll visualise the error if logout fails
+      //! See how you'll visualise the error if logout fails
     }
   }
 
-  onMyArticlesClick() {
+  openProfile() {
     this.toggleMenu();
 
     this.currentUser$.subscribe((user) => {
       const userId: string | undefined = user?.uid;
       this.router.navigate(["/users", userId]);
     });
+  }
+
+  openReadingList() {
+    this.toggleMenu();
+    this.router.navigate(["/reading-list"]);
+  }
+
+  openSettings() {
+    this.toggleMenu();
+    this.router.navigate(["/settings"]);
   }
 }

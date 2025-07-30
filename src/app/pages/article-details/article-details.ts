@@ -4,11 +4,21 @@ import { ArticleContentComponent } from "../../features/article/article-content/
 import { ArticleService } from "../../services/article.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Article } from "../../types";
-import { Observable, Subscription, tap } from "rxjs";
+import {
+  forkJoin,
+  map,
+  Observable,
+  of,
+  Subscription,
+  switchMap,
+  take,
+  tap,
+} from "rxjs";
 import { LoaderComponent } from "../../shared/loader/loader";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { AuthService } from "../../services/auth.service";
 import { ModalService } from "../../services/modal.service";
+import { UserService } from "../../services/user.service";
 
 @Component({
   selector: "app-article-details",
@@ -17,21 +27,24 @@ import { ModalService } from "../../services/modal.service";
   styleUrl: "./article-details.css",
 })
 export class ArticleDetailsComponent implements OnInit {
-  article$!: Observable<Article | undefined>;
-  article!: Article;
-  articleId!: string;
-  sanitizedContent: SafeHtml | null = null;
+  likes$: Observable<number> = of(0);
 
   currentUserId!: string | undefined;
+  articleId!: string;
+  article!: Article;
+  sanitizedContent: SafeHtml | null = null;
+
   isLoading: boolean = true;
+  isCopied: boolean = false;
   hasLiked: boolean = false;
+  hasBookmarked: boolean = false;
 
   private routeSub!: Subscription;
-  private articleSub!: Subscription;
 
   constructor(
     private authService: AuthService,
     private articleService: ArticleService,
+    private userService: UserService,
     private modalService: ModalService,
     private route: ActivatedRoute,
     private router: Router,
@@ -39,76 +52,141 @@ export class ArticleDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.routeSub = this.route.paramMap.subscribe((params) => {
-      this.articleId = params.get("articleId")!;
-      this.currentUserId = this.authService.getCurrentUser()?.uid;
+    this.routeSub = this.authService.currentUser$
+      .pipe(
+        switchMap((user) => {
+          this.currentUserId = user?.uid;
 
-      this.article$ = this.articleService.getSingleArticle(this.articleId).pipe(
-        tap((data) => {
-          this.isLoading = false;
+          return this.route.paramMap.pipe(
+            switchMap((params) => {
+              this.articleId = params.get("articleId")!;
 
-          this.sanitizedContent = this.sanitizer.bypassSecurityTrustHtml(
-            data?.content || ""
+              return forkJoin({
+                article: this.articleService
+                  .getSingleArticle(this.articleId)
+                  .pipe(take(1)),
+                userData: this.currentUserId
+                  ? this.userService
+                      .getUserData(this.currentUserId)
+                      .pipe(take(1))
+                  : of(null),
+              });
+            })
           );
+        }),
+        tap(({ article, userData }) => {
+          if (!article) {
+            //! Add error handling
+            return;
+          }
+
+          this.article = article;
+          this.sanitizedContent = this.sanitizer.bypassSecurityTrustHtml(
+            article.content
+          );
+
+          this.hasLiked = this.currentUserId
+            ? article.likedBy.includes(this.currentUserId)
+            : false;
+          this.hasBookmarked = userData
+            ? userData.readingList.includes(this.articleId)
+            : false;
+
+          this.isLoading = false;
         })
-      );
+      )
+      .subscribe();
 
-      this.articleSub = this.article$.subscribe((articleData) => {
-        const currentUserId = this.authService.getCurrentUser()?.uid;
-
-        if (!articleData || !currentUserId) {
-          //! Add error handling
-          return;
-        }
-
-        this.article = articleData;
-        this.hasLiked = articleData.likedBy?.includes(currentUserId);
-      });
-    });
+    this.likes$ = this.route.paramMap.pipe(
+      map((params) => params.get("articleId")),
+      switchMap((articleId) =>
+        this.articleService
+          .getSingleArticle(articleId!)
+          .pipe(map((article) => article?.likes ?? 0))
+      )
+    );
   }
 
   ngOnDestroy(): void {
     this.routeSub.unsubscribe();
-    this.articleSub.unsubscribe();
   }
 
-  onAuthorClick(authorId: string | undefined): void {
+  openAuthorProfile(authorId: string | undefined): void {
     this.router.navigate(["/users", authorId]);
   }
 
-  async onLikeClick(data: {
-    likedBy: string[] | undefined;
-    heartIcon: HTMLElement;
-  }): Promise<void> {
-    const currentUserId = this.authService.getCurrentUser()?.uid;
-
-    //* Make sure that when a user updates the likes, they can only arrayUnion() their own UID
-    if (!data.likedBy || !currentUserId) {
+  async onLike(): Promise<void> {
+    if (!this.article) {
       //! Add error handling
       return;
     }
 
-    if (currentUserId === this.article?.authorId) {
-      //! Add error handling
+    if (!this.currentUserId) {
+      this.modalService.openLoginModal();
       return;
     }
 
-    this.hasLiked = data.likedBy.includes(currentUserId);
+    if (this.currentUserId === this.article.authorId) {
+      //! Add error handling
+      return;
+    }
 
     try {
       if (this.hasLiked) {
-        await this.articleService.unlikeArticle(this.articleId, currentUserId);
-        data.heartIcon.classList.remove("liked");
+        await this.articleService.unlikeArticle(
+          this.articleId,
+          this.currentUserId
+        );
+
+        this.hasLiked = false;
       } else {
-        await this.articleService.likeArticle(this.articleId, currentUserId);
-        data.heartIcon.classList.add("liked");
+        await this.articleService.likeArticle(
+          this.articleId,
+          this.currentUserId
+        );
+
+        this.hasLiked = true;
       }
     } catch (error) {
       //! Add error handling
     }
   }
 
-  onDeleteClick(): void {
+  async onBookmark() {
+    if (!this.article) {
+      //! Add error handling
+      return;
+    }
+
+    if (!this.currentUserId) {
+      this.modalService.openLoginModal();
+      return;
+    }
+
+    if (this.hasBookmarked) {
+      await this.userService.removeBookmark(this.currentUserId, this.articleId);
+
+      this.hasBookmarked = false;
+    } else {
+      await this.userService.addBookmark(this.currentUserId, this.articleId);
+
+      this.hasBookmarked = true;
+    }
+  }
+
+  async onShare() {
+    const currentUrl = window.location.origin + this.router.url;
+    try {
+      await navigator.clipboard.writeText(currentUrl);
+
+      this.isCopied = true;
+      setTimeout(() => (this.isCopied = false), 3000);
+    } catch (error) {
+      //! Add error handling
+    }
+  }
+
+  onDelete(): void {
     this.modalService.openArticleDeleteModal(this.articleId);
   }
 }

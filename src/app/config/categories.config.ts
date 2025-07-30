@@ -22,6 +22,7 @@ export const articleCategories: string[] = [
   "Node.js",
   "Express.js",
   "Databases",
+  "Networking & APIs",
   "State management",
   "Microservices",
   "Git & Version control",

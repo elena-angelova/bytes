@@ -26,14 +26,17 @@ import { UserUpdate } from "../../types";
 export class ProfileSettingsComponent implements OnInit {
   displayName!: string | null;
   email!: string | null;
-  userId!: string;
-  dateJoined!: Timestamp;
-  currentRole!: string | null;
+  currentUserId!: string;
+
   bio!: string | null;
+  currentRole!: string | null;
   techStack!: string | null;
+  dateJoined!: Timestamp;
+
   articleCount!: number;
-  favoriteCategory!: string;
   totalLikes!: number;
+  favoriteCategory!: string;
+
   isLoading: boolean = true;
   isEditing: boolean = false;
 
@@ -51,6 +54,7 @@ export class ProfileSettingsComponent implements OnInit {
     private articleService: ArticleService
   ) {}
 
+  //* Consider moving the logic from subscribe into map
   ngOnInit(): void {
     this.authService.currentUser$
       .pipe(
@@ -58,7 +62,7 @@ export class ProfileSettingsComponent implements OnInit {
         tap((currentUser) => {
           this.displayName = currentUser.displayName;
           this.email = currentUser.email;
-          this.userId = currentUser.uid;
+          this.currentUserId = currentUser.uid;
         }),
         switchMap((currentUser) =>
           forkJoin({
@@ -113,30 +117,32 @@ export class ProfileSettingsComponent implements OnInit {
   //* Update button should be disabled while this is running
   onSubmit(data: UserUpdate): void {
     const filteredData: [string, string][] = Object.entries(data).filter(
-      ([key, value]) => value !== undefined && value !== null
+      ([_, value]) => value !== undefined && value !== null
     );
     const filteredDataObj: { [key: string]: string } =
       Object.fromEntries(filteredData);
 
-    this.userService.editUserData(filteredDataObj, this.userId).subscribe({
-      next: () => {
-        if (filteredDataObj["bio"] !== undefined) {
-          this.bio = filteredDataObj["bio"];
-        }
+    this.userService
+      .editUserData(filteredDataObj, this.currentUserId)
+      .subscribe({
+        next: () => {
+          if (filteredDataObj["bio"] !== undefined) {
+            this.bio = filteredDataObj["bio"];
+          }
 
-        if (filteredDataObj["currentRole"] !== undefined) {
-          this.currentRole = filteredDataObj["currentRole"];
-        }
+          if (filteredDataObj["currentRole"] !== undefined) {
+            this.currentRole = filteredDataObj["currentRole"];
+          }
 
-        if (filteredDataObj["techStack"] !== undefined) {
-          this.techStack = filteredDataObj["techStack"];
-        }
+          if (filteredDataObj["techStack"] !== undefined) {
+            this.techStack = filteredDataObj["techStack"];
+          }
 
-        this.profileDetailsForm.patchValue(filteredDataObj);
+          this.profileDetailsForm.patchValue(filteredDataObj);
 
-        this.isEditing = false;
-      },
-      error: (err) => console.log(err), //! Add error handling
-    });
+          this.isEditing = false;
+        },
+        error: (err) => console.log(err), //! Add error handling
+      });
   }
 }

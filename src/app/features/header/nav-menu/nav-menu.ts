@@ -30,21 +30,12 @@ export class NavMenuComponent {
   @Input() currentUser$!: Observable<User | null>;
   @Input() isMenuOpened!: boolean;
 
-  @Output() loginClick = new EventEmitter<void>();
-  @Output() registerClick = new EventEmitter<void>();
+  @Output() login = new EventEmitter<void>();
+  @Output() register = new EventEmitter<void>();
   @Output() toggleMenu = new EventEmitter<void>();
-  @Output() logoutClick = new EventEmitter<void>();
-  @Output() myArticlesClick = new EventEmitter<void>();
 
-  onLogin(): void {
-    this.loginClick.emit();
-  }
-
-  onRegister(): void {
-    this.registerClick.emit();
-  }
-
-  onToggleMenu(): void {
-    this.toggleMenu.emit();
-  }
+  @Output() profileClick = new EventEmitter<void>();
+  @Output() readingListClick = new EventEmitter<void>();
+  @Output() settingsClick = new EventEmitter<void>();
+  @Output() logout = new EventEmitter<void>();
 }

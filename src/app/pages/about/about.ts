@@ -10,8 +10,6 @@ import {
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 import { ModalService } from "../../services/modal.service";
-import { Observable } from "rxjs";
-import { User } from "firebase/auth";
 
 @Component({
   selector: "app-about",

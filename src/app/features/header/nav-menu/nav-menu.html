@@ -5,7 +5,7 @@
 
     @if (currentUser$ | async) {
     <li>
-      <div class="menu-header" (click)="onToggleMenu()">
+      <div class="menu-header" (click)="toggleMenu.emit()">
         <a>profile</a>
         <div
           class="down-arrow-icon-wrapper"
@@ -28,13 +28,15 @@
       </div>
       @if (isMenuOpened) {
       <app-menu-dropdown
-        (logoutClick)="logoutClick.emit()"
-        (myArticlesClick)="myArticlesClick.emit()"
+        (profileClick)="profileClick.emit()"
+        (readingListClick)="readingListClick.emit()"
+        (settingsClick)="settingsClick.emit()"
+        (logout)="logout.emit()"
       ></app-menu-dropdown>
       }
     </li>
     } @else {
-    <li><a (click)="onLogin()">log in</a></li>
+    <li><a (click)="login.emit()">log in</a></li>
     }
   </ul>
 </nav>
@@ -56,7 +58,7 @@
 </a>
 } @else {
 <app-cta-button
-  (click)="onRegister()"
-  [textContent]="'sign up'"
+  textContent="sign up"
+  (click)="register.emit()"
 ></app-cta-button>
 }

@@ -7,6 +7,7 @@ import {
   deleteDoc,
   doc,
   docData,
+  documentId,
   DocumentReference,
   Firestore,
   getDocs,
@@ -105,6 +106,20 @@ export class ArticleService {
     const articleDocRef = doc(this.firestore, "articles", articleId);
 
     return docData(articleDocRef) as Observable<Article | undefined>;
+  }
+
+  getReadingListArticles(articleIds: string[]): Observable<Article[]> {
+    const articlesRef = collection(
+      this.firestore,
+      "articles"
+    ) as CollectionReference<Article>;
+
+    const readingListQuery = query(
+      articlesRef,
+      where(documentId(), "in", articleIds)
+    );
+
+    return collectionData(readingListQuery, { idField: "id" });
   }
 
   createArticle(data: Article): Promise<DocumentReference> {

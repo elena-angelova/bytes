@@ -1,0 +1,10 @@
+@if (isLoading) {
+<app-loader></app-loader>
+} @else if (isEmpty) {
+<app-section-title content="Reading list"></app-section-title>
+<!-- TODO Replace the empty state component with something more personalised -->
+<app-empty-state></app-empty-state>
+} @else {
+<app-section-title content="Reading list"></app-section-title>
+<app-article-grid [articles]="articles" [columns]="3"></app-article-grid>
+}

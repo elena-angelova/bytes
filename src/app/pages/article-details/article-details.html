@@ -2,13 +2,18 @@
 <app-loader></app-loader>
 } @else {
 <app-article-header
-  [article$]="article$"
-  [hasLiked]="hasLiked"
-  [currentUserId]="currentUserId"
   [articleId]="articleId"
-  (openAuthorDetails)="onAuthorClick($event)"
-  (likeClick)="onLikeClick($event)"
-  (delete)="onDeleteClick()"
+  [article]="article"
+  [likes$]="likes$"
+  [isCopied]="isCopied"
+  [hasLiked]="hasLiked"
+  [hasBookmarked]="hasBookmarked"
+  [currentUserId]="currentUserId"
+  (authorClick)="openAuthorProfile($event)"
+  (like)="onLike()"
+  (bookmark)="onBookmark()"
+  (share)="onShare()"
+  (delete)="onDelete()"
 ></app-article-header>
 <app-article-content
   [sanitizedContent]="sanitizedContent"

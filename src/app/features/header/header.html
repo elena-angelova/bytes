@@ -8,11 +8,13 @@
     <app-nav-menu
       [currentUser$]="currentUser$"
       [isMenuOpened]="isMenuOpened"
-      (loginClick)="onLoginClick()"
-      (registerClick)="onRegisterClick()"
+      (login)="onLogin()"
+      (register)="onRegister()"
       (toggleMenu)="toggleMenu()"
-      (logoutClick)="onLogoutClick()"
-      (myArticlesClick)="onMyArticlesClick()"
+      (profileClick)="openProfile()"
+      (readingListClick)="openReadingList()"
+      (settingsClick)="openSettings()"
+      (logout)="onLogout()"
     ></app-nav-menu>
 
     <app-theme-toggle-button

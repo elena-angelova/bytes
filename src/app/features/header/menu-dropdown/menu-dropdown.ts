@@ -1,23 +1,14 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { RouterLink } from "@angular/router";
+import { Component, EventEmitter, Output } from "@angular/core";
 
 @Component({
   selector: "app-menu-dropdown",
-  imports: [RouterLink],
+  imports: [],
   templateUrl: "./menu-dropdown.html",
   styleUrl: "./menu-dropdown.css",
 })
 export class MenuDropdownComponent {
-  //! Make the dropdown menu close on every click on an item from within it
-
-  @Output() logoutClick = new EventEmitter<void>();
-  @Output() myArticlesClick = new EventEmitter<void>();
-
-  onLogout(): void {
-    this.logoutClick.emit();
-  }
-
-  loadMyArticles() {
-    this.myArticlesClick.emit();
-  }
+  @Output() profileClick = new EventEmitter<void>();
+  @Output() readingListClick = new EventEmitter<void>();
+  @Output() settingsClick = new EventEmitter<void>();
+  @Output() logout = new EventEmitter<void>();
 }
