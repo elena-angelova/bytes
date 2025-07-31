@@ -1,0 +1,15 @@
+.cdk-overlay-backdrop {
+  background-color: var(--modal-backdrop) !important;
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch;
+  max-height: 100vh;
+}
+
+.cdk-overlay-pane {
+  max-height: 90vh;
+  overflow: auto;
+}
+
+.mat-mdc-dialog-surface {
+  background-color: transparent !important;
+}

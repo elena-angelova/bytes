@@ -86,7 +86,7 @@
   position: relative;
 }
 
-.cancel-btn a {
+.cancel-btn {
   display: inline-block;
   padding: 0.5rem 1rem;
   cursor: pointer;
@@ -159,7 +159,7 @@ hr {
 }
 
 .fade {
-  animation: fadeIn 4s;
+  animation: fadeIn 3s;
   animation-fill-mode: forwards;
 }
 

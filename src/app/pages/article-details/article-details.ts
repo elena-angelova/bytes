@@ -36,6 +36,7 @@ export class ArticleDetailsComponent implements OnInit {
 
   isLoading: boolean = true;
   isCopied: boolean = false;
+  isOwner: boolean = false;
   hasLiked: boolean = false;
   hasBookmarked: boolean = false;
 
@@ -107,10 +108,6 @@ export class ArticleDetailsComponent implements OnInit {
     );
   }
 
-  ngOnDestroy(): void {
-    this.routeSub.unsubscribe();
-  }
-
   openAuthorProfile(authorId: string | undefined): void {
     this.router.navigate(["/users", authorId]);
   }
@@ -127,7 +124,9 @@ export class ArticleDetailsComponent implements OnInit {
     }
 
     if (this.currentUserId === this.article.authorId) {
-      //! Add error handling
+      this.isOwner = true;
+      setTimeout(() => (this.isOwner = false), 3000);
+
       return;
     }
 
@@ -188,5 +187,9 @@ export class ArticleDetailsComponent implements OnInit {
 
   onDelete(): void {
     this.modalService.openArticleDeleteModal(this.articleId);
+  }
+
+  ngOnDestroy(): void {
+    this.routeSub.unsubscribe();
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { doc, docData, Firestore, updateDoc } from "@angular/fire/firestore";
 import { from, Observable } from "rxjs";
-import { User, UserUpdate } from "../types";
+import { User } from "../types";
 import { arrayRemove, arrayUnion, setDoc, Timestamp } from "firebase/firestore";
 
 @Injectable({

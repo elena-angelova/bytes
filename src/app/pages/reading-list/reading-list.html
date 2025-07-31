@@ -6,5 +6,10 @@
 <app-empty-state></app-empty-state>
 } @else {
 <app-section-title content="Reading list"></app-section-title>
-<app-article-grid [articles]="articles" [columns]="3"></app-article-grid>
+
+<app-article-grid
+  [articles]="articles"
+  [columns]="3"
+  (authorClick)="openAuthorProfile($event)"
+></app-article-grid>
 }

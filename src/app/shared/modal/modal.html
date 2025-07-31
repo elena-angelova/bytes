@@ -42,7 +42,7 @@
     <app-primary-button
       [btnText]="btnText"
       [isLoading]="isLoading"
-      (click)="onSubmit()"
+      (click)="submit.emit()"
     ></app-primary-button>
   </form>
   } @else {
@@ -55,11 +55,11 @@
   }
 
   <div class="actions">
-    <app-secondary-button (click)="onCancel()"></app-secondary-button>
+    <app-secondary-button (click)="cancel.emit()"></app-secondary-button>
     <app-primary-button
       [btnText]="btnText"
       [isLoading]="isLoading"
-      (click)="onSubmit()"
+      (click)="submit.emit()"
     ></app-primary-button>
   </div>
   }

@@ -133,5 +133,3 @@ export class RegisterModalComponent {
     }
   }
 }
-
-// !Check if the access token refreshes correctly after 1 hour

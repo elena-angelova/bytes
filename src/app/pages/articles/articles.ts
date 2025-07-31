@@ -68,13 +68,6 @@ export class ArticlesComponent implements OnInit, AfterViewInit {
     });
   }
 
-  //! Consider unsubsribing from the observables in ngOnDestroy
-  ngOnDestroy() {
-    if (this.observer) {
-      this.observer.disconnect();
-    }
-  }
-
   loadMore() {
     if (!this.hasMore || this.isLoadingMore) {
       return;
@@ -97,11 +90,15 @@ export class ArticlesComponent implements OnInit, AfterViewInit {
     this.router.navigate(["/articles/category", category]);
   }
 
-  onAuthorClick(authorId: string) {
+  openAuthorProfile(authorId: string) {
     this.router.navigate(["/users", authorId]);
   }
 
   toggleMenu() {
     this.isMenuOpened = !this.isMenuOpened;
+  }
+
+  ngOnDestroy() {
+    this.observer?.disconnect();
   }
 }

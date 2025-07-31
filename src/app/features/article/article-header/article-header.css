@@ -118,6 +118,7 @@
     display: flex;
     align-items: center;
     gap: 0.6rem;
+    position: relative;
 
     .likes-count {
       font-size: 0.8rem;
@@ -190,7 +191,7 @@
   position: relative;
 }
 
-.popup-copied {
+.popup {
   background-color: var(--search-bar-bg);
   color: var(--search-bar-text);
   text-align: center;
@@ -199,10 +200,30 @@
   padding: 0.5rem 1rem;
   position: absolute;
   z-index: 1;
-  top: -30%;
-  left: 160%;
   text-wrap: nowrap;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.popup-copied {
+  top: -30%;
+  left: 160%;
+}
+
+.popup-error {
+  bottom: 170%;
+  left: -282%;
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--search-bar-bg) transparent transparent transparent;
+    transition: border-color 0.3s ease, color 0.3s ease;
+  }
 }
 
 .fade {

@@ -1,15 +1,12 @@
-@if (isLoading) {
+@if (isLoadingEditor) {
 <app-loader></app-loader>
-} @else if (serverErrorMessage) {
-<app-error-message
-  [serverErrorMessage]="serverErrorMessage"
-></app-error-message>
 } @else {
 <form [formGroup]="editArticleForm">
   <app-article-header-form
     [articleCategories]="articleCategories"
     [form]="editArticleForm"
     [isFormInvalid]="isFormInvalid"
+    [isLoading]="isLoading"
     [fileName]="fileName"
     [previewFileUrl]="previewFileUrl"
     (fileSelected)="onFileSelected($event)"
@@ -22,4 +19,8 @@
     [content]="contentSignal"
   ></app-text-editor>
 </form>
-}
+@if (hasError) {
+<app-toast-notification
+  [textContent]="serverErrorMessage"
+></app-toast-notification>
+} }

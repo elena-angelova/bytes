@@ -41,7 +41,6 @@ export class TextEditorComponent implements AfterViewInit {
   async ngAfterViewInit() {
     const Quill = (await import("quill")).default;
 
-    //* Test adding an image upload
     this.editor = new Quill(this.editorContainer.nativeElement, {
       modules: {
         toolbar: [
@@ -58,6 +57,23 @@ export class TextEditorComponent implements AfterViewInit {
     });
 
     this.editorReadySignal.set(true);
+
+    const toolbarEl = document.querySelector(".ql-toolbar");
+    const toolbarTop =
+      (toolbarEl?.getBoundingClientRect().top ?? 0) +
+      (document.body.scrollTop || document.documentElement.scrollTop || 0);
+
+    document.body.addEventListener("scroll", () => {
+      if (!toolbarEl) return;
+      const scrollTop =
+        document.body.scrollTop || document.documentElement.scrollTop || 0;
+
+      if (scrollTop > toolbarTop + 1) {
+        toolbarEl.classList.add("scrolled");
+      } else {
+        toolbarEl.classList.remove("scrolled");
+      }
+    });
   }
 
   getHtml(): string {

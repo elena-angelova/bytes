@@ -6,7 +6,7 @@
 <app-article-grid
   [articles]="articles"
   [columns]="3"
-  (openAuthorDetails)="onAuthorClick($event)"
+  (authorClick)="openAuthorProfile($event)"
 ></app-article-grid>
 } @else {
 <app-empty-state></app-empty-state>

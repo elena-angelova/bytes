@@ -5,7 +5,7 @@ import { AuthService } from "../../services/auth.service";
 import { SearchBarComponent } from "./search-bar/search-bar";
 import { NavMenuComponent } from "./nav-menu/nav-menu";
 import { ThemeToggleButtonComponent } from "./theme-toggle-button/theme-toggle-button";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { User } from "firebase/auth";
 
 @Component({
@@ -27,6 +27,8 @@ export class HeaderComponent implements OnInit {
   rotation: number = 0;
 
   isMenuOpened: boolean = false;
+
+  private currentUserSub?: Subscription;
 
   constructor(
     private modalService: ModalService,
@@ -85,7 +87,7 @@ export class HeaderComponent implements OnInit {
   openProfile() {
     this.toggleMenu();
 
-    this.currentUser$.subscribe((user) => {
+    this.currentUserSub = this.currentUser$.subscribe((user) => {
       const userId: string | undefined = user?.uid;
       this.router.navigate(["/users", userId]);
     });
@@ -99,5 +101,9 @@ export class HeaderComponent implements OnInit {
   openSettings() {
     this.toggleMenu();
     this.router.navigate(["/settings"]);
+  }
+
+  ngOnDestroy() {
+    this.currentUserSub?.unsubscribe();
   }
 }

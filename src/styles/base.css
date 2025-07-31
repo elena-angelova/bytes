@@ -1,0 +1,92 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+html,
+body {
+  overflow-y: auto;
+}
+
+html {
+  box-sizing: border-box;
+  font: var(--fs-body) "Space Grotesk", sans-serif;
+}
+
+body {
+  height: 100vh;
+  padding: 0 5rem;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+app-root {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+span.special-text {
+  color: var(--span-text);
+}
+
+img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+body,
+input,
+textarea,
+select,
+option {
+  font: inherit;
+}
+
+:is(p, ul, ol):not(:last-child) {
+  margin-bottom: 1.2rem;
+}
+
+ul,
+ol {
+  padding-left: 2rem;
+}
+
+ul li,
+ol li {
+  line-height: 1.4;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+h1 {
+  font-size: var(--fs-heading-1);
+}
+h2 {
+  font-size: var(--fs-heading-2);
+}
+h3 {
+  font-size: var(--fs-heading-3);
+}
+h4 {
+  font-size: var(--fs-heading-4);
+}
+h5 {
+  font-size: var(--fs-heading-5);
+}
+h6 {
+  font-size: var(--fs-heading-6);
+}

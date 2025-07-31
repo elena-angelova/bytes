@@ -8,4 +8,5 @@ import { Component, Input } from "@angular/core";
 })
 export class CtaButtonComponent {
   @Input() textContent!: string;
+  @Input() isLoading!: boolean;
 }

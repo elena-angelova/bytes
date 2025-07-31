@@ -10,7 +10,7 @@ import { AuthService } from "../../services/auth.service";
 import { ArticleService } from "../../services/article.service";
 import { UploadService } from "../../services/upload.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { map, Observable, tap } from "rxjs";
+import { map, Observable, Subscription, tap } from "rxjs";
 import {
   Article,
   CloudinaryUploadResponse,
@@ -20,9 +20,9 @@ import {
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ArticleHeaderFormComponent } from "../../features/article/article-header-form/article-header-form";
 import { TextEditorComponent } from "../../features/article/text-editor/text-editor";
-import { LoaderComponent } from "../../shared/loader/loader";
-import { ErrorMessageComponent } from "../../shared/error-message/error-message";
+import { ToastNotificationComponent } from "../../shared/toast-notification/toast-notification";
 import DOMPurify from "dompurify";
+import { LoaderComponent } from "../../shared/loader/loader";
 
 @Component({
   selector: "app-article-edit",
@@ -30,8 +30,8 @@ import DOMPurify from "dompurify";
     ReactiveFormsModule,
     ArticleHeaderFormComponent,
     TextEditorComponent,
+    ToastNotificationComponent,
     LoaderComponent,
-    ErrorMessageComponent,
   ],
   templateUrl: "./article-edit.html",
   styleUrl: "./article-edit.css",
@@ -44,13 +44,15 @@ export class ArticleEditComponent implements OnInit {
   articleId!: string;
   article!: Article;
   articleCategories: string[] = articleCategories;
-  isLoading: boolean = true;
+  isLoadingEditor: boolean = true;
+  isLoading: boolean = false;
 
   sanitizedContent: SafeHtml | null = null;
-  thumbnailFile!: File;
+  imageFile!: File;
   fileName!: string;
   previewFileUrl!: string;
 
+  hasError: boolean = false;
   isFormInvalid: boolean = false;
   serverErrorMessage!: string;
 
@@ -71,6 +73,10 @@ export class ArticleEditComponent implements OnInit {
     unauthenticated: "You need to be signed in to perform this action.",
   };
 
+  private routeSub?: Subscription;
+  private imageUploadSub?: Subscription;
+  private articleSub?: Subscription;
+
   constructor(
     private authService: AuthService,
     private articleService: ArticleService,
@@ -81,15 +87,13 @@ export class ArticleEditComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.route.paramMap.subscribe((params) => {
+    this.routeSub = this.route.paramMap.subscribe((params) => {
       this.articleId = params.get("articleId")!;
 
-      this.articleService
+      this.articleSub = this.articleService
         .getSingleArticle(this.articleId)
         .pipe(
           tap((data) => {
-            this.isLoading = false;
-
             this.sanitizedContent = this.sanitizer.bypassSecurityTrustHtml(
               data?.content || ""
             );
@@ -98,7 +102,13 @@ export class ArticleEditComponent implements OnInit {
         .subscribe({
           next: (articleData) => {
             if (!articleData) {
-              //! Add error handling
+              this.serverErrorMessage =
+                "Looks like the article's missing or has been removed.";
+
+              this.hasError = true;
+              setTimeout(() => (this.hasError = false), 4000);
+
+              this.isLoadingEditor = false;
               return;
             }
 
@@ -111,22 +121,25 @@ export class ArticleEditComponent implements OnInit {
             this.contentSignal.set(articleData.content);
             this.previewFileUrl = articleData.thumbnailUrl;
             this.article = articleData;
+
+            this.isLoadingEditor = false;
           },
-          error: (err) => console.log(err), //! Add error handling
+          error: (error) => {
+            this.serverErrorMessage =
+              this.firebaseErrorMessagesMap[error.code] ||
+              "An unexpected error occurred. Please try again.";
+
+            this.hasError = true;
+            setTimeout(() => (this.hasError = false), 4000);
+          },
         });
     });
   }
 
   onFileSelected(file: File) {
     this.fileName = file.name;
-    this.thumbnailFile = file;
+    this.imageFile = file;
     this.previewFileUrl = URL.createObjectURL(file);
-  }
-
-  uploadThumbnail(): Observable<string> {
-    return this.uploadService
-      .upload(this.thumbnailFile)
-      .pipe(map((response: CloudinaryUploadResponse) => response.secure_url));
   }
 
   onFormSubmit() {
@@ -147,7 +160,6 @@ export class ArticleEditComponent implements OnInit {
 
       const currentUser = this.authService.getCurrentUser();
       const authorId: string | undefined = currentUser?.uid;
-      //! Do I need this check as well? I will have a route guard for the buttons and the Firestore rules also don't allow non-authors to update.
       const isOwner = authorId === this.article.authorId;
 
       if (authorId && isOwner) {
@@ -160,14 +172,14 @@ export class ArticleEditComponent implements OnInit {
           title,
         };
 
-        if (!this.thumbnailFile) {
+        if (!this.imageFile) {
           const thumbnailUrl = this.article.thumbnailUrl;
           this.onEdit({
             ...baseArticleData,
             thumbnailUrl,
           });
         } else {
-          this.uploadThumbnail()
+          this.imageUploadSub = this.uploadImage()
             .pipe(
               map((thumbnailUrl) => ({
                 ...baseArticleData,
@@ -178,14 +190,37 @@ export class ArticleEditComponent implements OnInit {
               next: (articleData) => {
                 this.onEdit(articleData);
               },
-              error: (err) => {}, //! Add error handling for Cloudinary errors
+              error: () => {
+                this.serverErrorMessage =
+                  "Whoops! The image failed to upload. Make sure it's under 10MB and give it another go.";
+
+                this.hasError = true;
+                setTimeout(() => (this.hasError = false), 4000);
+
+                this.isLoading = false;
+                return;
+              },
             });
         }
-      } //! Add error handling if there's no authorId (no logged in user)
+      } else {
+        this.serverErrorMessage =
+          "Only the author can edit this article. Make sure you're signed in with the right account.";
+
+        this.hasError = true;
+        setTimeout(() => (this.hasError = false), 4000);
+
+        this.isLoading = false;
+      }
     } else {
       this.isFormInvalid = true;
       this.editArticleForm.markAllAsTouched();
     }
+  }
+
+  uploadImage(): Observable<string> {
+    return this.uploadService
+      .upload(this.imageFile)
+      .pipe(map((response: CloudinaryUploadResponse) => response.secure_url));
   }
 
   async onEdit(articleData: ArticleUpdate): Promise<void> {
@@ -204,5 +239,11 @@ export class ArticleEditComponent implements OnInit {
 
   onCancel() {
     this.router.navigate(["/articles", this.articleId]);
+  }
+
+  ngOnDestroy() {
+    this.routeSub?.unsubscribe();
+    this.imageUploadSub?.unsubscribe();
+    this.articleSub?.unsubscribe();
   }
 }

@@ -5,7 +5,7 @@ import { AuthService } from "../../services/auth.service";
 import { UserService } from "../../services/user.service";
 import { Timestamp } from "firebase/firestore";
 import { ArticleService } from "../../services/article.service";
-import { filter, forkJoin, switchMap, take, tap } from "rxjs";
+import { filter, forkJoin, Subscription, switchMap, take, tap } from "rxjs";
 import { User } from "firebase/auth";
 import { LoaderComponent } from "../../shared/loader/loader";
 import { FormBuilder, FormGroup } from "@angular/forms";
@@ -48,15 +48,17 @@ export class ProfileSettingsComponent implements OnInit {
     techStack: [""],
   });
 
+  private currentUserSub?: Subscription;
+  private userSub?: Subscription;
+
   constructor(
     private authService: AuthService,
     private userService: UserService,
     private articleService: ArticleService
   ) {}
 
-  //* Consider moving the logic from subscribe into map
   ngOnInit(): void {
-    this.authService.currentUser$
+    this.currentUserSub = this.authService.currentUser$
       .pipe(
         filter((currentUser): currentUser is User => !!currentUser),
         tap((currentUser) => {
@@ -122,7 +124,7 @@ export class ProfileSettingsComponent implements OnInit {
     const filteredDataObj: { [key: string]: string } =
       Object.fromEntries(filteredData);
 
-    this.userService
+    this.userSub = this.userService
       .editUserData(filteredDataObj, this.currentUserId)
       .subscribe({
         next: () => {
@@ -144,5 +146,10 @@ export class ProfileSettingsComponent implements OnInit {
         },
         error: (err) => console.log(err), //! Add error handling
       });
+  }
+
+  ngOnDestroy() {
+    this.currentUserSub?.unsubscribe();
+    this.userSub?.unsubscribe();
   }
 }

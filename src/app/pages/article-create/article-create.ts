@@ -17,11 +17,10 @@ import { AuthService } from "../../services/auth.service";
 import { Timestamp } from "@angular/fire/firestore";
 import { ArticleService } from "../../services/article.service";
 import { Router } from "@angular/router";
-import { LoaderComponent } from "../../shared/loader/loader";
-import { ErrorMessageComponent } from "../../shared/error-message/error-message";
 import DOMPurify from "dompurify";
 import { UploadService } from "../../services/upload.service";
-import { map, Observable } from "rxjs";
+import { map, Observable, Subscription } from "rxjs";
+import { ToastNotificationComponent } from "../../shared/toast-notification/toast-notification";
 
 @Component({
   selector: "app-article-editor",
@@ -29,8 +28,7 @@ import { map, Observable } from "rxjs";
     ReactiveFormsModule,
     ArticleHeaderFormComponent,
     TextEditorComponent,
-    LoaderComponent,
-    ErrorMessageComponent,
+    ToastNotificationComponent,
   ],
   templateUrl: "./article-create.html",
   styleUrl: "./article-create.css",
@@ -41,11 +39,12 @@ export class ArticleCreateComponent {
   articleCategories: string[] = articleCategories;
   isLoading: boolean = false;
 
-  thumbnailFile!: File;
+  imageFile!: File;
   fileName!: string;
   previewFileUrl!: string;
 
   isFormInvalid: boolean = false;
+  hasError: boolean = false;
   serverErrorMessage!: string;
 
   private formBuilder = inject(FormBuilder);
@@ -65,6 +64,8 @@ export class ArticleCreateComponent {
     unauthenticated: "You need to be signed in to perform this action.",
   };
 
+  private imageUploadSub?: Subscription;
+
   constructor(
     private authService: AuthService,
     private articleService: ArticleService,
@@ -74,20 +75,20 @@ export class ArticleCreateComponent {
 
   onFileSelected(file: File) {
     this.fileName = file.name;
-    this.thumbnailFile = file;
+    this.imageFile = file;
     this.previewFileUrl = URL.createObjectURL(file);
   }
 
-  uploadThumbnail(): Observable<string> {
+  uploadImage(): Observable<string> {
     return this.uploadService
-      .upload(this.thumbnailFile)
+      .upload(this.imageFile)
       .pipe(map((response: CloudinaryUploadResponse) => response.secure_url));
   }
 
   onFormSubmit(): void {
     const content: string = this.textEditor.getHtml();
 
-    if (this.createArticleForm.valid && this.thumbnailFile) {
+    if (this.createArticleForm.valid && this.imageFile) {
       this.isFormInvalid = false;
 
       const sanitizedContent: string = DOMPurify.sanitize(content);
@@ -119,7 +120,7 @@ export class ArticleCreateComponent {
           createdAt: Timestamp.now(),
         };
 
-        this.uploadThumbnail()
+        this.imageUploadSub = this.uploadImage()
           .pipe(
             map((thumbnailUrl) => ({
               ...baseArticleData,
@@ -130,11 +131,29 @@ export class ArticleCreateComponent {
             next: (articleData) => {
               this.onCreate(articleData);
             },
-            error: (err) => {}, //! Add error handling if there's no authorId (no logged in user) and for Cloudinary errors
+            error: () => {
+              this.serverErrorMessage =
+                "Whoops! The image failed to upload. Make sure it's under 10MB and give it another go.";
+
+              this.hasError = true;
+              setTimeout(() => (this.hasError = false), 4000);
+
+              this.isLoading = false;
+              return;
+            },
           });
+      } else {
+        this.serverErrorMessage =
+          "You're not logged in. Please sign in to continue.";
+
+        this.hasError = true;
+        setTimeout(() => (this.hasError = false), 4000);
+
+        this.isLoading = false;
       }
     } else {
       this.isFormInvalid = true;
+      setTimeout(() => (this.isFormInvalid = false), 3000);
       this.createArticleForm.markAllAsTouched();
     }
   }
@@ -150,8 +169,19 @@ export class ArticleCreateComponent {
       this.serverErrorMessage =
         this.firebaseErrorMessagesMap[error.code] ||
         "An unexpected error occurred. Please try again.";
+
+      this.hasError = true;
+      setTimeout(() => (this.hasError = false), 4000);
     } finally {
       this.isLoading = false;
     }
+  }
+
+  onCancel() {
+    this.router.navigate(["/articles"]);
+  }
+
+  ngOnDestroy() {
+    this.imageUploadSub?.unsubscribe;
   }
 }

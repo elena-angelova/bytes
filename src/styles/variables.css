@@ -1,0 +1,73 @@
+:root {
+  --fs-body: clamp(0.875rem, 0.5rem + 0.6vw, 1.125rem);
+
+  --fs-heading-6: clamp(0.9rem, 0.5rem + 0.8vw, 1.2rem);
+  --fs-heading-5: clamp(1rem, 0.6rem + 1vw, 1.5rem);
+  --fs-heading-4: clamp(1.1rem, 0.65rem + 1.2vw, 1.75rem);
+  --fs-heading-3: clamp(1.25rem, 0.7rem + 1.5vw, 2rem);
+  --fs-heading-2: clamp(1.5rem, 0.8rem + 2vw, 2.4rem);
+  --fs-heading-1: clamp(2.5rem, 1rem + 6vw, 7rem);
+
+  --bg-color: white;
+  --text-color: #2e2e2e;
+  --link-color: #1232ff;
+  --button-bg: #1232ff;
+  --button-text: white;
+  --button-hover-bg: #3451ff;
+  --primary-button-bg: #2e2e2e;
+  --primary-button-text: white;
+  --primary-button-hover-bg: #373737;
+  --secondary-button-bg: #ccc;
+  --secondary-button-text: #2e2e2e;
+  --secondary-button-hover-bg: #ddd;
+  --span-text: #1232ff;
+  --search-bar-bg: #eee;
+  --search-bar-text: #8f8f8f;
+  --border: #ddd;
+  --modal-backdrop: rgba(0, 0, 0, 0.7);
+  --modal-bg: white;
+  --input-label: #aaa;
+  --input-placeholder: #ddd;
+  --input-border: #ccc;
+  --input-border-focus: #757575;
+  --input-autofill-bg: #f4f4f4;
+  --notification-bg: #f6ebeb;
+  --notification-icon: #d96766;
+  --bio-placeholder: #ccc;
+  --box-shadow: 0 0 0 1px hsla(230, 13%, 9%, 0.075),
+    0 3px 10px rgb(0, 0, 0, 0.2);
+  --ql-toolbar-bg-scroll: white;
+}
+
+body.dark-mode {
+  --bg-color: #1f1f1f;
+  --text-color: #ededed;
+  --link-color: #3a4fcb;
+  --button-bg: #3a4fcb;
+  --button-text: #ededed;
+  --button-hover-bg: #4257c9;
+  --primary-button-bg: #3a4fcb;
+  --primary-button-text: #ededed;
+  --primary-button-hover-bg: #4257c9;
+  --secondary-button-bg: #2e2e2e;
+  --secondary-button-text: white;
+  --secondary-button-hover-bg: #373737;
+  --span-text: #3a4fcb;
+  --search-bar-bg: #2c2c2c;
+  --search-bar-text: #8f8f8f;
+  --border: #404040;
+  --modal-backdrop: rgba(17, 17, 17, 0.7);
+  --modal-bg: #1f1f1f;
+  --input-label: #7f7f7f;
+  --input-placeholder: #5f5f5f;
+  --input-border: #373737;
+  --input-border-focus: #666666;
+  --input-autofill-bg: #272727;
+  --notification-bg: #381919;
+  --notification-icon: #d96766;
+  --bio-placeholder: #5f5f5f;
+  --box-shadow: inset 0 0 0.5px 1px hsla(0, 0%, 100%, 0.1),
+    0 0 0 1px hsla(230, 13%, 9%, 0.075), 0px 1px 1.5px rgba(0, 0, 0, 0.3),
+    0px 3px 4px rgba(0, 0, 0, 0.2);
+  --ql-toolbar-bg-scroll: #262626;
+}

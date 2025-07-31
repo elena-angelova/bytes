@@ -30,7 +30,7 @@ export class CategoryComponent implements OnInit {
     private router: Router
   ) {}
 
-  //! Implement infinite scroll
+  //! Implement infinite scroll and unsubscribe
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       this.category = params.get("category")!;
@@ -45,7 +45,7 @@ export class CategoryComponent implements OnInit {
     });
   }
 
-  onAuthorClick(authorId: string) {
+  openAuthorProfile(authorId: string) {
     this.router.navigate(["/users", authorId]);
   }
 }

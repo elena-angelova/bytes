@@ -16,12 +16,4 @@ export class ArticleCategoryFilterComponent {
   categories: string[] = articleCategories;
   visibleCategories = this.categories.slice(0, 10);
   hiddenCategories = this.categories.slice(10);
-
-  onClick(category: string): void {
-    this.filter.emit(category);
-  }
-
-  onToggleMenu(): void {
-    this.toggleMenu.emit();
-  }
 }

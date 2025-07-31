@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { Article } from "../../../types";
 import { DatePipe } from "@angular/common";
 import { RouterLink } from "@angular/router";
@@ -11,9 +11,5 @@ import { RouterLink } from "@angular/router";
 })
 export class ArticleCardComponent {
   @Input() article!: Article;
-  @Output() openAuthorDetails = new EventEmitter<string>();
-
-  onAuthorClick(authorId: string) {
-    this.openAuthorDetails.emit(authorId);
-  }
+  @Output() authorClick = new EventEmitter<string>();
 }

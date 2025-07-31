@@ -4,7 +4,7 @@
 
 .error-message {
   padding: 1rem;
-  background-color: var(--error-msg-bg);
+  background-color: var(--notification-bg);
   border-radius: 0.5rem;
   display: flex;
   gap: 1rem;
@@ -14,7 +14,7 @@
   line-height: 0;
 
   svg {
-    stroke: #d96766;
+    stroke: var(--notification-icon);
   }
 }
 

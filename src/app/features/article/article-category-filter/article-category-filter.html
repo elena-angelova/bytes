@@ -2,10 +2,10 @@
   <ul>
     @for (category of visibleCategories; track $index) {
     <li>
-      <a (click)="onClick(category)">{{ category }}</a>
+      <a (click)="filter.emit(category)">{{ category }}</a>
     </li>
     }
-    <li (click)="onToggleMenu()">
+    <li (click)="toggleMenu.emit()">
       <svg
         class="more-icon"
         xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +26,7 @@
     <ul>
       @for (category of hiddenCategories; track $index) {
       <li>
-        <a (click)="onClick(category)">{{ category }}</a>
+        <a (click)="filter.emit(category)">{{ category }}</a>
       </li>
       }
     </ul>

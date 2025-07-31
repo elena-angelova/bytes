@@ -19,7 +19,7 @@
 <div class="footer">
   <div class="author">
     by
-    <span (click)="onAuthorClick(article.authorId)">{{
+    <span (click)="authorClick.emit(article.authorId)">{{
       article.authorName
     }}</span>
   </div>

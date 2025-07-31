@@ -57,17 +57,16 @@
     </div>
 
     <div class="buttons">
-      <div class="btn cancel-btn">
-        <a (click)="onCancel()">Cancel</a>
-      </div>
+      <a (click)="cancel.emit()" class="btn cancel-btn">Cancel</a>
 
       <div class="btn publish-btn">
         @if (isFormInvalid) {
-        <span #popUp class="popup-error fade">All fields are required</span>
+        <span class="popup-error fade">All fields are required</span>
         }
         <app-cta-button
-          [textContent]="'Publish'"
-          (click)="onSubmit()"
+          textContent="Publish"
+          [isLoading]="isLoading"
+          (click)="submit.emit()"
         ></app-cta-button>
       </div>
     </div>

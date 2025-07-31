@@ -15,8 +15,10 @@ export class ArticleHeaderComponent {
   @Input() article!: Article;
 
   @Input() isCopied!: boolean;
+  @Input() isOwner!: boolean;
   @Input() hasLiked!: boolean;
   @Input() hasBookmarked!: boolean;
+
   @Input() currentUserId!: string | undefined;
   @Input() articleId!: string;
 
@@ -25,24 +27,4 @@ export class ArticleHeaderComponent {
   @Output() like = new EventEmitter<void>();
   @Output() bookmark = new EventEmitter<void>();
   @Output() share = new EventEmitter<void>();
-
-  onAuthorClick(authorId: string | undefined) {
-    this.authorClick.emit(authorId);
-  }
-
-  onLike(): void {
-    this.like.emit();
-  }
-
-  onBookmark() {
-    this.bookmark.emit();
-  }
-
-  onShare() {
-    this.share.emit();
-  }
-
-  onDelete() {
-    this.delete.emit();
-  }
 }

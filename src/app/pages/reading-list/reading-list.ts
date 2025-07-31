@@ -9,6 +9,7 @@ import { SectionTitleComponent } from "../../shared/section-title/section-title"
 import { ArticleGridComponent } from "../../features/article/article-grid/article-grid";
 import { LoaderComponent } from "../../shared/loader/loader";
 import { EmptyStateComponent } from "../../shared/empty-state/empty-state";
+import { Router } from "@angular/router";
 
 @Component({
   selector: "app-reading-list",
@@ -27,16 +28,17 @@ export class ReadingListComponent implements OnInit {
   isEmpty!: boolean;
   isLoading: boolean = true;
 
-  sub!: Subscription;
+  readingListSub?: Subscription;
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
-    private articleService: ArticleService
+    private articleService: ArticleService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.sub = this.authService.currentUser$
+    this.readingListSub = this.authService.currentUser$
       .pipe(
         filter((currentUser): currentUser is User => !!currentUser),
         tap((currentUser) => (this.currentUserId = currentUser.uid)),
@@ -70,7 +72,11 @@ export class ReadingListComponent implements OnInit {
       });
   }
 
+  openAuthorProfile(authorId: string) {
+    this.router.navigate(["/users", authorId]);
+  }
+
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.readingListSub?.unsubscribe();
   }
 }

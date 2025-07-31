@@ -28,9 +28,6 @@ export class ThemeToggleButtonComponent {
   @Input() isDarkMode!: boolean;
   @Input() theme!: "light" | "dark";
   @Input() rotation!: number;
-  @Output() toggleTheme = new EventEmitter<void>();
 
-  onClick(): void {
-    this.toggleTheme.emit();
-  }
+  @Output() toggleTheme = new EventEmitter<void>();
 }

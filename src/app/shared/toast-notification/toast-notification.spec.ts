@@ -1,17 +1,17 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { FormFieldComponent } from "./form-field";
+import { ToastNotificationComponent } from "./toast-notification";
 
-describe("FormField", () => {
-  let component: FormFieldComponent;
-  let fixture: ComponentFixture<FormFieldComponent>;
+describe("ToastNotification", () => {
+  let component: ToastNotificationComponent;
+  let fixture: ComponentFixture<ToastNotificationComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [FormFieldComponent],
+      imports: [ToastNotificationComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(FormFieldComponent);
+    fixture = TestBed.createComponent(ToastNotificationComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

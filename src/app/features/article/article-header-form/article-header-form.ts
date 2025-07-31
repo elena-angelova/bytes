@@ -23,13 +23,13 @@ export class ArticleHeaderFormComponent implements AfterViewInit {
   @Input() previewFileUrl!: string;
   @Input() form!: FormGroup;
   @Input() isFormInvalid!: boolean;
+  @Input() isLoading!: boolean;
 
   @Output() submit = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
   @Output() fileSelected = new EventEmitter<File>();
 
   @ViewChild("titleTextarea") textarea!: ElementRef<HTMLTextAreaElement>;
-  @ViewChild("popUp") popUp!: ElementRef<HTMLSpanElement>;
 
   ngAfterViewInit(): void {
     this.textarea.nativeElement.focus();
@@ -54,20 +54,5 @@ export class ArticleHeaderFormComponent implements AfterViewInit {
     if (file) {
       this.fileSelected.emit(file);
     }
-  }
-
-  onSubmit() {
-    if (this.isFormInvalid) {
-      const el = this.popUp.nativeElement;
-      el.classList.remove("fade");
-      void el.offsetWidth;
-      el.classList.add("fade");
-    }
-
-    this.submit.emit();
-  }
-
-  onCancel() {
-    this.cancel.emit();
   }
 }

@@ -36,12 +36,4 @@ export class ModalComponent {
   @Output() cancel = new EventEmitter<void>();
 
   preserveOrder = () => 0;
-
-  onSubmit(): void {
-    this.submit.emit();
-  }
-
-  onCancel(): void {
-    this.cancel.emit();
-  }
 }

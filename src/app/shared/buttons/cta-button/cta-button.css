@@ -6,8 +6,36 @@
   background-color: var(--button-bg);
   color: var(--button-text);
   font-weight: 500;
+  position: relative;
 
   &:hover {
     background-color: var(--button-hover-bg);
+  }
+}
+
+.loading {
+  visibility: hidden;
+}
+
+.loader {
+  position: absolute;
+  top: 19%;
+  left: 18%;
+  width: 1.4rem;
+  padding: 3.5px;
+  margin: 0 1.1rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: var(--primary-button-text);
+  --_m: conic-gradient(#0000 10%, #000), linear-gradient(#000 0 0) content-box;
+  -webkit-mask: var(--_m);
+  mask: var(--_m);
+  -webkit-mask-composite: source-out;
+  mask-composite: subtract;
+  animation: l3 1s infinite linear;
+}
+@keyframes l3 {
+  to {
+    transform: rotate(1turn);
   }
 }
