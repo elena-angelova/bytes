@@ -1,15 +1,70 @@
 @if (isLoading) {
 <app-loader></app-loader>
-} @else if (isEmpty) {
-<app-section-title content="Reading list"></app-section-title>
-<!-- TODO Replace the empty state component with something more personalised -->
-<app-empty-state></app-empty-state>
 } @else {
 <app-section-title content="Reading list"></app-section-title>
 
+@if (articles.length === 0) {
+<div class="empty">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="300"
+    height="100"
+    viewBox="0 0 300 100"
+    fill="none"
+    class="empty-icon"
+  >
+    <rect width="300" height="100" rx="15" style="fill: var(--empty-icon-bg)" />
+    <rect
+      x="26"
+      y="22"
+      width="248"
+      height="22"
+      rx="7"
+      style="fill: var(--empty-icon-line1)"
+    />
+    <rect
+      x="26"
+      y="55"
+      width="135"
+      height="22"
+      rx="7"
+      style="fill: var(--empty-icon-line2)"
+    />
+    <path
+      xmlns="http://www.w3.org/2000/svg"
+      d="M259.167 58C257.972 58 257 58.897 257 60.0002V73.0014C257 73.3608 257.21 73.6952 257.548 73.8702C257.887 74.0452 258.303 74.0421 258.639 73.8577L263.5 71.1668L268.358 73.8577C268.693 74.0421 269.11 74.0484 269.448 73.8702C269.787 73.6921 270 73.3608 270 73.0014V60.0002C270 58.897 269.028 58 267.833 58H259.167Z"
+      fill="url(#paint0_linear_425_665)"
+      fill-opacity="0.6"
+    />
+    <defs xmlns="http://www.w3.org/2000/svg">
+      <linearGradient
+        id="paint0_linear_425_665"
+        x1="263.5"
+        y1="74"
+        x2="263.5"
+        y2="58"
+        gradientUnits="userSpaceOnUse"
+      >
+        <stop stop-color="#5970FF" />
+        <stop offset="0.5" stop-color="#2946FF" />
+        <stop offset="1" stop-color="#1232FF" />
+      </linearGradient>
+    </defs>
+  </svg>
+  <div class="content">
+    <h6>No articles yet</h6>
+    <p>Click the Save icon on any article to add it to your reading list.</p>
+  </div>
+</div>
+} @else {
 <app-article-grid
   [articles]="articles"
   [columns]="3"
   (authorClick)="openAuthorProfile($event)"
 ></app-article-grid>
-}
+
+} @if (hasError) {
+<app-toast-notification
+  [textContent]="serverErrorMessage"
+></app-toast-notification>
+}}

@@ -7,3 +7,45 @@
   margin: 5rem auto;
   width: 100%;
 }
+
+.empty {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+
+    h6 {
+      font-size: 1rem;
+    }
+
+    p {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+      width: 30ch;
+      font-size: 0.9rem;
+      font-weight: 300;
+      text-align: center;
+
+      svg {
+        fill: none;
+        stroke: var(--text-color);
+        stroke-width: 45;
+        width: 1.15rem;
+        height: 1.15rem;
+      }
+    }
+  }
+
+  .empty-icon rect {
+    transition: fill 0.3s ease, color 0.3s ease;
+  }
+}

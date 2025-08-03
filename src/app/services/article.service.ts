@@ -25,7 +25,7 @@ import {
   DocumentData,
   QueryDocumentSnapshot,
 } from "firebase/firestore";
-import { Article, ArticleUpdate } from "../types";
+import { Article } from "../types";
 import { from, map, Observable } from "rxjs";
 
 @Injectable({
@@ -146,7 +146,7 @@ export class ArticleService {
     });
   }
 
-  editArticle(data: ArticleUpdate, articleId: string): Promise<void> {
+  editArticle(data: Partial<Article>, articleId: string): Promise<void> {
     const articleDocRef = doc(this.firestore, "articles", articleId);
 
     return updateDoc(articleDocRef, {

@@ -1,6 +1,6 @@
 import { Component, inject } from "@angular/core";
 import { ErrorMessages, FormFields, RegisterFormValues } from "../../types";
-import { formFields } from "../../config";
+import { firebaseErrorMessages, formFields } from "../../config";
 import { ModalComponent } from "../../shared/modal/modal";
 import { ModalService } from "../../services/modal.service";
 import { AuthService } from "../../services/auth.service";
@@ -10,6 +10,7 @@ import {
   ValidationErrors,
   Validators,
 } from "@angular/forms";
+import { ErrorService } from "../../services/error.service";
 
 @Component({
   selector: "app-register",
@@ -58,14 +59,11 @@ export class RegisterModalComponent {
     }
   );
 
-  firebaseErrorMessagesMap: Record<string, string> = {
-    "auth/email-already-in-use": "An account with this email already exists.",
-    "auth/internal-error": "Something went wrong. Please try again.",
-    "auth/network-request-failed":
-      "Network error. Please check your internet connection.",
-  };
-
-  constructor(private modalService: ModalService, private auth: AuthService) {}
+  constructor(
+    private auth: AuthService,
+    private modalService: ModalService,
+    private errorService: ErrorService
+  ) {}
 
   passwordMatchValidator(group: FormGroup) {
     const password: string = group.get("password")?.value;
@@ -80,7 +78,7 @@ export class RegisterModalComponent {
 
   onFormSubmit(): void {
     this.errorMessages = [];
-    const formErrors: { [key: string]: ValidationErrors } = {};
+    const formErrors: Record<string, ValidationErrors> = {};
 
     if (this.registerForm.valid) {
       this.isFormInvalid = false;
@@ -125,9 +123,7 @@ export class RegisterModalComponent {
       this.registerForm.reset();
       this.modalService.closeAll();
     } catch (error: any) {
-      this.serverErrorMessage =
-        this.firebaseErrorMessagesMap[error.code] ||
-        "An unexpected error occurred. Please try again.";
+      this.errorService.handleError(this, error.code, firebaseErrorMessages);
     } finally {
       this.isLoading = false;
     }

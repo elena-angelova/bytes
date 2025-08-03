@@ -30,6 +30,7 @@ export class AuthorDetailsComponent implements OnInit {
   articles: Article[] = [];
   isLoading: boolean = true;
   currentUserId!: string | undefined;
+  isOwner: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -40,17 +41,21 @@ export class AuthorDetailsComponent implements OnInit {
 
   //! Implement infinite scroll
   ngOnInit(): void {
-    //! Merge these into one pipe
+    //! Merge these into one pipe and unsubscribe
     this.route.paramMap.subscribe((params) => {
       this.authorId = params.get("userId")!;
       this.currentUserId = this.authService.getCurrentUser()?.uid;
+
+      if (this.currentUserId === this.authorId) {
+        this.isOwner = true;
+      }
 
       this.userService
         .getUserData(this.authorId)
         .pipe(tap(() => (this.isLoading = false)))
         .subscribe({
           next: (data) => {
-            this.authorDetails = data;
+            this.authorDetails = data; //! Add error handling (NotFoundComponent) if the server returns no user
             this.authorName = `${data?.firstName} ${data?.lastName}`;
           },
           error: (err) => console.log(err), //! Add error handling
@@ -60,7 +65,7 @@ export class AuthorDetailsComponent implements OnInit {
         .getArticlesByAuthor(this.authorId)
         .pipe(tap(() => (this.isLoading = false)))
         .subscribe({
-          next: (articles) => (this.articles = articles),
+          next: (articles) => (this.articles = articles), //! Add error handling (EmptyStateComponent) if the server returns no articles
           error: (err) => console.log(err), //! Add error handling
         });
     });

@@ -39,7 +39,11 @@
     <div class="btn cancel-btn">
       <a (click)="onCancel()">Cancel</a>
     </div>
-    <app-cta-button textContent="Update" (click)="onSubmit()"></app-cta-button>
+    <app-cta-button
+      textContent="Update"
+      [isLoading]="isLoading"
+      (click)="onSubmit()"
+    ></app-cta-button>
   </div>
 </form>
 } @else {

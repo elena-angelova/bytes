@@ -11,6 +11,7 @@ import { ArticleDetailsComponent } from "./pages/article-details/article-details
 import { ArticleEditComponent } from "./pages/article-edit/article-edit";
 import { ProfileSettingsComponent } from "./pages/profile-settings/profile-settings";
 import { ReadingListComponent } from "./pages/reading-list/reading-list";
+import { NotFoundComponent } from "./shared/not-found/not-found";
 
 export const routes: Routes = [
   { path: "", component: HomePageComponent },
@@ -25,4 +26,6 @@ export const routes: Routes = [
   { path: "users/:userId", component: AuthorDetailsComponent },
   { path: "settings", component: ProfileSettingsComponent },
   { path: "reading-list", component: ReadingListComponent },
+  { path: "not-found", component: NotFoundComponent },
+  { path: "**", redirectTo: "/not-found" },
 ];

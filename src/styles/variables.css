@@ -37,6 +37,9 @@
   --box-shadow: 0 0 0 1px hsla(230, 13%, 9%, 0.075),
     0 3px 10px rgb(0, 0, 0, 0.2);
   --ql-toolbar-bg-scroll: white;
+  --empty-icon-bg: #f3f5f7;
+  --empty-icon-line1: #dadde2;
+  --empty-icon-line2: #e8e9ed;
 }
 
 body.dark-mode {
@@ -70,4 +73,7 @@ body.dark-mode {
     0 0 0 1px hsla(230, 13%, 9%, 0.075), 0px 1px 1.5px rgba(0, 0, 0, 0.3),
     0px 3px 4px rgba(0, 0, 0, 0.2);
   --ql-toolbar-bg-scroll: #262626;
+  --empty-icon-bg: #2c2c2c;
+  --empty-icon-line1: #424149;
+  --empty-icon-line2: #5d5c65;
 }

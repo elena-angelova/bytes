@@ -10,9 +10,3 @@ export interface User {
   currentRole: string;
   readingList: string[];
 }
-
-export interface UserUpdate {
-  bio: string;
-  techStack: string;
-  currentRole: string;
-}

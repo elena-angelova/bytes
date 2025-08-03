@@ -1,5 +1,10 @@
 import { Component, inject, OnInit, signal, ViewChild } from "@angular/core";
-import { articleCategories } from "../../config";
+import {
+  articleCategories,
+  cloudinaryErrorMessages,
+  customErrorMessages,
+  firebaseErrorMessages,
+} from "../../config";
 import {
   FormBuilder,
   FormGroup,
@@ -10,19 +15,28 @@ import { AuthService } from "../../services/auth.service";
 import { ArticleService } from "../../services/article.service";
 import { UploadService } from "../../services/upload.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { map, Observable, Subscription, tap } from "rxjs";
 import {
-  Article,
-  CloudinaryUploadResponse,
-  ArticleFormValues,
-  ArticleUpdate,
-} from "../../types";
+  catchError,
+  EMPTY,
+  finalize,
+  from,
+  map,
+  Observable,
+  of,
+  Subscription,
+  switchMap,
+  take,
+  tap,
+} from "rxjs";
+import { Article, CloudinaryUploadResponse } from "../../types";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { ArticleHeaderFormComponent } from "../../features/article/article-header-form/article-header-form";
 import { TextEditorComponent } from "../../features/article/text-editor/text-editor";
 import { ToastNotificationComponent } from "../../shared/toast-notification/toast-notification";
 import DOMPurify from "dompurify";
 import { LoaderComponent } from "../../shared/loader/loader";
+import { ErrorService } from "../../services/error.service";
+import { FirestoreError } from "firebase/firestore";
 
 @Component({
   selector: "app-article-edit",
@@ -44,17 +58,16 @@ export class ArticleEditComponent implements OnInit {
   articleId!: string;
   article!: Article;
   articleCategories: string[] = articleCategories;
-  isLoadingEditor: boolean = true;
-  isLoading: boolean = false;
-
   sanitizedContent: SafeHtml | null = null;
   imageFile!: File;
   fileName!: string;
   previewFileUrl!: string;
 
+  isLoadingEditor: boolean = true;
+  isSaving: boolean = false;
   hasError: boolean = false;
   isFormInvalid: boolean = false;
-  serverErrorMessage!: string;
+  serverErrorMessage: string = "";
 
   private formBuilder = inject(FormBuilder);
   editArticleForm: FormGroup = this.formBuilder.group({
@@ -63,158 +76,137 @@ export class ArticleEditComponent implements OnInit {
     content: ["", Validators.required],
   });
 
-  firebaseErrorMessagesMap: Record<string, string> = {
-    internal: "Something went wrong. Please try again.",
-    "permission-denied": "You don't have permission to perform this action.",
-    "deadline-exceeded":
-      "Request timed out. Please check your connection and try again.",
-    unavailable:
-      "Service is temporarily unavailable. Please check your connection or try again later.",
-    unauthenticated: "You need to be signed in to perform this action.",
-  };
-
   private routeSub?: Subscription;
-  private imageUploadSub?: Subscription;
-  private articleSub?: Subscription;
+  private currentUserSub?: Subscription;
 
   constructor(
     private authService: AuthService,
     private articleService: ArticleService,
     private uploadService: UploadService,
+    private errorService: ErrorService,
     private router: Router,
     private route: ActivatedRoute,
     private sanitizer: DomSanitizer
   ) {}
 
-  ngOnInit() {
-    this.routeSub = this.route.paramMap.subscribe((params) => {
-      this.articleId = params.get("articleId")!;
-
-      this.articleSub = this.articleService
-        .getSingleArticle(this.articleId)
-        .pipe(
-          tap((data) => {
-            this.sanitizedContent = this.sanitizer.bypassSecurityTrustHtml(
-              data?.content || ""
-            );
-          })
+  ngOnInit(): void {
+    this.routeSub = this.route.paramMap
+      .pipe(
+        map((params) => params.get("articleId")!),
+        tap((articleId) => (this.articleId = articleId)),
+        switchMap((articleId) =>
+          this.articleService.getSingleArticle(articleId).pipe(
+            tap((data) => {
+              this.sanitizedContent = this.sanitizer.bypassSecurityTrustHtml(
+                data?.content || ""
+              );
+            })
+          )
         )
-        .subscribe({
-          next: (articleData) => {
-            if (!articleData) {
-              this.serverErrorMessage =
-                "Looks like the article's missing or has been removed.";
-
-              this.hasError = true;
-              setTimeout(() => (this.hasError = false), 4000);
-
-              this.isLoadingEditor = false;
-              return;
-            }
-
-            this.editArticleForm.patchValue({
-              title: articleData.title,
-              category: articleData.category,
-              content: articleData.content,
-            });
-
-            this.contentSignal.set(articleData.content);
-            this.previewFileUrl = articleData.thumbnailUrl;
-            this.article = articleData;
-
+      )
+      .subscribe({
+        next: (articleData) => {
+          if (!articleData) {
+            const errorCode = "article/not-found";
+            this.errorService.handleError(this, errorCode, customErrorMessages);
             this.isLoadingEditor = false;
-          },
-          error: (error) => {
-            this.serverErrorMessage =
-              this.firebaseErrorMessagesMap[error.code] ||
-              "An unexpected error occurred. Please try again.";
+            return;
+          }
 
-            this.hasError = true;
-            setTimeout(() => (this.hasError = false), 4000);
-          },
-        });
-    });
-  }
-
-  onFileSelected(file: File) {
-    this.fileName = file.name;
-    this.imageFile = file;
-    this.previewFileUrl = URL.createObjectURL(file);
-  }
-
-  onFormSubmit() {
-    const content: string = this.textEditor.getHtml();
-
-    if (this.editArticleForm.valid) {
-      this.isFormInvalid = false;
-
-      const sanitizedContent: string = DOMPurify.sanitize(content);
-
-      const formValues: ArticleFormValues = this.editArticleForm.value;
-      const category: string = formValues.category;
-      const title: string = formValues.title;
-      const preview: string = formValues.content
-        .split(/\s+/)
-        .slice(0, 50)
-        .join(" ");
-
-      const currentUser = this.authService.getCurrentUser();
-      const authorId: string | undefined = currentUser?.uid;
-      const isOwner = authorId === this.article.authorId;
-
-      if (authorId && isOwner) {
-        this.isLoading = true;
-
-        const baseArticleData = {
-          category,
-          content: sanitizedContent,
-          preview,
-          title,
-        };
-
-        if (!this.imageFile) {
-          const thumbnailUrl = this.article.thumbnailUrl;
-          this.onEdit({
-            ...baseArticleData,
-            thumbnailUrl,
+          this.editArticleForm.patchValue({
+            title: articleData.title,
+            category: articleData.category,
+            content: articleData.content,
           });
-        } else {
-          this.imageUploadSub = this.uploadImage()
-            .pipe(
-              map((thumbnailUrl) => ({
-                ...baseArticleData,
-                thumbnailUrl,
-              }))
-            )
-            .subscribe({
-              next: (articleData) => {
-                this.onEdit(articleData);
-              },
-              error: () => {
-                this.serverErrorMessage =
-                  "Whoops! The image failed to upload. Make sure it's under 10MB and give it another go.";
 
-                this.hasError = true;
-                setTimeout(() => (this.hasError = false), 4000);
+          this.contentSignal.set(articleData.content);
+          this.previewFileUrl = articleData.thumbnailUrl;
+          this.article = articleData;
 
-                this.isLoading = false;
-                return;
-              },
-            });
-        }
-      } else {
-        this.serverErrorMessage =
-          "Only the author can edit this article. Make sure you're signed in with the right account.";
+          this.isLoadingEditor = false;
+        },
+        error: (error: FirestoreError) => {
+          this.errorService.handleError(
+            this,
+            error.code,
+            firebaseErrorMessages
+          );
 
-        this.hasError = true;
-        setTimeout(() => (this.hasError = false), 4000);
+          this.isLoadingEditor = false;
+        },
+      });
+  }
 
-        this.isLoading = false;
-      }
-    } else {
+  onSubmit(): void {
+    const htmlContent: string = this.textEditor.getHtml();
+
+    if (!this.editArticleForm.valid) {
       this.isFormInvalid = true;
       this.editArticleForm.markAllAsTouched();
+      return;
     }
+
+    this.isFormInvalid = false;
+    this.isSaving = true;
+
+    const sanitizedContent: string = DOMPurify.sanitize(htmlContent);
+    const {
+      category,
+      title,
+      content: plainTextContent,
+    } = this.editArticleForm.value;
+
+    const preview: string = plainTextContent
+      .split(/\s+/)
+      .slice(0, 50)
+      .join(" ");
+
+    const baseArticleData = {
+      category,
+      content: sanitizedContent,
+      preview,
+      title,
+    };
+
+    this.currentUserSub = this.authService.currentUser$
+      .pipe(
+        take(1),
+        switchMap((user) => {
+          if (!user || user.uid !== this.article.authorId) {
+            const errorCode = "unauthorized";
+            this.errorService.handleError(this, errorCode, customErrorMessages);
+            return EMPTY;
+          }
+
+          const thumbnailUrl$ = this.imageFile
+            ? this.uploadImage().pipe(
+                catchError((error) => {
+                  this.errorService.handleError(
+                    this,
+                    error.statusText,
+                    cloudinaryErrorMessages
+                  );
+
+                  return EMPTY;
+                })
+              )
+            : of(this.article.thumbnailUrl);
+
+          return thumbnailUrl$.pipe(
+            switchMap((thumbnailUrl) => {
+              const finalData = {
+                ...baseArticleData,
+                thumbnailUrl,
+              };
+              return from(this.onEdit(finalData));
+            })
+          );
+        }),
+        finalize(() => {
+          this.isSaving = false;
+        })
+      )
+      .subscribe();
   }
 
   uploadImage(): Observable<string> {
@@ -223,27 +215,29 @@ export class ArticleEditComponent implements OnInit {
       .pipe(map((response: CloudinaryUploadResponse) => response.secure_url));
   }
 
-  async onEdit(articleData: ArticleUpdate): Promise<void> {
+  onFileSelected(file: File): void {
+    this.fileName = file.name;
+    this.imageFile = file;
+    this.previewFileUrl = URL.createObjectURL(file);
+  }
+
+  async onEdit(articleData: Partial<Article>): Promise<void> {
     try {
       await this.articleService.editArticle(articleData, this.articleId);
-
       this.router.navigate(["/articles", this.articleId]);
     } catch (error: any) {
-      this.serverErrorMessage =
-        this.firebaseErrorMessagesMap[error.code] ||
-        "An unexpected error occurred. Please try again.";
+      this.errorService.handleError(this, error.code, firebaseErrorMessages);
     } finally {
-      this.isLoading = false;
+      this.isSaving = false;
     }
   }
 
-  onCancel() {
+  onCancel(): void {
     this.router.navigate(["/articles", this.articleId]);
   }
 
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.routeSub?.unsubscribe();
-    this.imageUploadSub?.unsubscribe();
-    this.articleSub?.unsubscribe();
+    this.currentUserSub?.unsubscribe();
   }
 }

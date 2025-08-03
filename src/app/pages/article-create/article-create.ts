@@ -1,5 +1,10 @@
 import { Component, inject, ViewChild } from "@angular/core";
-import { articleCategories } from "../../config";
+import {
+  articleCategories,
+  cloudinaryErrorMessages,
+  customErrorMessages,
+  firebaseErrorMessages,
+} from "../../config";
 import { ArticleHeaderFormComponent } from "../../features/article/article-header-form/article-header-form";
 import { TextEditorComponent } from "../../features/article/text-editor/text-editor";
 import {
@@ -8,19 +13,26 @@ import {
   ReactiveFormsModule,
   Validators,
 } from "@angular/forms";
-import {
-  Article,
-  CloudinaryUploadResponse,
-  ArticleFormValues,
-} from "../../types";
+import { Article, CloudinaryUploadResponse } from "../../types";
 import { AuthService } from "../../services/auth.service";
 import { Timestamp } from "@angular/fire/firestore";
 import { ArticleService } from "../../services/article.service";
 import { Router } from "@angular/router";
 import DOMPurify from "dompurify";
 import { UploadService } from "../../services/upload.service";
-import { map, Observable, Subscription } from "rxjs";
+import {
+  catchError,
+  EMPTY,
+  finalize,
+  from,
+  map,
+  Observable,
+  Subscription,
+  switchMap,
+  take,
+} from "rxjs";
 import { ToastNotificationComponent } from "../../shared/toast-notification/toast-notification";
+import { ErrorService } from "../../services/error.service";
 
 @Component({
   selector: "app-article-editor",
@@ -45,7 +57,7 @@ export class ArticleCreateComponent {
 
   isFormInvalid: boolean = false;
   hasError: boolean = false;
-  serverErrorMessage!: string;
+  serverErrorMessage: string = "";
 
   private formBuilder = inject(FormBuilder);
   createArticleForm: FormGroup = this.formBuilder.group({
@@ -54,29 +66,92 @@ export class ArticleCreateComponent {
     content: ["", Validators.required],
   });
 
-  firebaseErrorMessagesMap: Record<string, string> = {
-    internal: "Something went wrong. Please try again.",
-    "permission-denied": "You don't have permission to perform this action.",
-    "deadline-exceeded":
-      "Request timed out. Please check your connection and try again.",
-    unavailable:
-      "Service is temporarily unavailable. Please check your connection or try again later.",
-    unauthenticated: "You need to be signed in to perform this action.",
-  };
-
-  private imageUploadSub?: Subscription;
+  private currentUserSub?: Subscription;
 
   constructor(
     private authService: AuthService,
     private articleService: ArticleService,
     private uploadService: UploadService,
+    private errorService: ErrorService,
     private router: Router
   ) {}
 
-  onFileSelected(file: File) {
-    this.fileName = file.name;
-    this.imageFile = file;
-    this.previewFileUrl = URL.createObjectURL(file);
+  onSubmit(): void {
+    const htmlContent: string = this.textEditor.getHtml();
+
+    if (!this.createArticleForm.valid) {
+      this.isFormInvalid = true;
+      setTimeout(() => (this.isFormInvalid = false), 3000);
+
+      this.createArticleForm.markAllAsTouched();
+      return;
+    }
+
+    this.isFormInvalid = false;
+    this.isLoading = true;
+
+    const sanitizedContent: string = DOMPurify.sanitize(htmlContent);
+    const {
+      category,
+      title,
+      content: plainTextContent,
+    } = this.createArticleForm.value;
+
+    const preview: string = plainTextContent
+      .split(/\s+/)
+      .slice(0, 50)
+      .join(" ");
+
+    this.currentUserSub = this.authService.currentUser$
+      .pipe(
+        take(1),
+        switchMap((user) => {
+          if (!user) {
+            const errorCode = "unauthenticated";
+            this.errorService.handleError(this, errorCode, customErrorMessages);
+            return EMPTY;
+          }
+
+          const authorId: string = user.uid;
+          const authorName: string = user.displayName ?? "";
+
+          const baseArticleData = {
+            authorId,
+            authorName,
+            category,
+            content: sanitizedContent,
+            likes: 0,
+            likedBy: [],
+            preview,
+            title,
+            createdAt: Timestamp.now(),
+          };
+
+          return this.uploadImage().pipe(
+            catchError((error) => {
+              this.errorService.handleError(
+                this,
+                error.statusText,
+                cloudinaryErrorMessages
+              );
+
+              return EMPTY;
+            }),
+            switchMap((thumbnailUrl) => {
+              const finalData = {
+                ...baseArticleData,
+                thumbnailUrl,
+              };
+
+              return from(this.onCreate(finalData));
+            })
+          );
+        }),
+        finalize(() => {
+          this.isLoading = false;
+        })
+      )
+      .subscribe();
   }
 
   uploadImage(): Observable<string> {
@@ -85,77 +160,10 @@ export class ArticleCreateComponent {
       .pipe(map((response: CloudinaryUploadResponse) => response.secure_url));
   }
 
-  onFormSubmit(): void {
-    const content: string = this.textEditor.getHtml();
-
-    if (this.createArticleForm.valid && this.imageFile) {
-      this.isFormInvalid = false;
-
-      const sanitizedContent: string = DOMPurify.sanitize(content);
-
-      const formValues: ArticleFormValues = this.createArticleForm.value;
-      const category: string = formValues.category;
-      const title: string = formValues.title;
-      const preview: string = formValues.content
-        .split(/\s+/)
-        .slice(0, 50)
-        .join(" ");
-
-      const currentUser = this.authService.getCurrentUser();
-      const authorId: string | undefined = currentUser?.uid;
-      const authorName: string = currentUser?.displayName ?? "";
-
-      if (authorId) {
-        this.isLoading = true;
-
-        const baseArticleData = {
-          authorId,
-          authorName,
-          category,
-          content: sanitizedContent,
-          likes: 0,
-          likedBy: [],
-          preview,
-          title,
-          createdAt: Timestamp.now(),
-        };
-
-        this.imageUploadSub = this.uploadImage()
-          .pipe(
-            map((thumbnailUrl) => ({
-              ...baseArticleData,
-              thumbnailUrl,
-            }))
-          )
-          .subscribe({
-            next: (articleData) => {
-              this.onCreate(articleData);
-            },
-            error: () => {
-              this.serverErrorMessage =
-                "Whoops! The image failed to upload. Make sure it's under 10MB and give it another go.";
-
-              this.hasError = true;
-              setTimeout(() => (this.hasError = false), 4000);
-
-              this.isLoading = false;
-              return;
-            },
-          });
-      } else {
-        this.serverErrorMessage =
-          "You're not logged in. Please sign in to continue.";
-
-        this.hasError = true;
-        setTimeout(() => (this.hasError = false), 4000);
-
-        this.isLoading = false;
-      }
-    } else {
-      this.isFormInvalid = true;
-      setTimeout(() => (this.isFormInvalid = false), 3000);
-      this.createArticleForm.markAllAsTouched();
-    }
+  onFileSelected(file: File) {
+    this.fileName = file.name;
+    this.imageFile = file;
+    this.previewFileUrl = URL.createObjectURL(file);
   }
 
   async onCreate(articleData: Article): Promise<void> {
@@ -166,12 +174,7 @@ export class ArticleCreateComponent {
       this.createArticleForm.reset();
       this.router.navigate(["/articles", articleId]);
     } catch (error: any) {
-      this.serverErrorMessage =
-        this.firebaseErrorMessagesMap[error.code] ||
-        "An unexpected error occurred. Please try again.";
-
-      this.hasError = true;
-      setTimeout(() => (this.hasError = false), 4000);
+      this.errorService.handleError(this, error.code, firebaseErrorMessages);
     } finally {
       this.isLoading = false;
     }
@@ -182,6 +185,6 @@ export class ArticleCreateComponent {
   }
 
   ngOnDestroy() {
-    this.imageUploadSub?.unsubscribe;
+    this.currentUserSub?.unsubscribe();
   }
 }

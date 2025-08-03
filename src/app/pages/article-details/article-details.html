@@ -4,7 +4,6 @@
 <app-article-header
   [articleId]="articleId"
   [article]="article"
-  [likes$]="likes$"
   [isCopied]="isCopied"
   [isOwner]="isOwner"
   [hasLiked]="hasLiked"
@@ -19,4 +18,8 @@
 <app-article-content
   [sanitizedContent]="sanitizedContent"
 ></app-article-content>
-}
+@if (hasError) {
+<app-toast-notification
+  [textContent]="serverErrorMessage"
+></app-toast-notification>
+} }

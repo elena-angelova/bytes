@@ -1,6 +1,6 @@
 import { Component, inject } from "@angular/core";
 import { ErrorMessages, FormFields, LoginFormValues } from "../../types";
-import { formFields } from "../../config";
+import { firebaseErrorMessages, formFields } from "../../config";
 import { ModalComponent } from "../../shared/modal/modal";
 import { ModalService } from "../../services/modal.service";
 import { AuthService } from "../../services/auth.service";
@@ -10,6 +10,7 @@ import {
   ValidationErrors,
   Validators,
 } from "@angular/forms";
+import { ErrorService } from "../../services/error.service";
 
 @Component({
   selector: "app-login",
@@ -37,15 +38,11 @@ export class LoginModalComponent {
     password: ["", [Validators.required]],
   });
 
-  firebaseErrorMessagesMap: Record<string, string> = {
-    "auth/invalid-credential":
-      "Your login information is incorrect. Please try again.",
-    "auth/internal-error": "Something went wrong. Please try again.",
-    "auth/network-request-failed":
-      "Network error. Please check your internet connection.",
-  };
-
-  constructor(private modalService: ModalService, private auth: AuthService) {}
+  constructor(
+    private modalService: ModalService,
+    private auth: AuthService,
+    private errorService: ErrorService
+  ) {}
 
   onSwitchModal() {
     this.modalService.closeAll();
@@ -90,9 +87,7 @@ export class LoginModalComponent {
       this.loginForm.reset();
       this.modalService.closeAll();
     } catch (error: any) {
-      this.serverErrorMessage =
-        this.firebaseErrorMessagesMap[error.code] ||
-        "An unexpected error occurred. Please try again.";
+      this.errorService.handleError(this, error.code, firebaseErrorMessages);
     } finally {
       this.isLoading = false;
     }

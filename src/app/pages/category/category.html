@@ -1,6 +1,10 @@
 @if (isLoading) {
 <app-loader></app-loader>
-} @else {
+} @else if (hasError) {
+<app-toast-notification
+  [textContent]="serverErrorMessage"
+></app-toast-notification>
+} @else if (articles) {
 <app-section-title [content]="category"></app-section-title>
 @if (articles.length > 0) {
 <app-article-grid
@@ -9,5 +13,5 @@
   (authorClick)="openAuthorProfile($event)"
 ></app-article-grid>
 } @else {
-<app-empty-state></app-empty-state>
+<app-empty-state [isLoggedIn]="isLoggedIn"></app-empty-state>
 } }

@@ -1,4 +1,4 @@
-@if (isLoading) {
+@if (isLoadingPage) {
 <app-loader></app-loader>
 } @else {
 <app-section-title [content]="displayName"></app-section-title>
@@ -9,6 +9,8 @@
     [currentRole]="currentRole"
     [techStack]="techStack"
     [isEditing]="isEditing"
+    [isLoading]="isSaving"
+    (editingChange)="onEditingChange($event)"
     (submit)="onSubmit($event)"
   ></app-profile-details-form>
   <app-profile-stats
@@ -19,4 +21,8 @@
     [totalLikes]="totalLikes"
   ></app-profile-stats>
 </div>
-}
+@if (hasError) {
+<app-toast-notification
+  [textContent]="serverErrorMessage"
+></app-toast-notification>
+} }

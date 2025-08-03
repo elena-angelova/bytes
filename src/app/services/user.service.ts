@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { doc, docData, Firestore, updateDoc } from "@angular/fire/firestore";
-import { from, Observable } from "rxjs";
+import { from, Observable, throwError } from "rxjs";
 import { User } from "../types";
 import { arrayRemove, arrayUnion, setDoc, Timestamp } from "firebase/firestore";
 
@@ -30,7 +30,7 @@ export class UserService {
     });
   }
 
-  editUserData(data: { [key: string]: string }, uid: string): Observable<void> {
+  editUserData(data: Record<string, string>, uid: string): Observable<void> {
     const userDocRef = doc(this.firestore, "users", uid);
 
     return from(

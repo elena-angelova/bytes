@@ -6,12 +6,12 @@
     [articleCategories]="articleCategories"
     [form]="editArticleForm"
     [isFormInvalid]="isFormInvalid"
-    [isLoading]="isLoading"
+    [isLoading]="isSaving"
     [fileName]="fileName"
     [previewFileUrl]="previewFileUrl"
     (fileSelected)="onFileSelected($event)"
-    (submit)="onFormSubmit()"
-    (cancel)="onCancel()"
+    (submit)="onSubmit()"
+    (close)="onCancel()"
   ></app-article-header-form>
 
   <app-text-editor

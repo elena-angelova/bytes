@@ -6,12 +6,13 @@ import { RouterLink } from "@angular/router";
 
 @Component({
   selector: "app-article-header",
-  imports: [AsyncPipe, DatePipe, RouterLink],
+  imports: [DatePipe, RouterLink],
   templateUrl: "./article-header.html",
   styleUrl: "./article-header.css",
 })
 export class ArticleHeaderComponent {
-  @Input() likes$!: Observable<number>;
+  @Input() currentUserId!: string | undefined;
+  @Input() articleId!: string;
   @Input() article!: Article;
 
   @Input() isCopied!: boolean;
@@ -19,12 +20,14 @@ export class ArticleHeaderComponent {
   @Input() hasLiked!: boolean;
   @Input() hasBookmarked!: boolean;
 
-  @Input() currentUserId!: string | undefined;
-  @Input() articleId!: string;
-
   @Output() authorClick = new EventEmitter<string>();
   @Output() delete = new EventEmitter<void>();
   @Output() like = new EventEmitter<void>();
   @Output() bookmark = new EventEmitter<void>();
   @Output() share = new EventEmitter<void>();
+
+  onLike() {
+    if (this.isOwner) return;
+    this.like.emit();
+  }
 }

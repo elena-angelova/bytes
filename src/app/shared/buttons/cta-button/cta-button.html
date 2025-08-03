@@ -1,5 +1,7 @@
-<a class="btn cta-btn">
-  <span [class]="isLoading ? 'loading' : null">{{ textContent }}</span>
+<a class="btn cta-btn" [class.loading]="isLoading">
+  <span [style.visibility]="isLoading ? 'hidden' : 'visible'">{{
+    textContent
+  }}</span>
   @if (isLoading) {
   <div class="loader"></div>
   }

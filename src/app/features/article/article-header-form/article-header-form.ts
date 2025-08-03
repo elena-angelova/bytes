@@ -26,7 +26,7 @@ export class ArticleHeaderFormComponent implements AfterViewInit {
   @Input() isLoading!: boolean;
 
   @Output() submit = new EventEmitter<void>();
-  @Output() cancel = new EventEmitter<void>();
+  @Output() close = new EventEmitter<void>();
   @Output() fileSelected = new EventEmitter<File>();
 
   @ViewChild("titleTextarea") textarea!: ElementRef<HTMLTextAreaElement>;
@@ -48,8 +48,8 @@ export class ArticleHeaderFormComponent implements AfterViewInit {
   }
 
   onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    const file: File | undefined = input.files?.[0];
+    const inputEl = event.target as HTMLInputElement;
+    const file: File | undefined = inputEl.files?.[0];
 
     if (file) {
       this.fileSelected.emit(file);

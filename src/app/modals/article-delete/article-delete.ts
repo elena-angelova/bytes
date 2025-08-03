@@ -4,6 +4,8 @@ import { ModalService } from "../../services/modal.service";
 import { ArticleService } from "../../services/article.service";
 import { Router } from "@angular/router";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
+import { firebaseErrorMessages } from "../../config";
+import { ErrorService } from "../../services/error.service";
 
 @Component({
   selector: "app-article-delete",
@@ -19,20 +21,11 @@ export class ArticleDeleteModalComponent {
   serverErrorMessage!: string;
   isLoading: boolean = false;
 
-  firebaseErrorMessagesMap: Record<string, string> = {
-    internal: "Something went wrong. Please try again.",
-    "permission-denied": "You don't have permission to perform this action.",
-    "deadline-exceeded":
-      "Request timed out. Please check your connection and try again.",
-    unavailable:
-      "Service is temporarily unavailable. Please check your connection or try again later.",
-    unauthenticated: "You need to be signed in to perform this action.",
-  };
-
   constructor(
     @Inject(MAT_DIALOG_DATA) public data: { articleId: string },
     private articleService: ArticleService,
     private modalService: ModalService,
+    private errorService: ErrorService,
     private router: Router
   ) {}
 
@@ -43,11 +36,9 @@ export class ArticleDeleteModalComponent {
       await this.articleService.deleteArticle(this.data.articleId);
 
       this.modalService.closeAll();
-      await this.router.navigate(["/articles"]);
+      this.router.navigate(["/articles"]);
     } catch (error: any) {
-      this.serverErrorMessage =
-        this.firebaseErrorMessagesMap[error.code] ||
-        "An unexpected error occurred. Please try again.";
+      this.errorService.handleError(this, error.code, firebaseErrorMessages);
     } finally {
       this.isLoading = false;
     }

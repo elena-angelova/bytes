@@ -5,13 +5,14 @@ import { ArticleService } from "../../services/article.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Article } from "../../types";
 import {
-  forkJoin,
+  catchError,
+  combineLatest,
+  EMPTY,
   map,
   Observable,
   of,
   Subscription,
   switchMap,
-  take,
   tap,
 } from "rxjs";
 import { LoaderComponent } from "../../shared/loader/loader";
@@ -19,10 +20,22 @@ import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { AuthService } from "../../services/auth.service";
 import { ModalService } from "../../services/modal.service";
 import { UserService } from "../../services/user.service";
+import { ErrorService } from "../../services/error.service";
+import {
+  customErrorMessages,
+  domErrorMessages,
+  firebaseErrorMessages,
+} from "../../config";
+import { ToastNotificationComponent } from "../../shared/toast-notification/toast-notification";
 
 @Component({
   selector: "app-article-details",
-  imports: [ArticleHeaderComponent, ArticleContentComponent, LoaderComponent],
+  imports: [
+    ArticleHeaderComponent,
+    ArticleContentComponent,
+    LoaderComponent,
+    ToastNotificationComponent,
+  ],
   templateUrl: "./article-details.html",
   styleUrl: "./article-details.css",
 })
@@ -36,9 +49,12 @@ export class ArticleDetailsComponent implements OnInit {
 
   isLoading: boolean = true;
   isCopied: boolean = false;
-  isOwner: boolean = false;
   hasLiked: boolean = false;
   hasBookmarked: boolean = false;
+
+  isOwner: boolean = false;
+  hasError: boolean = false;
+  serverErrorMessage: string = "";
 
   private routeSub!: Subscription;
 
@@ -47,37 +63,44 @@ export class ArticleDetailsComponent implements OnInit {
     private articleService: ArticleService,
     private userService: UserService,
     private modalService: ModalService,
+    private errorService: ErrorService,
     private route: ActivatedRoute,
     private router: Router,
     private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit(): void {
-    this.routeSub = this.authService.currentUser$
+    this.routeSub = combineLatest([
+      this.authService.currentUser$.pipe(map((user) => user?.uid)),
+      this.route.paramMap.pipe(map((params) => params.get("articleId")!)),
+    ])
       .pipe(
-        switchMap((user) => {
-          this.currentUserId = user?.uid;
+        switchMap(([currentUserId, articleId]) => {
+          this.currentUserId = currentUserId;
+          this.articleId = articleId;
 
-          return this.route.paramMap.pipe(
-            switchMap((params) => {
-              this.articleId = params.get("articleId")!;
-
-              return forkJoin({
-                article: this.articleService
-                  .getSingleArticle(this.articleId)
-                  .pipe(take(1)),
-                userData: this.currentUserId
-                  ? this.userService
-                      .getUserData(this.currentUserId)
-                      .pipe(take(1))
-                  : of(null),
-              });
-            })
-          );
+          return combineLatest([
+            this.articleService.getSingleArticle(articleId),
+            currentUserId
+              ? this.userService.getUserData(currentUserId)
+              : of(null),
+          ]);
         }),
-        tap(({ article, userData }) => {
+        catchError((error) => {
+          this.errorService.handleError(
+            this,
+            error.code,
+            firebaseErrorMessages
+          );
+
+          this.isLoading = false;
+          return EMPTY;
+        }),
+        tap(([article, userData]) => {
           if (!article) {
-            //! Add error handling
+            this.isLoading = false;
+            this.router.navigate(["/not-found"]);
+
             return;
           }
 
@@ -97,15 +120,6 @@ export class ArticleDetailsComponent implements OnInit {
         })
       )
       .subscribe();
-
-    this.likes$ = this.route.paramMap.pipe(
-      map((params) => params.get("articleId")),
-      switchMap((articleId) =>
-        this.articleService
-          .getSingleArticle(articleId!)
-          .pipe(map((article) => article?.likes ?? 0))
-      )
-    );
   }
 
   openAuthorProfile(authorId: string | undefined): void {
@@ -114,7 +128,9 @@ export class ArticleDetailsComponent implements OnInit {
 
   async onLike(): Promise<void> {
     if (!this.article) {
-      //! Add error handling
+      const errorCode = "article/not-found";
+      this.errorService.handleError(this, errorCode, customErrorMessages);
+      this.isLoading = false;
       return;
     }
 
@@ -126,7 +142,6 @@ export class ArticleDetailsComponent implements OnInit {
     if (this.currentUserId === this.article.authorId) {
       this.isOwner = true;
       setTimeout(() => (this.isOwner = false), 3000);
-
       return;
     }
 
@@ -136,24 +151,22 @@ export class ArticleDetailsComponent implements OnInit {
           this.articleId,
           this.currentUserId
         );
-
-        this.hasLiked = false;
       } else {
         await this.articleService.likeArticle(
           this.articleId,
           this.currentUserId
         );
-
-        this.hasLiked = true;
       }
-    } catch (error) {
-      //! Add error handling
+    } catch (error: any) {
+      this.errorService.handleError(this, error.code, firebaseErrorMessages);
     }
   }
 
   async onBookmark() {
     if (!this.article) {
-      //! Add error handling
+      const errorCode = "article/not-found";
+      this.errorService.handleError(this, errorCode, customErrorMessages);
+      this.isLoading = false;
       return;
     }
 
@@ -162,14 +175,17 @@ export class ArticleDetailsComponent implements OnInit {
       return;
     }
 
-    if (this.hasBookmarked) {
-      await this.userService.removeBookmark(this.currentUserId, this.articleId);
-
-      this.hasBookmarked = false;
-    } else {
-      await this.userService.addBookmark(this.currentUserId, this.articleId);
-
-      this.hasBookmarked = true;
+    try {
+      if (this.hasBookmarked) {
+        await this.userService.removeBookmark(
+          this.currentUserId,
+          this.articleId
+        );
+      } else {
+        await this.userService.addBookmark(this.currentUserId, this.articleId);
+      }
+    } catch (error: any) {
+      this.errorService.handleError(this, error.code, firebaseErrorMessages);
     }
   }
 
@@ -177,11 +193,10 @@ export class ArticleDetailsComponent implements OnInit {
     const currentUrl = window.location.origin + this.router.url;
     try {
       await navigator.clipboard.writeText(currentUrl);
-
       this.isCopied = true;
       setTimeout(() => (this.isCopied = false), 3000);
-    } catch (error) {
-      //! Add error handling
+    } catch (error: any) {
+      this.errorService.handleError(this, error.name, domErrorMessages);
     }
   }
 

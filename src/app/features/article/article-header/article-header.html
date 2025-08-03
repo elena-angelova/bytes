@@ -64,7 +64,7 @@
             version="1.1"
             viewBox="10 23 85 55"
             [class]="hasLiked ? 'heart-icon liked' : 'heart-icon'"
-            (click)="like.emit()"
+            (click)="onLike()"
           >
             <title>Like</title>
             <g transform="translate(0,-952.36218)">
@@ -74,7 +74,7 @@
             </g>
           </svg>
           <div class="likes-count">
-            {{ likes$ | async }}
+            {{ article.likes }}
           </div>
         </div>
       </div>
