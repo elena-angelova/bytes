@@ -1,4 +1,11 @@
-import { Component, inject, OnInit, signal, ViewChild } from "@angular/core";
+import {
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  ViewChild,
+} from "@angular/core";
 import {
   articleCategories,
   cloudinaryErrorMessages,
@@ -50,7 +57,7 @@ import { FirestoreError } from "firebase/firestore";
   templateUrl: "./article-edit.html",
   styleUrl: "./article-edit.css",
 })
-export class ArticleEditComponent implements OnInit {
+export class ArticleEditComponent implements OnInit, OnDestroy {
   @ViewChild(TextEditorComponent) textEditor!: TextEditorComponent;
 
   contentSignal = signal<string>("");

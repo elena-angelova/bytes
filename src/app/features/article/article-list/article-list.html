@@ -1,0 +1,35 @@
+@for (article of articles; track $index) {
+<div class="list-item">
+  <div class="main">
+    <div class="header">
+      <div class="createdDate">
+        {{ article.createdAt.toDate() | date : "MMM d, y" }}
+      </div>
+
+      <h6 class="title" [routerLink]="['/articles', article.id]">
+        {{ article.title }}
+      </h6>
+    </div>
+    <div class="preview" [routerLink]="['/articles', article.id]">
+      {{ article.preview }}
+    </div>
+    <div class="footer">
+      <div class="author">
+        by
+        <span (click)="authorClick.emit(article.authorId)">{{
+          article.authorName
+        }}</span>
+      </div>
+    </div>
+  </div>
+  <div class="aside">
+    <div class="thumbnail">
+      <img
+        [routerLink]="['/articles', article.id]"
+        src="{{ article.thumbnailUrl }}"
+        alt="Article thumbnail"
+      />
+    </div>
+  </div>
+</div>
+}

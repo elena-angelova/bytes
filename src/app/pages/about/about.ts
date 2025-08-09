@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnDestroy } from "@angular/core";
 import { CtaButtonComponent } from "../../shared/buttons/cta-button/cta-button";
 import {
   animate,
@@ -10,6 +10,7 @@ import {
 import { Router } from "@angular/router";
 import { AuthService } from "../../services/auth.service";
 import { ModalService } from "../../services/modal.service";
+import { Subscription, take } from "rxjs";
 
 @Component({
   selector: "app-about",
@@ -24,8 +25,9 @@ import { ModalService } from "../../services/modal.service";
     ]),
   ],
 })
-export class AboutPageComponent {
+export class AboutPageComponent implements OnDestroy {
   openedIndex: number | null = null;
+  private currentUserSub?: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -42,12 +44,18 @@ export class AboutPageComponent {
   }
 
   onCtaClick() {
-    const userId: string | undefined = this.authService.getCurrentUser()?.uid;
+    this.currentUserSub = this.authService.currentUser$
+      .pipe(take(1))
+      .subscribe((currentUser) => {
+        if (currentUser) {
+          this.router.navigate(["/articles/create"]);
+        } else {
+          this.modalService.openRegisterModal();
+        }
+      });
+  }
 
-    if (userId) {
-      this.router.navigate(["/articles/create"]);
-    } else {
-      this.modalService.openRegisterModal();
-    }
+  ngOnDestroy() {
+    this.currentUserSub?.unsubscribe();
   }
 }

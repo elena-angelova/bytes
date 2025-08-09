@@ -3,6 +3,10 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 3.3rem;
-  margin: 5rem 0;
+  gap: 3.5rem;
+  margin: 6rem 0;
+}
+
+app-cta-button {
+  align-self: center;
 }

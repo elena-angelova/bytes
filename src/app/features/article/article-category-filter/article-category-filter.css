@@ -19,11 +19,11 @@
       }
 
       a:hover {
-        color: #8f8f8f;
+        color: var(--search-bar-text);
       }
 
       svg:hover {
-        fill: #8f8f8f;
+        fill: var(--search-bar-text);
       }
     }
 
@@ -34,7 +34,8 @@
 }
 
 hr {
-  border: 1px solid var(--border);
+  border: none;
+  border-top: 2px solid var(--border);
   transition: border-color 0.3s ease, color 0.3s ease;
 }
 
@@ -62,13 +63,10 @@ hr {
     li {
       list-style: none;
       height: fit-content;
+      cursor: pointer;
 
-      a {
-        cursor: pointer;
-      }
-
-      a:hover {
-        color: #8f8f8f;
+      &:hover {
+        color: var(--search-bar-text);
       }
     }
   }

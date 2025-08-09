@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnDestroy, OnInit } from "@angular/core";
 import { ProfileStatsComponent } from "./profile-stats/profile-stats";
 import { ProfileDetailsFormComponent } from "./profile-details-form/profile-details-form";
 import { AuthService } from "../../services/auth.service";
@@ -14,7 +14,6 @@ import { User } from "../../types";
 import { ErrorService } from "../../services/error.service";
 import { customErrorMessages, firebaseErrorMessages } from "../../config";
 import { ToastNotificationComponent } from "../../shared/toast-notification/toast-notification";
-import { getAuth, updateProfile } from "@angular/fire/auth";
 
 @Component({
   selector: "app-profile-settings",
@@ -28,7 +27,7 @@ import { getAuth, updateProfile } from "@angular/fire/auth";
   templateUrl: "./profile-settings.html",
   styleUrl: "./profile-settings.css",
 })
-export class ProfileSettingsComponent implements OnInit {
+export class ProfileSettingsComponent implements OnInit, OnDestroy {
   currentUserId!: string;
   displayName!: string | null;
   email!: string | null;
@@ -76,7 +75,7 @@ export class ProfileSettingsComponent implements OnInit {
         switchMap((currentUser) =>
           combineLatest([
             this.userService.getUserData(currentUser.uid),
-            this.articleService.getArticlesByAuthor(currentUser.uid),
+            this.articleService.getOwnArticles(currentUser.uid),
           ])
         )
       )

@@ -2,15 +2,27 @@
 <app-loader></app-loader>
 } @else {
 <app-section-title [content]="authorName"></app-section-title>
+
 <div class="content">
-  @if (articles.length > 0) {
-  <app-article-grid [articles]="articles" [columns]="2"></app-article-grid>
-  } @else {
-  <app-empty-state
-    [isOwner]="isOwner"
-    [isLoggedIn]="!!currentUserId"
-  ></app-empty-state>
-  }
+  <div class="main">
+    @if (articles.length > 0) {
+    <app-article-grid [articles]="articles" [columns]="2"></app-article-grid>
+
+    @if (isLoadingMore) {
+    <app-loader></app-loader>
+    } @else if (hasMore) {
+    <app-cta-button
+      textContent="Load more"
+      (click)="loadMore()"
+    ></app-cta-button>
+    } } @else {
+    <app-empty-state
+      [isOwner]="isOwner"
+      [isLoggedIn]="isLoggedIn"
+    ></app-empty-state>
+    }
+  </div>
+
   <aside>
     <div class="header">
       <h5>Hello!</h5>
@@ -42,4 +54,9 @@
     </div>
   </aside>
 </div>
-}
+
+@if (hasError) {
+<app-toast-notification
+  [textContent]="serverErrorMessage"
+></app-toast-notification>
+} }

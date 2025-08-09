@@ -3,7 +3,17 @@
 } @else {
 <app-section-title content="Reading list"></app-section-title>
 
-@if (articles.length === 0) {
+@if (articles.length > 0) {
+<app-article-list
+  [articles]="articles"
+  (authorClick)="openAuthorProfile($event)"
+></app-article-list>
+
+@if (isLoadingMore) {
+<app-loader></app-loader>
+} @else if (hasMore) {
+<app-cta-button textContent="Load more" (click)="loadMore()"></app-cta-button>
+} } @else {
 <div class="empty">
   <svg
     xmlns="http://www.w3.org/2000/svg"
@@ -56,15 +66,8 @@
     <p>Click the Save icon on any article to add it to your reading list.</p>
   </div>
 </div>
-} @else {
-<app-article-grid
-  [articles]="articles"
-  [columns]="3"
-  (authorClick)="openAuthorProfile($event)"
-></app-article-grid>
-
 } @if (hasError) {
 <app-toast-notification
   [textContent]="serverErrorMessage"
 ></app-toast-notification>
-}}
+} }

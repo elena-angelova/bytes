@@ -1,42 +1,15 @@
 <div class="header-container">
-  <div class="author-controls">
+  <div class="meta">
     <div class="created-date">
       {{ article.createdAt.toDate() | date : "MMM d, y" }}
     </div>
 
-    @if (currentUserId === article.authorId) {
-    <div class="controls">
-      <div class="edit-wrapper">
-        <div class="edit" [routerLink]="['/articles', articleId, 'edit']">
-          <svg
-            class="edit-icon"
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="1 1 22 22"
-          >
-            <path
-              d="M11.007,9.815l-.956,2.869a1.007,1.007,0,0,0,1.265,1.264l2.869-.956a1.007,1.007,0,0,0,.39-.241l6.736-6.736a2.354,2.354,0,0,0,0-3.327h0a2.356,2.356,0,0,0-3.326,0L11.249,9.425A1,1,0,0,0,11.007,9.815Z"
-            />
-            <path
-              d="M21,9a1,1,0,0,0-1,1v7a3,3,0,0,1-3,3H7a3,3,0,0,1-3-3V7A3,3,0,0,1,7,4h7a1,1,0,0,0,0-2H7A5.006,5.006,0,0,0,2,7V17a5.006,5.006,0,0,0,5,5H17a5.006,5.006,0,0,0,5-5V10A1,1,0,0,0,21,9Z"
-            />
-          </svg>
-          <span>Edit</span>
-        </div>
-      </div>
-      <div class="delete" (click)="delete.emit()">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          version="1.1"
-          viewBox="2 3 28 26"
-        >
-          <path
-            d="M27,6h-2h-4V5c0-1.6542969-1.3457031-3-3-3h-4c-1.6542969,0-3,1.3457031-3,3v1H7H5C4.4477539,6,4,6.4477539,4,7  s0.4477539,1,1,1h1v16c0,3.3085938,2.6914063,6,6,6h8c3.3085938,0,6-2.6914063,6-6V8h1c0.5522461,0,1-0.4477539,1-1  S27.5522461,6,27,6z M13,5c0-0.5512695,0.4487305-1,1-1h4c0.5512695,0,1,0.4487305,1,1v1h-6V5z M24,24c0,2.2055664-1.7944336,4-4,4  h-8c-2.2055664,0-4-1.7944336-4-4V8h4h8h4V24z M20,12v12c0,0.5522461-0.4477539,1-1,1s-1-0.4477539-1-1V12  c0-0.5522461,0.4477539-1,1-1S20,11.4477539,20,12z M14,12v12c0,0.5522461-0.4477539,1-1,1s-1-0.4477539-1-1V12  c0-0.5522461,0.4477539-1,1-1S14,11.4477539,14,12z"
-          />
-        </svg>
-        <span>Delete</span>
-      </div>
+    <div
+      class="category"
+      [routerLink]="['/articles/category', article.category]"
+    >
+      {{ article.category }}
     </div>
-    }
   </div>
 
   <div class="title-toolbar-wrapper">
@@ -114,6 +87,34 @@
             />
           </svg>
         </div>
+
+        @if (currentUserId === article.authorId) {
+        <div class="controls">
+          <div class="more-icon-wrapper" (click)="toggleMenu.emit()">
+            <svg
+              class="more-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="20 20 60 60"
+            >
+              &gt;
+              <circle cx="8" cy="50" r="15" />
+              <circle cx="50" cy="50" r="15" />
+              <circle cx="92" cy="50" r="15" />
+            </svg>
+          </div>
+
+          @if (isMenuOpened) {
+          <div class="dropdown-container">
+            <a
+              class="btn edit-btn"
+              [routerLink]="['/articles', articleId, 'edit']"
+              >Edit article</a
+            >
+            <a class="btn delete-btn" (click)="delete.emit()">Delete article</a>
+          </div>
+          }
+        </div>
+        }
       </div>
     </div>
   </div>

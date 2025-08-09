@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Router, RouterLink } from "@angular/router";
 import { ModalService } from "../../services/modal.service";
 import { AuthService } from "../../services/auth.service";
@@ -7,6 +7,8 @@ import { NavMenuComponent } from "./nav-menu/nav-menu";
 import { ThemeToggleButtonComponent } from "./theme-toggle-button/theme-toggle-button";
 import { Observable, Subscription } from "rxjs";
 import { User } from "firebase/auth";
+import { ErrorService } from "../../services/error.service";
+import { customErrorMessages, firebaseErrorMessages } from "../../config";
 
 @Component({
   selector: "app-header",
@@ -19,7 +21,7 @@ import { User } from "firebase/auth";
   templateUrl: "./header.html",
   styleUrl: "./header.css",
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
   currentUser$!: Observable<User | null>;
 
   theme: "light" | "dark" = "light";
@@ -27,12 +29,15 @@ export class HeaderComponent implements OnInit {
   rotation: number = 0;
 
   isMenuOpened: boolean = false;
+  hasError: boolean = false;
+  serverErrorMessage: string = "";
 
   private currentUserSub?: Subscription;
 
   constructor(
     private modalService: ModalService,
     private authService: AuthService,
+    private errorService: ErrorService,
     private router: Router
   ) {
     const savedMode: string | null = localStorage.getItem("darkMode");
@@ -78,9 +83,9 @@ export class HeaderComponent implements OnInit {
 
     try {
       await this.authService.logout();
-      await this.router.navigate([""]);
-    } catch (error) {
-      //! See how you'll visualise the error if logout fails
+      this.router.navigate(["/"]);
+    } catch (error: any) {
+      this.errorService.handleError(this, error.code, firebaseErrorMessages);
     }
   }
 
@@ -88,8 +93,13 @@ export class HeaderComponent implements OnInit {
     this.toggleMenu();
 
     this.currentUserSub = this.currentUser$.subscribe((user) => {
-      const userId: string | undefined = user?.uid;
-      this.router.navigate(["/users", userId]);
+      if (!user) {
+        const errorCode = "unauthenticated";
+        this.errorService.handleError(this, errorCode, customErrorMessages);
+        return;
+      }
+
+      this.router.navigate(["/users", user.uid]);
     });
   }
 

@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { doc, docData, Firestore, updateDoc } from "@angular/fire/firestore";
-import { from, Observable, throwError } from "rxjs";
+import { from, Observable } from "rxjs";
 import { User } from "../types";
 import { arrayRemove, arrayUnion, setDoc, Timestamp } from "firebase/firestore";
 
@@ -12,7 +12,6 @@ export class UserService {
 
   getUserData(uid: string): Observable<User | undefined> {
     const userDocRef = doc(this.firestore, "users", uid);
-
     return docData(userDocRef) as Observable<User | undefined>;
   }
 

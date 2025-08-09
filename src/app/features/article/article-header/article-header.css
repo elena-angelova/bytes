@@ -4,73 +4,24 @@
   gap: 1.3rem;
 }
 
-.created-date {
-  font-size: 0.9rem;
-  color: var(--button-bg);
-}
-
-.author-controls {
+.meta {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-}
+  gap: 2rem;
 
-.controls {
-  display: flex;
-  gap: 1rem;
+  .created-date {
+    font-size: 0.9rem;
+    color: var(--button-bg);
+  }
 
-  .edit,
-  .delete {
-    display: flex;
-    gap: 0.4rem;
-    align-items: center;
-    cursor: pointer;
+  .category {
+    font-size: 0.7rem;
+    padding: 0.4rem 0.7rem;
+    border-radius: 1rem;
     color: var(--search-bar-text);
-    padding: 0.5rem 0.7rem;
-    border-radius: 0.5rem;
-
-    svg {
-      font-weight: 400;
-      fill: var(--search-bar-text);
-      width: 1rem;
-      height: 1rem;
-    }
-
-    span {
-      font-size: 0.9rem;
-      font-weight: 500;
-    }
-  }
-
-  .edit:hover {
-    color: var(--button-hover-bg);
-
-    svg {
-      fill: var(--button-hover-bg);
-    }
-  }
-
-  .delete:hover {
-    color: #d96766;
-
-    svg {
-      fill: #d96766;
-    }
-  }
-
-  .edit-wrapper {
-    position: relative;
-
-    &::after {
-      content: "";
-      display: block;
-      width: 1px;
-      height: 1.3rem;
-      background-color: var(--search-bar-text);
-      position: absolute;
-      top: 7px;
-      right: -10px;
-    }
+    background-color: var(--search-bar-bg);
+    transition: background-color 0.3s ease;
+    cursor: pointer;
   }
 }
 
@@ -127,8 +78,8 @@
     }
 
     .heart-icon {
-      width: 1.1rem;
-      height: 1.1rem;
+      width: 1.2rem;
+      height: 1.2rem;
       cursor: pointer;
       fill: none;
       stroke: var(--text-color);
@@ -173,17 +124,70 @@
     stroke: var(--text-color);
     fill: var(--text-color);
   }
-}
 
-.cover-img-wrapper {
-  width: 100%;
-  aspect-ratio: 1.7;
-  border-radius: 1rem;
-  overflow: hidden;
+  .controls {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
 
-  img {
-    height: 100%;
-    object-fit: cover;
+    .more-icon-wrapper {
+      cursor: pointer;
+      padding: 0.3rem 0;
+
+      .more-icon {
+        fill: var(--text-color);
+        width: 1.2rem;
+        height: 0.6rem;
+
+        &:hover {
+          fill: var(--search-bar-text);
+        }
+      }
+    }
+  }
+
+  .dropdown-container {
+    position: absolute;
+    border-radius: 0.5rem;
+    top: 110%;
+    right: -270%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.2rem;
+    background-color: var(--search-bar-bg);
+    transition: background-color 0.3s ease;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: -17%;
+      left: 47%;
+      margin-left: -5px;
+      border-width: 8px;
+      border-style: solid;
+      border-color: transparent transparent var(--search-bar-bg) transparent;
+      transition: border-color 0.3s ease, color 0.3s ease;
+    }
+
+    a {
+      font-size: 0.8rem;
+      text-wrap: nowrap;
+      cursor: pointer;
+
+      &.edit-btn:hover {
+        color: var(--search-bar-text);
+      }
+
+      &.delete-btn {
+        color: var(--notification-icon);
+
+        &:hover {
+          color: #c63432;
+        }
+      }
+    }
   }
 }
 
@@ -192,7 +196,6 @@
 }
 
 .popup {
-  background-color: var(--search-bar-bg);
   color: var(--search-bar-text);
   text-align: center;
   font-size: 0.8rem;
@@ -201,6 +204,7 @@
   position: absolute;
   z-index: 1;
   text-wrap: nowrap;
+  background-color: var(--search-bar-bg);
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -243,5 +247,17 @@
   }
   100% {
     opacity: 0;
+  }
+}
+
+.cover-img-wrapper {
+  width: 100%;
+  aspect-ratio: 1.7;
+  border-radius: 1rem;
+  overflow: hidden;
+
+  img {
+    height: 100%;
+    object-fit: cover;
   }
 }

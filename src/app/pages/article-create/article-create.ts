@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from "@angular/core";
+import { Component, inject, OnDestroy, ViewChild } from "@angular/core";
 import {
   articleCategories,
   cloudinaryErrorMessages,
@@ -45,7 +45,7 @@ import { ErrorService } from "../../services/error.service";
   templateUrl: "./article-create.html",
   styleUrl: "./article-create.css",
 })
-export class ArticleCreateComponent {
+export class ArticleCreateComponent implements OnDestroy {
   @ViewChild(TextEditorComponent) textEditor!: TextEditorComponent;
 
   articleCategories: string[] = articleCategories;

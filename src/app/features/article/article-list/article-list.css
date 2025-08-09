@@ -1,0 +1,83 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  gap: 4rem;
+  height: 11rem;
+  padding-top: 2rem;
+
+  &:not(:first-child) {
+    border-top: 2px solid var(--border);
+  }
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.createdDate {
+  font-size: 0.8rem;
+}
+
+.title,
+.preview {
+  cursor: pointer;
+}
+
+.preview {
+  line-clamp: 2;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.author {
+  font-size: 0.6rem;
+  display: flex;
+  gap: 0.4rem;
+
+  span {
+    font-size: 0.9rem;
+    font-weight: bold;
+    line-height: 1;
+    cursor: pointer;
+  }
+}
+
+.aside {
+  height: 100%;
+}
+
+.thumbnail {
+  height: 100%;
+  aspect-ratio: 1.5;
+  overflow: hidden;
+  border-radius: 0.7rem;
+  cursor: pointer;
+
+  img {
+    height: 100%;
+    object-fit: cover;
+  }
+}

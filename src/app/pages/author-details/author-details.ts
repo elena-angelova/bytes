@@ -1,15 +1,27 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { SectionTitleComponent } from "../../shared/section-title/section-title";
 import { ArticleGridComponent } from "../../features/article/article-grid/article-grid";
-import { ArticleService } from "../../services/article.service";
-import { ActivatedRoute } from "@angular/router";
-import { UserService } from "../../services/user.service";
-import { tap } from "rxjs";
-import { Article, User } from "../../types";
-import { DatePipe } from "@angular/common";
+import { CtaButtonComponent } from "../../shared/buttons/cta-button/cta-button";
 import { LoaderComponent } from "../../shared/loader/loader";
 import { EmptyStateComponent } from "../../shared/empty-state/empty-state";
+import { ToastNotificationComponent } from "../../shared/toast-notification/toast-notification";
+import { ArticleService } from "../../services/article.service";
+import { ActivatedRoute, Router } from "@angular/router";
+import { UserService } from "../../services/user.service";
+import {
+  combineLatest,
+  finalize,
+  forkJoin,
+  map,
+  Subscription,
+  switchMap,
+  take,
+} from "rxjs";
+import { Article, User } from "../../types";
+import { DatePipe } from "@angular/common";
 import { AuthService } from "../../services/auth.service";
+import { ErrorService } from "../../services/error.service";
+import { firebaseErrorMessages } from "../../config";
 
 @Component({
   selector: "app-author-details",
@@ -17,57 +29,181 @@ import { AuthService } from "../../services/auth.service";
     DatePipe,
     SectionTitleComponent,
     ArticleGridComponent,
+    CtaButtonComponent,
     LoaderComponent,
     EmptyStateComponent,
+    ToastNotificationComponent,
   ],
   templateUrl: "./author-details.html",
   styleUrl: "./author-details.css",
 })
-export class AuthorDetailsComponent implements OnInit {
-  authorId!: string;
-  authorName!: string;
-  authorDetails!: User | undefined;
+export class AuthorDetailsComponent implements OnInit, OnDestroy {
+  authorName: string = "";
+  authorDetails: User | undefined;
   articles: Article[] = [];
+  userId: string = "";
+
   isLoading: boolean = true;
-  currentUserId!: string | undefined;
+  isLoadingMore: boolean = false;
+  hasMore: boolean = true;
+
+  isLoggedIn!: boolean;
   isOwner: boolean = false;
 
+  hasError: boolean = false;
+  serverErrorMessage: string = "";
+  private readonly pageSize = 8;
+
+  private routeSub?: Subscription;
+  private loadMoreSub?: Subscription;
+
   constructor(
-    private route: ActivatedRoute,
     private articleService: ArticleService,
     private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
+    private errorService: ErrorService,
+    private route: ActivatedRoute,
+    private router: Router
   ) {}
 
-  //! Implement infinite scroll
   ngOnInit(): void {
-    //! Merge these into one pipe and unsubscribe
-    this.route.paramMap.subscribe((params) => {
-      this.authorId = params.get("userId")!;
-      this.currentUserId = this.authService.getCurrentUser()?.uid;
+    this.routeSub = combineLatest([
+      this.authService.currentUser$.pipe(map((user) => user?.uid)),
+      this.route.paramMap.pipe(map((params) => params.get("userId")!)),
+    ])
+      .pipe(
+        switchMap(([currentUserId, userId]) => {
+          this.userId = userId;
 
-      if (this.currentUserId === this.authorId) {
-        this.isOwner = true;
-      }
+          this.isLoading = true;
+          this.articleService.resetPagination();
+          this.articles = [];
 
-      this.userService
-        .getUserData(this.authorId)
-        .pipe(tap(() => (this.isLoading = false)))
-        .subscribe({
-          next: (data) => {
-            this.authorDetails = data; //! Add error handling (NotFoundComponent) if the server returns no user
-            this.authorName = `${data?.firstName} ${data?.lastName}`;
-          },
-          error: (err) => console.log(err), //! Add error handling
-        });
+          if (currentUserId) {
+            this.isLoggedIn = true;
+          }
 
-      this.articleService
-        .getArticlesByAuthor(this.authorId)
-        .pipe(tap(() => (this.isLoading = false)))
-        .subscribe({
-          next: (articles) => (this.articles = articles), //! Add error handling (EmptyStateComponent) if the server returns no articles
-          error: (err) => console.log(err), //! Add error handling
-        });
-    });
+          if (currentUserId === userId) {
+            this.isOwner = true;
+          }
+
+          return forkJoin({
+            userData: this.userService.getUserData(userId).pipe(take(1)),
+            articles: this.articleService.getArticlesByAuthor(
+              userId,
+              this.pageSize
+            ),
+          }).pipe(
+            finalize(() => {
+              this.isLoading = false;
+            })
+          );
+        })
+      )
+      .subscribe({
+        next: ({ userData, articles }) => {
+          if (!userData) {
+            this.router.navigate(["/not-found"]);
+            return;
+          }
+
+          this.authorDetails = userData;
+          this.authorName = `${userData?.firstName} ${userData?.lastName}`;
+
+          this.addArticles(articles);
+        },
+        error: (error) => {
+          this.errorService.handleError(
+            this,
+            error.code,
+            firebaseErrorMessages
+          );
+        },
+      });
+  }
+
+  loadMore() {
+    if (!this.hasMore || this.isLoadingMore) return;
+
+    this.isLoadingMore = true;
+
+    this.loadMoreSub = this.articleService
+      .getArticlesByAuthor(this.userId, this.pageSize)
+      .pipe(
+        finalize(() => {
+          this.isLoadingMore = false;
+        })
+      )
+      .subscribe({
+        next: (articles) => this.addArticles(articles),
+        error: (error: any) => {
+          this.errorService.handleError(
+            this,
+            error.code,
+            firebaseErrorMessages
+          );
+        },
+      });
+  }
+
+  addArticles(articles: Article[]): void {
+    this.hasMore = articles.length === this.pageSize;
+
+    if (articles.length === 0) return;
+
+    this.articles = [...this.articles, ...articles];
+  }
+
+  ngOnDestroy() {
+    this.routeSub?.unsubscribe();
+    this.loadMoreSub?.unsubscribe();
   }
 }
+
+//* -------
+// ngOnInit(): void {
+//   this.routeSub = combineLatest([
+//     this.authService.currentUser$.pipe(map((user) => user?.uid)),
+//     this.route.paramMap.pipe(map((params) => params.get("userId")!)),
+//   ])
+//     .pipe(
+//       switchMap(([currentUserId, userId]) => {
+//         if (currentUserId) {
+//           this.isLoggedIn = true;
+//         }
+
+//         if (currentUserId === userId) {
+//           this.isOwner = true;
+//         }
+
+//         return combineLatest([
+//           this.userService.getUserData(userId),
+//           this.articleService.getArticlesByAuthor(userId),
+//         ]);
+//       })
+//     )
+//     .subscribe({
+//       next: ([userData, articles]) => {
+//         if (!userData) {
+//           this.isLoading = false;
+//           this.router.navigate(["/not-found"]);
+//           return;
+//         }
+
+//         this.authorDetails = userData;
+//         this.authorName = `${userData?.firstName} ${userData?.lastName}`;
+//         this.articles = articles;
+
+//         this.isLoading = false;
+//       },
+//       error: (error) => {
+//         this.errorService.handleError(
+//           this,
+//           error.code,
+//           firebaseErrorMessages
+//         );
+
+//         this.isLoading = false;
+//       },
+//     });
+// }

@@ -25,8 +25,8 @@
   <div class="dropdown-container">
     <ul>
       @for (category of hiddenCategories; track $index) {
-      <li>
-        <a (click)="filter.emit(category)">{{ category }}</a>
+      <li (click)="filter.emit(category)">
+        <a>{{ category }}</a>
       </li>
       }
     </ul>

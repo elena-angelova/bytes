@@ -1,20 +1,10 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ArticleHeaderComponent } from "../../features/article/article-header/article-header";
 import { ArticleContentComponent } from "../../features/article/article-content/article-content";
 import { ArticleService } from "../../services/article.service";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Article } from "../../types";
-import {
-  catchError,
-  combineLatest,
-  EMPTY,
-  map,
-  Observable,
-  of,
-  Subscription,
-  switchMap,
-  tap,
-} from "rxjs";
+import { combineLatest, map, of, Subscription, switchMap } from "rxjs";
 import { LoaderComponent } from "../../shared/loader/loader";
 import { DomSanitizer, SafeHtml } from "@angular/platform-browser";
 import { AuthService } from "../../services/auth.service";
@@ -39,24 +29,23 @@ import { ToastNotificationComponent } from "../../shared/toast-notification/toas
   templateUrl: "./article-details.html",
   styleUrl: "./article-details.css",
 })
-export class ArticleDetailsComponent implements OnInit {
-  likes$: Observable<number> = of(0);
-
-  currentUserId!: string | undefined;
-  articleId!: string;
+export class ArticleDetailsComponent implements OnInit, OnDestroy {
+  currentUserId: string | undefined;
+  articleId: string = "";
   article!: Article;
   sanitizedContent: SafeHtml | null = null;
 
   isLoading: boolean = true;
+  isOwner: boolean = false;
   isCopied: boolean = false;
   hasLiked: boolean = false;
   hasBookmarked: boolean = false;
+  isMenuOpened: boolean = false;
 
-  isOwner: boolean = false;
   hasError: boolean = false;
   serverErrorMessage: string = "";
 
-  private routeSub!: Subscription;
+  private routeSub?: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -85,22 +74,13 @@ export class ArticleDetailsComponent implements OnInit {
               ? this.userService.getUserData(currentUserId)
               : of(null),
           ]);
-        }),
-        catchError((error) => {
-          this.errorService.handleError(
-            this,
-            error.code,
-            firebaseErrorMessages
-          );
-
-          this.isLoading = false;
-          return EMPTY;
-        }),
-        tap(([article, userData]) => {
+        })
+      )
+      .subscribe({
+        next: ([article, userData]) => {
           if (!article) {
             this.isLoading = false;
             this.router.navigate(["/not-found"]);
-
             return;
           }
 
@@ -117,13 +97,25 @@ export class ArticleDetailsComponent implements OnInit {
             : false;
 
           this.isLoading = false;
-        })
-      )
-      .subscribe();
+        },
+        error: (error: any) => {
+          this.errorService.handleError(
+            this,
+            error.code,
+            firebaseErrorMessages
+          );
+
+          this.isLoading = false;
+        },
+      });
   }
 
   openAuthorProfile(authorId: string | undefined): void {
     this.router.navigate(["/users", authorId]);
+  }
+
+  toggleMenu() {
+    this.isMenuOpened = !this.isMenuOpened;
   }
 
   async onLike(): Promise<void> {
@@ -205,6 +197,6 @@ export class ArticleDetailsComponent implements OnInit {
   }
 
   ngOnDestroy(): void {
-    this.routeSub.unsubscribe();
+    this.routeSub?.unsubscribe();
   }
 }

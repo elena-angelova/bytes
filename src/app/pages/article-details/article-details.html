@@ -9,6 +9,8 @@
   [hasLiked]="hasLiked"
   [hasBookmarked]="hasBookmarked"
   [currentUserId]="currentUserId"
+  [isMenuOpened]="isMenuOpened"
+  (toggleMenu)="toggleMenu()"
   (authorClick)="openAuthorProfile($event)"
   (like)="onLike()"
   (bookmark)="onBookmark()"

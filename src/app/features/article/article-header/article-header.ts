@@ -11,20 +11,22 @@ import { RouterLink } from "@angular/router";
   styleUrl: "./article-header.css",
 })
 export class ArticleHeaderComponent {
-  @Input() currentUserId!: string | undefined;
-  @Input() articleId!: string;
+  @Input() currentUserId: string | undefined;
+  @Input() articleId: string = "";
   @Input() article!: Article;
 
-  @Input() isCopied!: boolean;
-  @Input() isOwner!: boolean;
-  @Input() hasLiked!: boolean;
-  @Input() hasBookmarked!: boolean;
+  @Input() isCopied: boolean = false;
+  @Input() isOwner: boolean = false;
+  @Input() hasLiked: boolean = false;
+  @Input() hasBookmarked: boolean = false;
+  @Input() isMenuOpened: boolean = false;
 
   @Output() authorClick = new EventEmitter<string>();
   @Output() delete = new EventEmitter<void>();
   @Output() like = new EventEmitter<void>();
   @Output() bookmark = new EventEmitter<void>();
   @Output() share = new EventEmitter<void>();
+  @Output() toggleMenu = new EventEmitter<void>();
 
   onLike() {
     if (this.isOwner) return;

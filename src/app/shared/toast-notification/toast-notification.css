@@ -1,14 +1,17 @@
+:host {
+  position: absolute;
+  bottom: 3.5%;
+  left: 22.5%;
+  width: 54%;
+  z-index: 999;
+}
+
 #toast-notification {
   padding: 1rem;
   border-radius: 1rem;
   display: flex;
   align-items: center;
   gap: 1rem;
-  position: absolute;
-  z-index: 999;
-  bottom: 3%;
-  left: 22.5%;
-  width: 55%;
   background-color: var(--notification-bg);
   transition: background-color 0.3s ease, color 0.3s ease;
 }

@@ -1,5 +1,10 @@
+h2 {
+  line-height: 1;
+}
+
 hr {
   margin-top: 1.3rem;
-  border: 1px solid var(--border);
+  border: none;
+  border-top: 2px solid var(--border);
   transition: border-color 0.3s ease, color 0.3s ease;
 }

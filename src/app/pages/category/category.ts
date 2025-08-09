@@ -1,8 +1,8 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Article } from "../../types";
 import { ArticleService } from "../../services/article.service";
 import { ActivatedRoute, Router } from "@angular/router";
-import { map, Subscription, switchMap, tap } from "rxjs";
+import { finalize, map, Subscription, switchMap, tap } from "rxjs";
 import { SectionTitleComponent } from "../../shared/section-title/section-title";
 import { ArticleGridComponent } from "../../features/article/article-grid/article-grid";
 import { EmptyStateComponent } from "../../shared/empty-state/empty-state";
@@ -12,12 +12,14 @@ import { ToastNotificationComponent } from "../../shared/toast-notification/toas
 import { firebaseErrorMessages } from "../../config";
 import { ErrorService } from "../../services/error.service";
 import { FirebaseError } from "firebase/app";
+import { CtaButtonComponent } from "../../shared/buttons/cta-button/cta-button";
 
 @Component({
   selector: "app-category",
   imports: [
     SectionTitleComponent,
     ArticleGridComponent,
+    CtaButtonComponent,
     EmptyStateComponent,
     LoaderComponent,
     ToastNotificationComponent,
@@ -25,16 +27,22 @@ import { FirebaseError } from "firebase/app";
   templateUrl: "./category.html",
   styleUrl: "./category.css",
 })
-export class CategoryComponent implements OnInit {
-  category!: string;
-  articles: Article[] | undefined;
+export class CategoryComponent implements OnInit, OnDestroy {
+  category: string = "";
+  articles: Article[] = [];
+
+  isLoggedIn: boolean = false;
   isLoading: boolean = true;
-  isLoggedIn!: boolean;
-  serverErrorMessage: string = "";
+  isLoadingMore: boolean = false;
+  hasMore: boolean = true;
+
   hasError: boolean = false;
+  serverErrorMessage: string = "";
+  private readonly pageSize = 9;
 
   private currentUserSub?: Subscription;
   private routeSub?: Subscription;
+  private loadMoreSub?: Subscription;
 
   constructor(
     private articleService: ArticleService,
@@ -44,7 +52,6 @@ export class CategoryComponent implements OnInit {
     private router: Router
   ) {}
 
-  //! Implement infinite scroll
   ngOnInit(): void {
     this.currentUserSub = this.authService.currentUser$.subscribe(
       (currentUser) => (this.isLoggedIn = !!currentUser)
@@ -54,25 +61,62 @@ export class CategoryComponent implements OnInit {
       .pipe(
         map((params) => params.get("category")!),
         tap((category) => (this.category = category)),
-        switchMap((category) =>
-          this.articleService.getArticlesByCategory(category)
-        )
+        switchMap((category) => {
+          this.isLoading = true;
+          this.articleService.resetPagination();
+          this.articles = [];
+
+          return this.articleService
+            .getArticlesByCategory(category, this.pageSize)
+            .pipe(
+              finalize(() => {
+                this.isLoading = false;
+              })
+            );
+        })
       )
       .subscribe({
-        next: (articles) => {
-          this.articles = articles;
-          this.isLoading = false;
-        },
+        next: (articles) => this.addArticles(articles),
         error: (error: FirebaseError) => {
           this.errorService.handleError(
             this,
             error.code,
             firebaseErrorMessages
           );
-
-          this.isLoading = false;
         },
       });
+  }
+
+  loadMore() {
+    if (!this.hasMore || this.isLoadingMore) return;
+
+    this.isLoadingMore = true;
+
+    this.loadMoreSub = this.articleService
+      .getArticlesByCategory(this.category, this.pageSize)
+      .pipe(
+        finalize(() => {
+          this.isLoadingMore = false;
+        })
+      )
+      .subscribe({
+        next: (articles) => this.addArticles(articles),
+        error: (error: any) => {
+          this.errorService.handleError(
+            this,
+            error.code,
+            firebaseErrorMessages
+          );
+        },
+      });
+  }
+
+  addArticles(articles: Article[]): void {
+    this.hasMore = articles.length === this.pageSize;
+
+    if (articles.length === 0) return;
+
+    this.articles = [...this.articles, ...articles];
   }
 
   openAuthorProfile(authorId: string) {
@@ -82,5 +126,6 @@ export class CategoryComponent implements OnInit {
   ngOnDestroy() {
     this.currentUserSub?.unsubscribe();
     this.routeSub?.unsubscribe();
+    this.loadMoreSub?.unsubscribe();
   }
 }

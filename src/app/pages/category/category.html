@@ -1,17 +1,23 @@
 @if (isLoading) {
 <app-loader></app-loader>
-} @else if (hasError) {
-<app-toast-notification
-  [textContent]="serverErrorMessage"
-></app-toast-notification>
-} @else if (articles) {
+} @else {
 <app-section-title [content]="category"></app-section-title>
+
 @if (articles.length > 0) {
 <app-article-grid
   [articles]="articles"
   [columns]="3"
   (authorClick)="openAuthorProfile($event)"
 ></app-article-grid>
-} @else {
+
+@if (isLoadingMore) {
+<app-loader></app-loader>
+} @else if (hasMore) {
+<app-cta-button textContent="Load more" (click)="loadMore()"></app-cta-button>
+} } @else {
 <app-empty-state [isLoggedIn]="isLoggedIn"></app-empty-state>
+} @if (hasError) {
+<app-toast-notification
+  [textContent]="serverErrorMessage"
+></app-toast-notification>
 } }

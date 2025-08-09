@@ -140,7 +140,8 @@
 }
 
 hr {
-  border: 1px solid var(--button-bg);
+  border: none;
+  border-top: 2px solid var(--button-bg);
   transition: border-color 0.3s ease, color 0.3s ease;
 }
 

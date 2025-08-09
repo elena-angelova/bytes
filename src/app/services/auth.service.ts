@@ -53,9 +53,4 @@ export class AuthService {
   async logout(): Promise<void> {
     await signOut(this.auth);
   }
-
-  //! I need to refactor this method as at refresh it doesn't return the user object, but just null. Might need to subscribe to the user observable like in the NavMenuComponent
-  getCurrentUser(): User | null {
-    return this.auth.currentUser;
-  }
 }
