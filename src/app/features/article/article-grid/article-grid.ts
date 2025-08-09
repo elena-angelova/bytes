@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { ArticleCardComponent } from "../article-card/article-card";
 import { Article } from "../../../types";
 
@@ -11,6 +11,4 @@ import { Article } from "../../../types";
 export class ArticleGridComponent {
   @Input() articles!: Article[];
   @Input() columns!: number;
-
-  @Output() authorClick = new EventEmitter<string>();
 }

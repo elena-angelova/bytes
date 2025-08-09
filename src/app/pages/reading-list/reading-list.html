@@ -4,10 +4,7 @@
 <app-section-title content="Reading list"></app-section-title>
 
 @if (articles.length > 0) {
-<app-article-list
-  [articles]="articles"
-  (authorClick)="openAuthorProfile($event)"
-></app-article-list>
+<app-article-list [articles]="articles"></app-article-list>
 
 @if (isLoadingMore) {
 <app-loader></app-loader>

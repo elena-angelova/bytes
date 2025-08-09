@@ -3,9 +3,6 @@
   [style]="{ 'grid-template-columns': 'repeat(' + columns + ', 1fr)' }"
 >
   @for (article of articles; track $index) {
-  <app-article-card
-    [article]="article"
-    (authorClick)="authorClick.emit($event)"
-  ></app-article-card>
+  <app-article-card [article]="article"></app-article-card>
   }
 </div>

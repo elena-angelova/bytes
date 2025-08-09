@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Article } from "../../types";
 import { ArticleService } from "../../services/article.service";
-import { Router } from "@angular/router";
 import { ArticleCategoryFilterComponent } from "../../features/article/article-category-filter/article-category-filter";
 import { ArticleGridComponent } from "../../features/article/article-grid/article-grid";
 import { LoaderComponent } from "../../shared/loader/loader";
@@ -45,8 +44,7 @@ export class ArticlesComponent implements OnInit, OnDestroy {
   constructor(
     private authService: AuthService,
     private articleService: ArticleService,
-    private errorService: ErrorService,
-    private router: Router
+    private errorService: ErrorService
   ) {}
 
   ngOnInit(): void {
@@ -90,18 +88,6 @@ export class ArticlesComponent implements OnInit, OnDestroy {
           );
         },
       });
-  }
-
-  onFilter(category: string): void {
-    this.router.navigate(["/articles/category", category]);
-  }
-
-  openAuthorProfile(authorId: string): void {
-    this.router.navigate(["/users", authorId]);
-  }
-
-  toggleMenu(): void {
-    this.isMenuOpened = !this.isMenuOpened;
   }
 
   ngOnDestroy(): void {

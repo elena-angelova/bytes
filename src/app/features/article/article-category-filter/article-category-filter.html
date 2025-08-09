@@ -2,10 +2,10 @@
   <ul>
     @for (category of visibleCategories; track $index) {
     <li>
-      <a (click)="filter.emit(category)">{{ category }}</a>
+      <a [routerLink]="['/articles/category', category]">{{ category }}</a>
     </li>
     }
-    <li (click)="toggleMenu.emit()">
+    <li (click)="isMenuOpened = !isMenuOpened">
       <svg
         class="more-icon"
         xmlns="http://www.w3.org/2000/svg"
@@ -25,7 +25,7 @@
   <div class="dropdown-container">
     <ul>
       @for (category of hiddenCategories; track $index) {
-      <li (click)="filter.emit(category)">
+      <li [routerLink]="['/articles/category', category]">
         <a>{{ category }}</a>
       </li>
       }

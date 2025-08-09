@@ -4,6 +4,7 @@ import { LoginModalComponent } from "../modals/login/login";
 import { ComponentType, Overlay } from "@angular/cdk/overlay";
 import { RegisterModalComponent } from "../modals/register/register";
 import { ArticleDeleteModalComponent } from "../modals/article-delete/article-delete";
+import { Article } from "../types";
 
 @Injectable({
   providedIn: "root",
@@ -26,8 +27,8 @@ export class ModalService {
     this.open(RegisterModalComponent);
   }
 
-  openArticleDeleteModal(articleId: string): void {
-    this.open(ArticleDeleteModalComponent, { articleId });
+  openArticleDeleteModal(articleData: Partial<Article>): void {
+    this.open(ArticleDeleteModalComponent, articleData);
   }
 
   closeAll(): void {

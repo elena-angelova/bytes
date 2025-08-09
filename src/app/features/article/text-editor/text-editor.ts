@@ -79,8 +79,6 @@ export class TextEditorComponent implements AfterViewInit {
   getHtml(): string {
     const textContent = this.editor.getText().trim();
     this.form.get("content")?.setValue(textContent);
-    console.log();
-
     return this.editor.root.innerHTML;
   }
 }

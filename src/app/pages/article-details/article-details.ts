@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
+import { Component, NgZone, OnDestroy, OnInit, signal } from "@angular/core";
 import { ArticleHeaderComponent } from "../../features/article/article-header/article-header";
 import { ArticleContentComponent } from "../../features/article/article-content/article-content";
 import { ArticleService } from "../../services/article.service";
@@ -35,12 +35,11 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
   article!: Article;
   sanitizedContent: SafeHtml | null = null;
 
-  isLoading: boolean = true;
+  isLoading = signal(true);
   isOwner: boolean = false;
   isCopied: boolean = false;
   hasLiked: boolean = false;
   hasBookmarked: boolean = false;
-  isMenuOpened: boolean = false;
 
   hasError: boolean = false;
   serverErrorMessage: string = "";
@@ -79,7 +78,7 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
       .subscribe({
         next: ([article, userData]) => {
           if (!article) {
-            this.isLoading = false;
+            this.isLoading.set(false);
             this.router.navigate(["/not-found"]);
             return;
           }
@@ -96,7 +95,7 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
             ? userData.readingList.includes(this.articleId)
             : false;
 
-          this.isLoading = false;
+          this.isLoading.set(false);
         },
         error: (error: any) => {
           this.errorService.handleError(
@@ -105,24 +104,15 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
             firebaseErrorMessages
           );
 
-          this.isLoading = false;
+          this.isLoading.set(false);
         },
       });
-  }
-
-  openAuthorProfile(authorId: string | undefined): void {
-    this.router.navigate(["/users", authorId]);
-  }
-
-  toggleMenu() {
-    this.isMenuOpened = !this.isMenuOpened;
   }
 
   async onLike(): Promise<void> {
     if (!this.article) {
       const errorCode = "article/not-found";
       this.errorService.handleError(this, errorCode, customErrorMessages);
-      this.isLoading = false;
       return;
     }
 
@@ -158,7 +148,6 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
     if (!this.article) {
       const errorCode = "article/not-found";
       this.errorService.handleError(this, errorCode, customErrorMessages);
-      this.isLoading = false;
       return;
     }
 
@@ -193,7 +182,11 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
   }
 
   onDelete(): void {
-    this.modalService.openArticleDeleteModal(this.articleId);
+    const articleData: Partial<Article> = {
+      id: this.articleId,
+      authorId: this.article.authorId,
+    };
+    this.modalService.openArticleDeleteModal(articleData);
   }
 
   ngOnDestroy(): void {

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { Article } from "../../types";
 import { ArticleService } from "../../services/article.service";
-import { ActivatedRoute, Router } from "@angular/router";
+import { ActivatedRoute } from "@angular/router";
 import { finalize, map, Subscription, switchMap, tap } from "rxjs";
 import { SectionTitleComponent } from "../../shared/section-title/section-title";
 import { ArticleGridComponent } from "../../features/article/article-grid/article-grid";
@@ -48,8 +48,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
     private articleService: ArticleService,
     private authService: AuthService,
     private errorService: ErrorService,
-    private route: ActivatedRoute,
-    private router: Router
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
@@ -117,10 +116,6 @@ export class CategoryComponent implements OnInit, OnDestroy {
     if (articles.length === 0) return;
 
     this.articles = [...this.articles, ...articles];
-  }
-
-  openAuthorProfile(authorId: string) {
-    this.router.navigate(["/users", authorId]);
   }
 
   ngOnDestroy() {

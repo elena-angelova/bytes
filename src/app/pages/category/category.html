@@ -4,11 +4,7 @@
 <app-section-title [content]="category"></app-section-title>
 
 @if (articles.length > 0) {
-<app-article-grid
-  [articles]="articles"
-  [columns]="3"
-  (authorClick)="openAuthorProfile($event)"
-></app-article-grid>
+<app-article-grid [articles]="articles" [columns]="3"></app-article-grid>
 
 @if (isLoadingMore) {
 <app-loader></app-loader>

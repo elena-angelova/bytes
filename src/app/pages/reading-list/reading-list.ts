@@ -7,7 +7,6 @@ import { Article } from "../../types";
 import { SectionTitleComponent } from "../../shared/section-title/section-title";
 import { ArticleListComponent } from "../../features/article/article-list/article-list";
 import { LoaderComponent } from "../../shared/loader/loader";
-import { Router } from "@angular/router";
 import { ErrorService } from "../../services/error.service";
 import { customErrorMessages, firebaseErrorMessages } from "../../config";
 import { ToastNotificationComponent } from "../../shared/toast-notification/toast-notification";
@@ -45,8 +44,7 @@ export class ReadingListComponent implements OnInit, OnDestroy {
     private authService: AuthService,
     private userService: UserService,
     private articleService: ArticleService,
-    private errorService: ErrorService,
-    private router: Router
+    private errorService: ErrorService
   ) {}
 
   ngOnInit(): void {
@@ -72,6 +70,7 @@ export class ReadingListComponent implements OnInit, OnDestroy {
 
           if (userData.readingList.length === 0) {
             this.hasMore = false;
+            this.isLoading = false;
             return of([]);
           }
 
@@ -134,10 +133,6 @@ export class ReadingListComponent implements OnInit, OnDestroy {
           );
         },
       });
-  }
-
-  openAuthorProfile(authorId: string) {
-    this.router.navigate(["/users", authorId]);
   }
 
   ngOnDestroy() {

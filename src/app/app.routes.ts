@@ -1,31 +1,88 @@
 import { Routes } from "@angular/router";
-import { HomePageComponent } from "./pages/home/home";
-import { AboutPageComponent } from "./pages/about/about";
-import { PrivacyPolicyComponent } from "./pages/privacy-policy/privacy-policy";
-import { TermsOfUseComponent } from "./pages/terms-of-use/terms-of-use";
-import { ArticleCreateComponent } from "./pages/article-create/article-create";
-import { ArticlesComponent } from "./pages/articles/articles";
-import { CategoryComponent } from "./pages/category/category";
-import { AuthorDetailsComponent } from "./pages/author-details/author-details";
-import { ArticleDetailsComponent } from "./pages/article-details/article-details";
-import { ArticleEditComponent } from "./pages/article-edit/article-edit";
-import { ProfileSettingsComponent } from "./pages/profile-settings/profile-settings";
-import { ReadingListComponent } from "./pages/reading-list/reading-list";
+import { AuthGuard, OwnerGuard } from "./guards";
 import { NotFoundComponent } from "./shared/not-found/not-found";
 
 export const routes: Routes = [
-  { path: "", component: HomePageComponent },
-  { path: "about", component: AboutPageComponent },
-  { path: "privacy-policy", component: PrivacyPolicyComponent },
-  { path: "terms-of-use", component: TermsOfUseComponent },
-  { path: "articles/create", component: ArticleCreateComponent },
-  { path: "articles", component: ArticlesComponent },
-  { path: "articles/category/:category", component: CategoryComponent },
-  { path: "articles/:articleId", component: ArticleDetailsComponent },
-  { path: "articles/:articleId/edit", component: ArticleEditComponent },
-  { path: "users/:userId", component: AuthorDetailsComponent },
-  { path: "settings", component: ProfileSettingsComponent },
-  { path: "reading-list", component: ReadingListComponent },
+  {
+    path: "",
+    loadComponent: () =>
+      import("./pages/home/home").then((c) => c.HomePageComponent),
+  },
+  {
+    path: "about",
+    loadComponent: () =>
+      import("./pages/about/about").then((c) => c.AboutPageComponent),
+  },
+  {
+    path: "privacy-policy",
+    loadComponent: () =>
+      import("./pages/privacy-policy/privacy-policy").then(
+        (c) => c.PrivacyPolicyComponent
+      ),
+  },
+  {
+    path: "terms-of-use",
+    loadComponent: () =>
+      import("./pages/terms-of-use/terms-of-use").then(
+        (c) => c.TermsOfUseComponent
+      ),
+  },
+  {
+    path: "articles/create",
+    loadComponent: () =>
+      import("./pages/article-create/article-create").then(
+        (c) => c.ArticleCreateComponent
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: "articles",
+    loadComponent: () =>
+      import("./pages/articles/articles").then((c) => c.ArticlesComponent),
+  },
+  {
+    path: "articles/category/:category",
+    loadComponent: () =>
+      import("./pages/category/category").then((c) => c.CategoryComponent),
+  },
+  {
+    path: "articles/:articleId/edit",
+    loadComponent: () =>
+      import("./pages/article-edit/article-edit").then(
+        (c) => c.ArticleEditComponent
+      ),
+    canActivate: [OwnerGuard],
+  },
+  {
+    path: "articles/:articleId",
+    loadComponent: () =>
+      import("./pages/article-details/article-details").then(
+        (c) => c.ArticleDetailsComponent
+      ),
+  },
+  {
+    path: "users/:userId",
+    loadComponent: () =>
+      import("./pages/author-details/author-details").then(
+        (c) => c.AuthorDetailsComponent
+      ),
+  },
+  {
+    path: "settings",
+    loadComponent: () =>
+      import("./pages/profile-settings/profile-settings").then(
+        (c) => c.ProfileSettingsComponent
+      ),
+    canActivate: [AuthGuard],
+  },
+  {
+    path: "reading-list",
+    loadComponent: () =>
+      import("./pages/reading-list/reading-list").then(
+        (c) => c.ReadingListComponent
+      ),
+    canActivate: [AuthGuard],
+  },
   { path: "not-found", component: NotFoundComponent },
   { path: "**", redirectTo: "/not-found" },
 ];

@@ -21,7 +21,7 @@
       <div class="toolbar-container toolbar-left">
         <div class="author">
           by
-          <span (click)="authorClick.emit(article.authorId)">{{
+          <span [routerLink]="['/users', article.authorId]">{{
             article.authorName
           }}</span>
         </div>
@@ -90,7 +90,7 @@
 
         @if (currentUserId === article.authorId) {
         <div class="controls">
-          <div class="more-icon-wrapper" (click)="toggleMenu.emit()">
+          <div class="more-icon-wrapper" (click)="isMenuOpened = !isMenuOpened">
             <svg
               class="more-icon"
               xmlns="http://www.w3.org/2000/svg"

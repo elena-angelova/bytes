@@ -1,4 +1,4 @@
-@if (isLoading) {
+@if (isLoading()) {
 <app-loader></app-loader>
 } @else {
 <app-article-header
@@ -9,9 +9,6 @@
   [hasLiked]="hasLiked"
   [hasBookmarked]="hasBookmarked"
   [currentUserId]="currentUserId"
-  [isMenuOpened]="isMenuOpened"
-  (toggleMenu)="toggleMenu()"
-  (authorClick)="openAuthorProfile($event)"
   (like)="onLike()"
   (bookmark)="onBookmark()"
   (share)="onShare()"

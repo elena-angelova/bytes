@@ -1,18 +1,10 @@
 @if (isLoading) {
 <app-loader></app-loader>
 } @else {
-<app-article-category-filter
-  [isMenuOpened]="isMenuOpened"
-  (filter)="onFilter($event)"
-  (toggleMenu)="toggleMenu()"
-></app-article-category-filter>
+<app-article-category-filter></app-article-category-filter>
 
 @if (articles.length > 0) {
-<app-article-grid
-  [articles]="articles"
-  [columns]="3"
-  (authorClick)="openAuthorProfile($event)"
-></app-article-grid>
+<app-article-grid [articles]="articles" [columns]="3"></app-article-grid>
 
 @if (isLoadingMore) {
 <app-loader></app-loader>

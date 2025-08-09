@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { Article } from "../../../types";
 import { DatePipe } from "@angular/common";
 import { RouterLink } from "@angular/router";
@@ -11,6 +11,4 @@ import { RouterLink } from "@angular/router";
 })
 export class ArticleListComponent {
   @Input() articles: Article[] = [];
-
-  @Output() authorClick = new EventEmitter<string>();
 }

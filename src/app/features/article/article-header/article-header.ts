@@ -19,14 +19,14 @@ export class ArticleHeaderComponent {
   @Input() isOwner: boolean = false;
   @Input() hasLiked: boolean = false;
   @Input() hasBookmarked: boolean = false;
-  @Input() isMenuOpened: boolean = false;
 
-  @Output() authorClick = new EventEmitter<string>();
   @Output() delete = new EventEmitter<void>();
   @Output() like = new EventEmitter<void>();
   @Output() bookmark = new EventEmitter<void>();
   @Output() share = new EventEmitter<void>();
   @Output() toggleMenu = new EventEmitter<void>();
+
+  isMenuOpened: boolean = false;
 
   onLike() {
     if (this.isOwner) return;

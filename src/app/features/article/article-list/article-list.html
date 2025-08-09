@@ -16,7 +16,7 @@
     <div class="footer">
       <div class="author">
         by
-        <span (click)="authorClick.emit(article.authorId)">{{
+        <span [routerLink]="['/users', article.authorId]">{{
           article.authorName
         }}</span>
       </div>
