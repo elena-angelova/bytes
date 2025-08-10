@@ -14,13 +14,14 @@
       <line x1="15" y1="15" x2="20" y2="20"></line>
     </svg>
   </div>
-  <form id="searchForm">
+  <form id="searchForm" (submit)="onSearch()">
     <input
       type="search"
       id="searchInput"
+      name="search"
       placeholder="Search"
       aria-label="Search"
+      [(ngModel)]="query"
     />
   </form>
 </div>
-<!-- !Add a handler for the search bar -->

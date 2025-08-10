@@ -2,9 +2,8 @@
   flex: 1 1 auto;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
-  max-width: 80ch;
-  margin: 6rem auto;
+  gap: 3.5rem;
+  margin: 6rem 0;
 }
 
 .empty {
@@ -47,8 +46,4 @@
   .empty-icon rect {
     transition: fill 0.3s ease, color 0.3s ease;
   }
-}
-
-app-cta-button {
-  align-self: center;
 }

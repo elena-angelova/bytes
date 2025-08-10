@@ -28,7 +28,7 @@ import {
   WhereFilterOp,
 } from "firebase/firestore";
 import { Article } from "../types";
-import { from, map, Observable } from "rxjs";
+import { forkJoin, from, map, Observable } from "rxjs";
 
 type FirestoreFilter =
   | []
@@ -123,7 +123,7 @@ export class ArticleService {
     );
   }
 
-  getOwnArticles(uid: string) {
+  getOwnArticles(uid: string): Observable<Article[]> {
     const authorQuery = query(
       this.articlesRef,
       where("authorId", "==", uid),
@@ -131,6 +131,47 @@ export class ArticleService {
     );
 
     return collectionData(authorQuery, { idField: "id" });
+  }
+
+  searchArticles(q: string): Observable<Article[]> {
+    const queryTitle = query(
+      this.articlesRef,
+      where("title", ">=", q),
+      where("title", "<=", q + "\uf8ff")
+    );
+
+    const queryCategory = query(
+      this.articlesRef,
+      where("category", ">=", q),
+      where("category", "<=", q + "\uf8ff")
+    );
+
+    const title$ = from(getDocs(queryTitle));
+    const category$ = from(getDocs(queryCategory));
+
+    return forkJoin({
+      titleMatches: title$,
+      categoryMatches: category$,
+    }).pipe(
+      map(({ titleMatches, categoryMatches }) => {
+        const titleResults = titleMatches.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        const categoryResults = categoryMatches.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        }));
+
+        const mergedMap = new Map<string, Article>();
+
+        titleResults.forEach((item) => mergedMap.set(item.id, item));
+        categoryResults.forEach((item) => mergedMap.set(item.id, item));
+
+        return Array.from(mergedMap.values());
+      })
+    );
   }
 
   getSingleArticle(articleId: string): Observable<Article | undefined> {

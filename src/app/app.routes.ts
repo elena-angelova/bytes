@@ -83,6 +83,13 @@ export const routes: Routes = [
       ),
     canActivate: [AuthGuard],
   },
+  {
+    path: "search",
+    loadComponent: () =>
+      import("./pages/search-results/search-results").then(
+        (c) => c.SearchResultsComponent
+      ),
+  },
   { path: "not-found", component: NotFoundComponent },
   { path: "**", redirectTo: "/not-found" },
 ];

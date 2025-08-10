@@ -1,0 +1,48 @@
+@if (isLoading) {
+<app-loader></app-loader>
+} @else {
+<app-section-title
+  content="Results for &quot;{{ query }}&quot;"
+></app-section-title>
+@if (results.length > 0) {
+<app-article-grid [articles]="results" [columns]="3"></app-article-grid>
+} @else {
+<div class="empty">
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="300"
+    height="100"
+    viewBox="0 0 300 100"
+    fill="none"
+    class="empty-icon"
+  >
+    <rect width="300" height="100" rx="15" style="fill: var(--empty-icon-bg)" />
+    <rect
+      x="26"
+      y="22"
+      width="248"
+      height="22"
+      rx="10"
+      style="fill: var(--empty-icon-line1)"
+    />
+    <rect
+      x="26"
+      y="55"
+      width="135"
+      height="22"
+      rx="10"
+      style="fill: var(--empty-icon-line2)"
+    />
+  </svg>
+  <div class="content">
+    <h6>No results found</h6>
+    <p>
+      Search terms should match the start of an article's title or category.
+    </p>
+  </div>
+</div>
+} @if (hasError) {
+<app-toast-notification
+  [textContent]="serverErrorMessage"
+></app-toast-notification>
+} }

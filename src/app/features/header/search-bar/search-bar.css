@@ -4,16 +4,17 @@
   background-color: var(--search-bar-bg);
   border: none;
   border-radius: 1.3rem;
-  padding: 0.5rem 0;
+  padding: 0.5rem 1rem 0.5rem 0;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 #searchInput {
   appearance: none;
   border: none;
-  background-color: transparent;
-  color: var(--search-bar-text);
   font-weight: 300;
+  color: var(--search-bar-text);
+  background-color: transparent;
+  min-width: 20ch;
 
   &::placeholder {
     font-weight: 300;
@@ -22,6 +23,13 @@
 
   &:focus {
     outline: var(--search-bar-bg);
+  }
+
+  &:is(:-webkit-autofill, :autofill) {
+    box-shadow: 0 0 0 1000px transparent inset;
+    -webkit-text-fill-color: var(--search-bar-text);
+    caret-color: transparent;
+    transition: background-color 5000s ease-in-out 0s;
   }
 }
 
