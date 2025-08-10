@@ -28,6 +28,7 @@ export class RegisterModalComponent {
   errorMessages: string[] = [];
   passwordPattern: RegExp = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).+$/;
 
+  // Get the necessary fields from the field config object
   fields: FormFields = {
     firstName: formFields["firstName"],
     lastName: formFields["lastName"],
@@ -37,6 +38,7 @@ export class RegisterModalComponent {
     acceptTerms: formFields["acceptTerms"],
   };
 
+  // Build the form and add validators
   private formBuilder = inject(FormBuilder);
   registerForm: FormGroup = this.formBuilder.group(
     {
@@ -65,12 +67,14 @@ export class RegisterModalComponent {
     private errorService: ErrorService
   ) {}
 
+  // Custom validator to check if "password" and "repeatPassword" fields match
   passwordMatchValidator(group: FormGroup) {
     const password: string = group.get("password")?.value;
     const repeatPassword: string = group.get("repeatPassword")?.value;
     return password === repeatPassword ? null : { passwordMismatch: true };
   }
 
+  // Switch to login modal
   onSwitchModal() {
     this.modalService.closeAll();
     setTimeout(() => this.modalService.openLoginModal(), 200);
@@ -80,6 +84,7 @@ export class RegisterModalComponent {
     this.errorMessages = [];
     const formErrors: Record<string, ValidationErrors> = {};
 
+    // Check if form is valid
     if (this.registerForm.valid) {
       this.isFormInvalid = false;
       this.onRegister(this.registerForm.value);
@@ -87,6 +92,7 @@ export class RegisterModalComponent {
       this.isFormInvalid = true;
       this.registerForm.markAllAsTouched();
 
+      // Collect validation errors from each form control
       Object.keys(this.registerForm.controls).forEach((key: string) => {
         const controlErrors: ValidationErrors | null | undefined =
           this.registerForm.get(key)?.errors;
@@ -95,10 +101,12 @@ export class RegisterModalComponent {
         }
       });
 
+      // Collect validation errors from the custom password match validator
       if (this.registerForm.errors) {
         formErrors["repeatPassword"] = this.registerForm.errors;
       }
 
+      // Map each validation error to a user-friendly message
       for (const field in formErrors) {
         const failedValidatorsObj: ValidationErrors = formErrors[field];
         const uiErrorMessages: ErrorMessages = this.fields[field].errorMessages;

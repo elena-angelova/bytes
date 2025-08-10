@@ -35,10 +35,12 @@ export class AboutPageComponent implements OnDestroy {
     private router: Router
   ) {}
 
+  // Toggle expand section open/closed
   onToggle(index: number): void {
     this.openedIndex = this.openedIndex === index ? null : index;
   }
 
+  // Return the arrow icon state based on whether the expand section is open or closed
   getIconState(index: number): "opened" | "closed" {
     return this.openedIndex === index ? "opened" : "closed";
   }

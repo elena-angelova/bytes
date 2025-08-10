@@ -13,6 +13,7 @@ export class SearchBarComponent {
 
   constructor(private router: Router) {}
 
+  // Get the query and navigate to the search results page
   onSearch() {
     if (this.query.trim()) {
       this.router.navigate(["/search"], {

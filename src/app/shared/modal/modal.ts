@@ -35,5 +35,6 @@ export class ModalComponent {
   @Output() submit = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
 
+  // Comparator for the keyvalue pipe to preserve the original order of the 'fields' object keys (disable sorting)
   preserveOrder = () => 0;
 }

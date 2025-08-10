@@ -1,4 +1,4 @@
-import { Component, NgZone, OnDestroy, OnInit, signal } from "@angular/core";
+import { Component, OnDestroy, OnInit, signal } from "@angular/core";
 import { ArticleHeaderComponent } from "../../features/article/article-header/article-header";
 import { ArticleContentComponent } from "../../features/article/article-content/article-content";
 import { ArticleService } from "../../services/article.service";
@@ -58,6 +58,7 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // Get current user UID and article ID
     this.routeSub = combineLatest([
       this.authService.currentUser$.pipe(map((user) => user?.uid)),
       this.route.paramMap.pipe(map((params) => params.get("articleId")!)),
@@ -67,6 +68,7 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
           this.currentUserId = currentUserId;
           this.articleId = articleId;
 
+          // Fetch article details and current user's data (if logged in)
           return combineLatest([
             this.articleService.getSingleArticle(articleId),
             currentUserId
@@ -88,9 +90,12 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
             article.content
           );
 
+          // Check if current user (if any) has already liked the article
           this.hasLiked = this.currentUserId
             ? article.likedBy.includes(this.currentUserId)
             : false;
+
+          // Check if current user (if any) has already bookmarked the article
           this.hasBookmarked = userData
             ? userData.readingList.includes(this.articleId)
             : false;
@@ -109,6 +114,7 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Handle like/unlike
   async onLike(): Promise<void> {
     if (!this.article) {
       const errorCode = "article/not-found";
@@ -116,11 +122,13 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Open the login modal if not logged in
     if (!this.currentUserId) {
       this.modalService.openLoginModal();
       return;
     }
 
+    // Prevent owners from liking their own articles and show a pop-up message
     if (this.currentUserId === this.article.authorId) {
       this.isOwner = true;
       setTimeout(() => (this.isOwner = false), 3000);
@@ -128,6 +136,7 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
     }
 
     try {
+      // Toggle like status: unlike if already liked, otherwise like the article
       if (this.hasLiked) {
         await this.articleService.unlikeArticle(
           this.articleId,
@@ -144,6 +153,7 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Handle adding/removing the article from the current user's reading list
   async onBookmark() {
     if (!this.article) {
       const errorCode = "article/not-found";
@@ -151,12 +161,14 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
       return;
     }
 
+    // Open the login modal if not logged in
     if (!this.currentUserId) {
       this.modalService.openLoginModal();
       return;
     }
 
     try {
+      // Toggle bookmark status: remove bookmark if already bookmarked, otherwise add bookmark
       if (this.hasBookmarked) {
         await this.userService.removeBookmark(
           this.currentUserId,
@@ -170,8 +182,10 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Copy article's URL to clipboard and show a pop-up confirmation
   async onShare() {
     const currentUrl = window.location.origin + this.router.url;
+
     try {
       await navigator.clipboard.writeText(currentUrl);
       this.isCopied = true;
@@ -181,6 +195,7 @@ export class ArticleDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  // Open delete confirmation modal
   onDelete(): void {
     const articleData: Partial<Article> = {
       id: this.articleId,

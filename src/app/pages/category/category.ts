@@ -52,6 +52,7 @@ export class CategoryComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // Check if a user is currently logged in (for EmptyStateComponent)
     this.currentUserSub = this.authService.currentUser$.subscribe(
       (currentUser) => (this.isLoggedIn = !!currentUser)
     );
@@ -61,10 +62,12 @@ export class CategoryComponent implements OnInit, OnDestroy {
         map((params) => params.get("category")!),
         tap((category) => (this.category = category)),
         switchMap((category) => {
+          // Reset pagination and clear articles to load fresh data when route parameter changes
           this.isLoading = true;
           this.articleService.resetPagination();
           this.articles = [];
 
+          // Fetch first batch of articles in the category
           return this.articleService
             .getArticlesByCategory(category, this.pageSize)
             .pipe(
@@ -86,7 +89,9 @@ export class CategoryComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Fetch subsequent batches
   loadMore() {
+    // Prevent loading more if already loading or no more articles to load
     if (!this.hasMore || this.isLoadingMore) return;
 
     this.isLoadingMore = true;
@@ -110,7 +115,9 @@ export class CategoryComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Append articles to the list
   addArticles(articles: Article[]): void {
+    // Determine if there are more articles to load based on whether the current batch is full
     this.hasMore = articles.length === this.pageSize;
 
     if (articles.length === 0) return;

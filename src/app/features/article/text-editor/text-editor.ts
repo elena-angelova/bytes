@@ -26,6 +26,7 @@ export class TextEditorComponent implements AfterViewInit {
   editorReadySignal = signal<boolean>(false);
 
   constructor() {
+    // Load initial content (if any) into the editor once both are available and ready
     effect(() => {
       const contentValue = this.content?.();
       const editorReady = this.editorReadySignal();
@@ -38,6 +39,7 @@ export class TextEditorComponent implements AfterViewInit {
     });
   }
 
+  // Import and initialize the Quill editor
   async ngAfterViewInit() {
     const Quill = (await import("quill")).default;
 
@@ -57,7 +59,11 @@ export class TextEditorComponent implements AfterViewInit {
     });
 
     this.editorReadySignal.set(true);
+    this.initStickyToolbar();
+  }
 
+  // Add sticky styling to the toolbar when the page is scrolled
+  initStickyToolbar(): void {
     const toolbarEl = document.querySelector(".ql-toolbar");
     const toolbarTop =
       (toolbarEl?.getBoundingClientRect().top ?? 0) +
@@ -76,6 +82,7 @@ export class TextEditorComponent implements AfterViewInit {
     });
   }
 
+  // Set form control with plain text and return the editor's HTML
   getHtml(): string {
     const textContent = this.editor.getText().trim();
     this.form.get("content")?.setValue(textContent);

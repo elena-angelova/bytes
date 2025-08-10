@@ -59,6 +59,7 @@ export class ArticleCreateComponent implements OnDestroy {
   hasError: boolean = false;
   serverErrorMessage: string = "";
 
+  // Build the form and add validators
   private formBuilder = inject(FormBuilder);
   createArticleForm: FormGroup = this.formBuilder.group({
     title: ["", Validators.required],
@@ -77,12 +78,13 @@ export class ArticleCreateComponent implements OnDestroy {
   ) {}
 
   onSubmit(): void {
+    // Get the editor's HTML
     const htmlContent: string = this.textEditor.getHtml();
 
+    // Check if form is valid
     if (!this.createArticleForm.valid) {
       this.isFormInvalid = true;
       setTimeout(() => (this.isFormInvalid = false), 3000);
-
       this.createArticleForm.markAllAsTouched();
       return;
     }
@@ -90,6 +92,7 @@ export class ArticleCreateComponent implements OnDestroy {
     this.isFormInvalid = false;
     this.isLoading = true;
 
+    // Sanitize the HTML
     const sanitizedContent: string = DOMPurify.sanitize(htmlContent);
     const {
       category,
@@ -106,6 +109,7 @@ export class ArticleCreateComponent implements OnDestroy {
       .pipe(
         take(1),
         switchMap((user) => {
+          // Check if a user is currently logged in
           if (!user) {
             const errorCode = "unauthenticated";
             this.errorService.handleError(this, errorCode, customErrorMessages);
@@ -115,6 +119,7 @@ export class ArticleCreateComponent implements OnDestroy {
           const authorId: string = user.uid;
           const authorName: string = user.displayName ?? "";
 
+          // Build the base article document object
           const baseArticleData = {
             authorId,
             authorName,
@@ -127,6 +132,7 @@ export class ArticleCreateComponent implements OnDestroy {
             createdAt: Timestamp.now(),
           };
 
+          // Upload cover image
           return this.uploadImage().pipe(
             catchError((error) => {
               this.errorService.handleError(
@@ -138,6 +144,7 @@ export class ArticleCreateComponent implements OnDestroy {
               return EMPTY;
             }),
             switchMap((thumbnailUrl) => {
+              // Append the image URL to the article document object
               const finalData = {
                 ...baseArticleData,
                 thumbnailUrl,
@@ -154,12 +161,14 @@ export class ArticleCreateComponent implements OnDestroy {
       .subscribe();
   }
 
+  // Upload the cover image to Cloudinary
   uploadImage(): Observable<string> {
     return this.uploadService
       .upload(this.imageFile)
       .pipe(map((response: CloudinaryUploadResponse) => response.secure_url));
   }
 
+  // Store emitted cover image and create a preview URL for display
   onFileSelected(file: File) {
     this.fileName = file.name;
     this.imageFile = file;

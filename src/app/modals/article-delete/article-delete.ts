@@ -42,6 +42,7 @@ export class ArticleDeleteModalComponent implements OnDestroy {
       .pipe(take(1))
       .subscribe({
         next: (user) => {
+          // Check authorization before deleting
           if (!user || user.uid !== this.data.authorId) {
             const errorCode = "unauthorized";
             this.errorService.handleError(this, errorCode, customErrorMessages);

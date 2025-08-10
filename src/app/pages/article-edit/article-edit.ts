@@ -76,6 +76,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   isFormInvalid: boolean = false;
   serverErrorMessage: string = "";
 
+  // Build the form and add validators
   private formBuilder = inject(FormBuilder);
   editArticleForm: FormGroup = this.formBuilder.group({
     title: ["", Validators.required],
@@ -97,6 +98,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // Fetch article details
     this.routeSub = this.route.paramMap
       .pipe(
         map((params) => params.get("articleId")!),
@@ -120,6 +122,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
             return;
           }
 
+          // Load article details into the form
           this.editArticleForm.patchValue({
             title: articleData.title,
             category: articleData.category,
@@ -145,8 +148,10 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
   }
 
   onSubmit(): void {
+    // Get the editor's HTML
     const htmlContent: string = this.textEditor.getHtml();
 
+    // Check if form is valid
     if (!this.editArticleForm.valid) {
       this.isFormInvalid = true;
       this.editArticleForm.markAllAsTouched();
@@ -156,6 +161,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     this.isFormInvalid = false;
     this.isSaving = true;
 
+    // Sanitize the HTML
     const sanitizedContent: string = DOMPurify.sanitize(htmlContent);
     const {
       category,
@@ -168,6 +174,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .slice(0, 50)
       .join(" ");
 
+    // Build the updated article data object
     const baseArticleData = {
       category,
       content: sanitizedContent,
@@ -179,12 +186,14 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .pipe(
         take(1),
         switchMap((user) => {
+          // Check if a user is currently logged in and they are the owner
           if (!user || user.uid !== this.article.authorId) {
             const errorCode = "unauthorized";
             this.errorService.handleError(this, errorCode, customErrorMessages);
             return EMPTY;
           }
 
+          // Upload new image if there's a selected file, otherwise use existing URL
           const thumbnailUrl$ = this.imageFile
             ? this.uploadImage().pipe(
                 catchError((error) => {
@@ -201,6 +210,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
 
           return thumbnailUrl$.pipe(
             switchMap((thumbnailUrl) => {
+              // Append the image URL to the updated article data object
               const finalData = {
                 ...baseArticleData,
                 thumbnailUrl,
@@ -216,12 +226,14 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  // Upload the cover image to Cloudinary
   uploadImage(): Observable<string> {
     return this.uploadService
       .upload(this.imageFile)
       .pipe(map((response: CloudinaryUploadResponse) => response.secure_url));
   }
 
+  // Store emitted cover image and create a preview URL for display
   onFileSelected(file: File): void {
     this.fileName = file.name;
     this.imageFile = file;

@@ -51,6 +51,7 @@ export class ReadingListComponent implements OnInit, OnDestroy {
     this.currentUserSub = this.authService.currentUser$
       .pipe(
         switchMap((currentUser) => {
+          // Check if a user is currently logged in
           if (!currentUser) {
             const errorCode = "unauthenticated";
             this.errorService.handleError(this, errorCode, customErrorMessages);
@@ -58,9 +59,11 @@ export class ReadingListComponent implements OnInit, OnDestroy {
             return EMPTY;
           }
 
+          // Fetch current user's profile data
           return this.userService.getUserData(currentUser.uid).pipe(take(1));
         }),
         switchMap((userData) => {
+          // If profile can't be found, show an error message
           if (!userData) {
             const errorCode = "current-user/not-found";
             this.errorService.handleError(this, errorCode, customErrorMessages);
@@ -68,16 +71,23 @@ export class ReadingListComponent implements OnInit, OnDestroy {
             return EMPTY;
           }
 
+          // If the reading list is empty, return an empty array
           if (userData.readingList.length === 0) {
             this.hasMore = false;
             this.isLoading = false;
             return of([]);
           }
 
+          // Reverse reading list so recently saved articles are first
           this.articleIds = userData.readingList.reverse();
+
+          // Take the first batch of articles
           const firstPageIds = this.articleIds.slice(0, this.pageSize);
+
+          // Determine if there are more articles to load based on whether the current batch is full
           this.hasMore = firstPageIds.length === this.pageSize;
 
+          // Fetch the first batch of articles
           return this.articleService.getReadingListArticles(firstPageIds).pipe(
             finalize(() => {
               this.isLoading = false;
@@ -101,16 +111,22 @@ export class ReadingListComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Fetch subsequent batches
   loadMore() {
+    // Prevent loading more if already loading or no more articles to load
     if (!this.hasMore || this.isLoadingMore) return;
 
+    // Get the next batch of article IDs
     const start = this.currentPage * this.pageSize;
     const end = start + this.pageSize;
     const nextPageIds = this.articleIds.slice(start, end);
 
+    // Stop loading if there are no more article IDs to fetch
     if (nextPageIds.length === 0) return;
 
     this.isLoadingMore = true;
+
+    // Determine if there are more articles to load based on whether the current batch is full
     this.hasMore = nextPageIds.length === this.pageSize;
 
     this.loadMoreSub = this.articleService
@@ -122,6 +138,7 @@ export class ReadingListComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (newArticles) => {
+          // Append new articles to the list and move to the next page
           this.articles = [...this.articles, ...newArticles];
           this.currentPage++;
         },
@@ -140,120 +157,3 @@ export class ReadingListComponent implements OnInit, OnDestroy {
     this.loadMoreSub?.unsubscribe();
   }
 }
-
-// export class ReadingListComponent implements OnInit {
-//   articles: Article[] = [];
-//   articleIds: string[] = [];
-//   currentPage: number = 1;
-//   private readonly pageSize = 9;
-
-//   isLoading: boolean = true;
-//   isLoadingMore: boolean = false;
-//   hasError: boolean = false;
-//   serverErrorMessage: string = "";
-//   observer!: IntersectionObserver;
-
-//   @ViewChild("scrollAnchor") scrollAnchor!: ElementRef;
-
-//   constructor(
-//     private authService: AuthService,
-//     private userService: UserService,
-//     private articleService: ArticleService,
-//     private errorService: ErrorService,
-//     private router: Router
-//   ) {}
-
-//   ngOnInit(): void {
-//     this.authService.currentUser$
-//       .pipe(
-//         switchMap((currentUser) => {
-//           if (!currentUser) {
-//             const errorCode = "unauthenticated";
-//             this.errorService.handleError(this, errorCode, customErrorMessages);
-//             this.isLoading = false;
-//             return EMPTY;
-//           }
-
-//           return this.userService.getUserData(currentUser.uid);
-//         }),
-//         switchMap((userData) => {
-//           if (!userData) {
-//             const errorCode = "current-user/not-found";
-//             this.errorService.handleError(this, errorCode, customErrorMessages);
-//             this.isLoading = false;
-//             return EMPTY;
-//           }
-
-//           if (userData.readingList.length === 0) return of([]);
-
-//           this.articleIds = userData.readingList.reverse();
-//           const pageIds = this.articleIds.slice(0, this.pageSize);
-
-//           return this.articleService.getReadingListArticles(pageIds);
-//         }),
-//         take(1)
-//       )
-//       .subscribe({
-//         next: (articles) => {
-//           this.articles = articles;
-//           this.isLoading = false;
-
-//           setTimeout(() => {
-//             this.observer.observe(this.scrollAnchor.nativeElement);
-//           });
-//         },
-//         error: (error: any) => {
-//           this.errorService.handleError(
-//             this,
-//             error.code,
-//             firebaseErrorMessages
-//           );
-
-//           this.isLoading = false;
-//         },
-//       });
-//   }
-
-//   ngAfterViewInit() {
-//     this.observer = new IntersectionObserver(([entry]) => {
-//       if (entry.isIntersecting && !this.isLoadingMore) {
-//         this.loadMore();
-//       }
-//     });
-//   }
-
-//   loadMore() {
-//     if (this.isLoadingMore) return;
-
-//     const start = this.currentPage * this.pageSize;
-//     const end = start + this.pageSize;
-//     const nextPageIds = this.articleIds.slice(start, end);
-
-//     if (nextPageIds.length === 0) return;
-
-//     this.isLoadingMore = true;
-
-//     this.articleService
-//       .getReadingListArticles(nextPageIds)
-//       .pipe(take(1))
-//       .subscribe({
-//         next: (newArticles) => {
-//           this.articles = [...this.articles, ...newArticles];
-//           this.isLoadingMore = false;
-//           this.currentPage++;
-//         },
-//         error: (error: any) => {
-//           this.errorService.handleError(
-//             this,
-//             error.code,
-//             firebaseErrorMessages
-//           );
-//           this.isLoadingMore = false;
-//         },
-//       });
-//   }
-
-//   openAuthorProfile(authorId: string) {
-//     this.router.navigate(["/users", authorId]);
-//   }
-// }

@@ -36,6 +36,7 @@ export class SearchResultsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // Get the search query and fetch results
     this.route.queryParamMap.subscribe((params) => {
       this.query = params.get("q") || "";
       this.fetchResults(this.query);
@@ -43,6 +44,7 @@ export class SearchResultsComponent implements OnInit {
   }
 
   fetchResults(query: string) {
+    // Call the article service to search articles based on the query
     this.articleService
       .searchArticles(query)
       .pipe(

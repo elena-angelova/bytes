@@ -41,12 +41,14 @@ export class ArticleHeaderFormComponent implements AfterViewInit {
     this.resizeTitleField();
   }
 
+  // Resize the title textarea's height to fit its content
   resizeTitleField() {
     const el = this.textarea.nativeElement;
     el.style.height = "auto";
     el.style.height = el.scrollHeight + "px";
   }
 
+  // Emit the selected file
   onFileSelected(event: Event) {
     const inputEl = event.target as HTMLInputElement;
     const file: File | undefined = inputEl.files?.[0];

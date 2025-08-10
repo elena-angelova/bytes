@@ -48,21 +48,25 @@ export class ArticlesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // Check if a user is currently logged in (for EmptyStateComponent)
     this.currentUserSub = this.authService.currentUser$.subscribe(
       (currentUser) => (this.isLoggedIn = !!currentUser)
     );
 
+    // Reset the last doc saved in the article service
     this.articleService.resetPagination();
     this.loadArticles();
   }
 
   loadMore() {
+    // Prevent loading more if already loading or no more articles to load
     if (!this.hasMore || this.isLoadingMore) return;
 
     this.isLoadingMore = true;
     this.loadArticles();
   }
 
+  // Fetch a batch of articles
   loadArticles(): void {
     this.articlesSub = this.articleService
       .getArticles(this.pageSize)
@@ -74,10 +78,12 @@ export class ArticlesComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: (articles) => {
+          // Determine if there are more articles to load based on whether the current batch is full
           this.hasMore = articles.length === this.pageSize;
 
           if (articles.length === 0) return;
 
+          // Append new articles to the existing list
           this.articles = [...this.articles, ...articles];
         },
         error: (error: any) => {
@@ -95,101 +101,3 @@ export class ArticlesComponent implements OnInit, OnDestroy {
     this.articlesSub?.unsubscribe();
   }
 }
-
-//*------
-// export class ArticlesComponent implements OnInit, OnDestroy {
-//   articles: Article[] = [];
-
-//   isMenuOpened: boolean = false;
-//   isLoading: boolean = true;
-//   isLoadingMore: boolean = false;
-//   hasMore: boolean = true;
-
-//   hasError: boolean = false;
-//   serverErrorMessage: string = "";
-
-//   private readonly pageSize = 9;
-//   private unsubscribers: Unsubscribe[] = [];
-
-//   constructor(
-//     private articleService: ArticleService,
-//     private errorService: ErrorService,
-//     private router: Router
-//   ) {}
-
-//   ngOnInit(): void {
-//     this.articleService.resetPagination();
-
-//     const unsubscribe = this.articleService.getArticles(
-//       this.pageSize,
-//       this.onChanges.bind(this),
-//       this.onError.bind(this)
-//     );
-//     this.unsubscribers.push(unsubscribe);
-//   }
-
-//   loadMore(): void {
-//     if (!this.hasMore || this.isLoadingMore) {
-//       return;
-//     }
-
-//     this.isLoadingMore = true;
-
-//     const unsubscribe = this.articleService.getArticles(
-//       this.pageSize,
-//       this.onChanges.bind(this),
-//       this.onError.bind(this)
-//     );
-//     this.unsubscribers.push(unsubscribe);
-//   }
-
-//   onChanges(newArticles: Article[]): void {
-//     if (newArticles.length === 0) {
-//       this.isLoading = false;
-//       this.isLoadingMore = false;
-//       return;
-//     }
-
-//     if (newArticles.length < this.pageSize) {
-//       this.hasMore = false;
-//     }
-
-//     for (const newArticle of newArticles) {
-//       const index = this.articles.findIndex(
-//         (article) => article.id === newArticle.id
-//       );
-
-//       if (index !== -1) {
-//         this.articles[index] = newArticle;
-//       } else {
-//         this.articles.push(newArticle);
-//       }
-//     }
-
-//     this.isLoading = false;
-//     this.isLoadingMore = false;
-//   }
-
-//   onError(error: any): void {
-//     this.errorService.handleError(this, error.code, firebaseErrorMessages);
-
-//     this.isLoading = false;
-//     this.isLoadingMore = false;
-//   }
-
-//   onFilter(category: string): void {
-//     this.router.navigate(["/articles/category", category]);
-//   }
-
-//   openAuthorProfile(authorId: string): void {
-//     this.router.navigate(["/users", authorId]);
-//   }
-
-//   toggleMenu(): void {
-//     this.isMenuOpened = !this.isMenuOpened;
-//   }
-
-//   ngOnDestroy(): void {
-//     this.unsubscribers.forEach((unsubscribe) => unsubscribe());
-//   }
-// }

@@ -67,6 +67,7 @@ export class AuthorDetailsComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // Get current user UID and author ID
     this.routeSub = combineLatest([
       this.authService.currentUser$.pipe(map((user) => user?.uid)),
       this.route.paramMap.pipe(map((params) => params.get("userId")!)),
@@ -75,6 +76,7 @@ export class AuthorDetailsComponent implements OnInit, OnDestroy {
         switchMap(([currentUserId, userId]) => {
           this.userId = userId;
 
+          // Reset pagination and clear articles to load fresh data when route parameter changes
           this.isLoading = true;
           this.articleService.resetPagination();
           this.articles = [];
@@ -87,6 +89,7 @@ export class AuthorDetailsComponent implements OnInit, OnDestroy {
             this.isOwner = true;
           }
 
+          // Fetch author's profile data and the first batch of articles they have written
           return forkJoin({
             userData: this.userService.getUserData(userId).pipe(take(1)),
             articles: this.articleService.getArticlesByAuthor(
@@ -102,6 +105,7 @@ export class AuthorDetailsComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: ({ userData, articles }) => {
+          // If profile doesn't exist, redirect to the Not Found page
           if (!userData) {
             this.router.navigate(["/not-found"]);
             return;
@@ -122,7 +126,9 @@ export class AuthorDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Fetch subsequent batches
   loadMore() {
+    // Prevent loading more if already loading or no more articles to load
     if (!this.hasMore || this.isLoadingMore) return;
 
     this.isLoadingMore = true;
@@ -146,7 +152,9 @@ export class AuthorDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
+  // Append articles to the list
   addArticles(articles: Article[]): void {
+    // Determine if there are more articles to load based on whether the current batch is full
     this.hasMore = articles.length === this.pageSize;
 
     if (articles.length === 0) return;
@@ -159,51 +167,3 @@ export class AuthorDetailsComponent implements OnInit, OnDestroy {
     this.loadMoreSub?.unsubscribe();
   }
 }
-
-//* -------
-// ngOnInit(): void {
-//   this.routeSub = combineLatest([
-//     this.authService.currentUser$.pipe(map((user) => user?.uid)),
-//     this.route.paramMap.pipe(map((params) => params.get("userId")!)),
-//   ])
-//     .pipe(
-//       switchMap(([currentUserId, userId]) => {
-//         if (currentUserId) {
-//           this.isLoggedIn = true;
-//         }
-
-//         if (currentUserId === userId) {
-//           this.isOwner = true;
-//         }
-
-//         return combineLatest([
-//           this.userService.getUserData(userId),
-//           this.articleService.getArticlesByAuthor(userId),
-//         ]);
-//       })
-//     )
-//     .subscribe({
-//       next: ([userData, articles]) => {
-//         if (!userData) {
-//           this.isLoading = false;
-//           this.router.navigate(["/not-found"]);
-//           return;
-//         }
-
-//         this.authorDetails = userData;
-//         this.authorName = `${userData?.firstName} ${userData?.lastName}`;
-//         this.articles = articles;
-
-//         this.isLoading = false;
-//       },
-//       error: (error) => {
-//         this.errorService.handleError(
-//           this,
-//           error.code,
-//           firebaseErrorMessages
-//         );
-
-//         this.isLoading = false;
-//       },
-//     });
-// }

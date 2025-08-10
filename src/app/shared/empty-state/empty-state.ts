@@ -19,6 +19,7 @@ export class EmptyStateComponent implements OnInit {
   constructor(private router: Router, private modalService: ModalService) {}
 
   ngOnInit(): void {
+    // Set the subheading text based on whether the current user is viewing their own author details page
     if (this.isOwner) {
       this.subheading =
         "Just an empty page with endless potential. Ready to begin?";

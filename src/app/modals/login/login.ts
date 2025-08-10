@@ -27,11 +27,13 @@ export class LoginModalComponent {
   isFormInvalid: boolean = false;
   errorMessages: string[] = [];
 
+  // Get the necessary fields from the field config object
   fields: FormFields = {
     email: formFields["email"],
     password: formFields["password"],
   };
 
+  // Build the form and add validators
   private formBuilder = inject(FormBuilder);
   loginForm: FormGroup = this.formBuilder.group({
     email: ["", [Validators.required, Validators.email]],
@@ -44,6 +46,7 @@ export class LoginModalComponent {
     private errorService: ErrorService
   ) {}
 
+  // Switch to register modal
   onSwitchModal() {
     this.modalService.closeAll();
     setTimeout(() => this.modalService.openRegisterModal(), 200);
@@ -53,6 +56,7 @@ export class LoginModalComponent {
     this.errorMessages = [];
     const formErrors: { [key: string]: ValidationErrors } = {};
 
+    // Check if form is valid
     if (this.loginForm.valid) {
       this.isFormInvalid = false;
       this.onLogin(this.loginForm.value);
@@ -60,6 +64,7 @@ export class LoginModalComponent {
       this.isFormInvalid = true;
       this.loginForm.markAllAsTouched();
 
+      // Collect validation errors from each form control
       Object.keys(this.loginForm.controls).forEach((key: string) => {
         const controlErrors: ValidationErrors | null | undefined =
           this.loginForm.get(key)?.errors;
@@ -68,6 +73,7 @@ export class LoginModalComponent {
         }
       });
 
+      // Map each validation error to a user-friendly message
       for (const field in formErrors) {
         const failedValidatorsObj: ValidationErrors = formErrors[field];
         const uiErrorMessages: ErrorMessages = this.fields[field].errorMessages;
@@ -81,9 +87,7 @@ export class LoginModalComponent {
   async onLogin(formData: LoginFormValues) {
     try {
       this.isLoading = true;
-
       await this.auth.login(formData.email, formData.password);
-
       this.loginForm.reset();
       this.modalService.closeAll();
     } catch (error: any) {

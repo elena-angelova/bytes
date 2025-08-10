@@ -20,17 +20,20 @@ export class ProfileDetailsFormComponent {
   @Output() submit = new EventEmitter<Partial<User>>();
   @Output() editingChange = new EventEmitter<boolean>();
 
-  onEdit() {
+  // Enable editing mode and notify parent
+  onEdit(): void {
     this.isEditing = true;
     this.editingChange.emit(this.isEditing);
   }
 
-  onCancel() {
+  // Disable editing mode and notify parent
+  onCancel(): void {
     this.isEditing = false;
     this.editingChange.emit(this.isEditing);
   }
 
-  onSubmit() {
+  // Emit the form value to the parent for processing
+  onSubmit(): void {
     this.submit.emit(this.form.value);
   }
 }

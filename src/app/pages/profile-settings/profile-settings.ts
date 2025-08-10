@@ -46,6 +46,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   hasError: boolean = false;
   serverErrorMessage: string = "";
 
+  // Build the form
   private formBuilder = inject(FormBuilder);
   profileDetailsForm: FormGroup = this.formBuilder.group({
     bio: [""],
@@ -66,13 +67,15 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentUserSub = this.authService.currentUser$
       .pipe(
-        filter((currentUser): currentUser is FirebaseUser => !!currentUser),
+        filter((currentUser): currentUser is FirebaseUser => !!currentUser), //! Handle if there's no currentUser
         tap((currentUser) => {
+          // Store current user's info from Firebase Auth
           this.displayName = currentUser.displayName;
           this.email = currentUser.email;
           this.currentUserId = currentUser.uid;
         }),
         switchMap((currentUser) =>
+          // Fetch current user's profile and the articles they have written
           combineLatest([
             this.userService.getUserData(currentUser.uid),
             this.articleService.getOwnArticles(currentUser.uid),
@@ -81,6 +84,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       )
       .subscribe({
         next: ([userData, articles]) => {
+          // If profile doesn't exist, show an error message
           if (!userData) {
             const errorCode = "user/not-found";
             this.errorService.handleError(this, errorCode, customErrorMessages);
@@ -88,11 +92,13 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
             return;
           }
 
+          // Store profile details for display
           this.dateJoined = userData.dateJoined;
           this.bio = userData.bio;
           this.currentRole = userData.currentRole;
           this.techStack = userData.techStack;
 
+          // If the user isn't currently editing, populate the form with the profile details (to avoid overwriting their changes)
           if (!this.isEditing) {
             this.profileDetailsForm.patchValue({
               bio: userData.bio,
@@ -101,7 +107,10 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
             });
           }
 
+          // Store number of articles written
           this.articleCount = articles.length;
+
+          // Count articles per category and sum total likes across all articles
           const categoryCount: { [category: string]: number } = {};
           this.totalLikes = 0;
 
@@ -116,6 +125,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
             (a, b) => b[1] - a[1]
           );
 
+          // Set the most frequent category as favorite
           this.favoriteCategory = sortedCategories[0]?.[0];
           this.isLoadingPage = false;
         },
@@ -131,13 +141,16 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
       });
   }
 
-  onEditingChange(isEditing: boolean) {
+  // Update editing state when child emits a change
+  onEditingChange(isEditing: boolean): void {
     this.isEditing = isEditing;
   }
 
+  // Update user's profile with the form value emitted from the child
   onSubmit(data: Partial<User>): void {
     this.isSaving = true;
 
+    // Filter out any non-string, undefined or null values from the submitted data (so only fields the user has actually touched are sent to Firestore)
     const filteredEntries = Object.entries(data).filter(
       ([_, value]) =>
         typeof value === "string" && value !== undefined && value !== null
@@ -146,6 +159,7 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     const filteredDataObj: Record<string, string> =
       Object.fromEntries(filteredEntries);
 
+    // Call service to update the profile data
     this.userSub = this.userService
       .editUserData(filteredDataObj, this.currentUserId)
       .subscribe({

@@ -40,6 +40,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private errorService: ErrorService,
     private router: Router
   ) {
+    // Apply dark mode if saved in local storage
     const savedMode: string | null = localStorage.getItem("darkMode");
     if (savedMode === "true") {
       this.isDarkMode = true;
@@ -50,6 +51,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    // Set the theme toggle icon based on saved mode
     const savedMode: string | null = localStorage.getItem("darkMode");
     if (savedMode === "true") {
       this.theme = "light";
