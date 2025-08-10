@@ -7,9 +7,8 @@
 - [How to run](#how-to-run)
 - [Technologies & libraries](#technologies--libraries)
 - [Features](#features)
-- [Application structure](#project-structure)
+- [Application structure](#application-structure)
 - [Folder structure](#folder-structure)
-- [Data fetching & error handling](#data-fetching--error-handling)
 
 ---
 
@@ -23,6 +22,8 @@ To run in development mode:
 
    ```bash
    git clone https://github.com/elena-angelova/bytes.git
+    ```
+   ```bash
    cd bytes
    ```
 
@@ -36,19 +37,24 @@ To run in development mode:
    ```bash
    npm start
    ```
-   - App runs at `http://localhost:4200`.
+    App runs at `http://localhost:4200`
 
 All necessary configuration for Firebase and Cloudinary, including API keys, are already included within the project repository.
 
-**Test user credentials**:
-Email: john@example.com
-Password: 123Test-
 
-Email: anna@example.com
-Password: 123Test-
+### Test user credentials:
 
-Email: stephen@example.com
-Password: 123Test-
+**User 1**
+- Email: **john@example.com**
+- Password: **123Test-**
+
+**User 2**
+- Email: **anna@example.com**
+- Password: **123Test-**
+
+**User 3**
+- Email: **stephen@example.com**
+- Password: **123Test-**
 
 ---
 
@@ -71,10 +77,10 @@ Password: 123Test-
 
 - **Authentication**: Full user authentication flow including registration, login, logout, and persistent session management.
 - **Article management**: Full CRUD functionality for articles - users can create, edit, delete, and view articles. Supports rich text editing via a WYSIWYG editor.
-- **Article interaction**: like/unlike, bookmark, and copy URL
-- **Categories**: Articles are organized by categories, allowing users to browse specific topics
-- **Profile management**: Users can edit personal details and view stats
-- **Author profile**: Each author has a dedicated profile page showcasing their bio, current role, tech stack and join date.
+- **Article interaction**: like/unlike, bookmark, and copy URL.
+- **Categories**: Articles are organized by categories, allowing users to browse specific topics.
+- **Profile management**: Users can edit personal details and view stats.
+- **Author profile**: Each author has a dedicated profile page showcasing their articles, bio, current role, tech stack and join date.
 - **Reading list**: Registered users can save articles to a personalized reading list.
 - **Modals**: Modal dialogs for login, registration, and delete confirmation.
 - **Search**: Allows users to find articles by title or category. Matches terms that begin exactly with the entered query.
@@ -89,11 +95,11 @@ Password: 123Test-
 ### Backend overview
 
 The backend of the application is powered by Firebase:
-
-- Cloud Firestore is used as the primary database to store and manage articles and user profiles.
-- Firebase Authentication handles user registration, login, logout and session management.
+- **Cloud Firestore** is used as the primary database to store and manage articles and user profiles.
+- **Firebase Authentication** handles user registration, login, logout and session management.
 
 Communication with Firebase is handled via AngularFire, which is a wrapper around Firebase's modular SDK.
+
 The app also integrates Cloudinary via its API for image uploads.
 
 #### Collections
@@ -104,8 +110,8 @@ The app also integrates Cloudinary via its API for image uploads.
 ### Public part
 
 Accessible without authentication. Guest users can browse articles and author information but cannot interact with articles (like, bookmark). They can only copy the article URL to share.
-Includes:
 
+Includes:
 - Home
 - About
 - Login modal
@@ -118,9 +124,9 @@ Includes:
 
 ### Private part
 
-Available after successful login via Firebase Authentication. Users can create articles, manage their profiles (including editing or deleting their own articles), like and bookmark articles by other authors, and customize their profile settings. They can also copy the article URL to share.
-Includes:
+Available after successful login via Firebase Authentication. Users can create articles, edit/delete their already existing articles, like and bookmark articles by other authors, and customize their profile settings.
 
+Includes:
 - View profile
 - Reading list
 - Settings
@@ -147,12 +153,12 @@ Users remain logged in after refreshing the page thanks to Firebase session pers
 
 ```
 src/app/
-├── pages/          # Main pages (articles, category, article edit, article create, profile settings, etc.)
-├── features/       # Reusable feature components used within pages (article, header, footer)
-├── modals/         # Modal dialogs (login, register, delete confirmation)
-├── shared/         # Shared UI components (buttons, loader, toast, empty state)
-├── services/       # Services (auth, article, user, modal, error, upload)
-├── types/          # TypeScript interfaces/models (2+ interfaces used)
-├── config/         # Configuration files (error messages, form fields, etc.)
-├── guards/         # Route guards for auth and ownership protection
+  ├── pages/          # Main pages (articles, category, article edit, article create, profile settings, etc.)
+  ├── features/       # Reusable feature components used within pages (article, header, footer)
+  ├── modals/         # Modal dialogs (login, register, delete confirmation)
+  ├── shared/         # Shared UI components (buttons, loader, toast, empty state, etc.)
+  ├── services/       # Services (auth, article, user, modal, error, upload)
+  ├── types/          # TypeScript interfaces/models (2+ interfaces used)
+  ├── config/         # Configuration files (error messages, form fields, etc.)
+  ├── guards/         # Route guards for auth and ownership protection
 ```
