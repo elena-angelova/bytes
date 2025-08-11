@@ -150,12 +150,14 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
     this.isEditing = isEditing;
   }
 
-  // Update user's profile with the form value emitted from the child
-  onSubmit(data: Partial<User>): void {
+  // Update user's profile with the form values
+  onSubmit(): void {
     this.isSaving = true;
 
     // Filter out any non-string, undefined or null values from the submitted data (so only fields the user has actually touched are sent to Firestore)
-    const filteredEntries = Object.entries(data).filter(
+    const filteredEntries = Object.entries(
+      this.profileDetailsForm.value
+    ).filter(
       ([_, value]) =>
         typeof value === "string" && value !== undefined && value !== null
     ) as [string, string][];
