@@ -26,7 +26,11 @@
 
   <div class="preview">{{ article.preview }}</div>
 
-  <div [routerLink]="['/articles', article.id]" class="btn-wrapper">
+  <a
+    [routerLink]="['/articles', article.id]"
+    target="_blank"
+    class="btn-wrapper"
+  >
     <svg
       class="arrow-icon"
       xmlns="http://www.w3.org/2000/svg"
@@ -42,6 +46,6 @@
       <line x1="21" y1="20" x2="31" y2="10" />
       <line x1="0" y1="10" x2="31" y2="10" />
     </svg>
-    <a class="btn read-article-btn">Read Article</a>
-  </div>
+    <span class="btn read-article-btn">Read Article</span>
+  </a>
 </div>

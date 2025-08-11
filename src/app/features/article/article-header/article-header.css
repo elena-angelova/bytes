@@ -215,7 +215,7 @@
 
 .popup-error {
   bottom: 170%;
-  left: -282%;
+  left: -270%;
 
   &::after {
     content: "";

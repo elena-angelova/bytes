@@ -71,7 +71,7 @@
     stroke: var(--text-color);
   }
 
-  a {
+  span {
     font-weight: 600;
     text-decoration: underline;
     text-decoration-color: var(--search-bar-text);
