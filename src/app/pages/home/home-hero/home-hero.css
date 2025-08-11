@@ -19,7 +19,7 @@ h5 {
 
 h1 {
   font-family: "Space Mono", monospace;
-  word-spacing: -2rem;
+  word-spacing: -1rem;
   line-height: 1;
 }
 
@@ -28,4 +28,24 @@ h5 {
   font-family: "Space Mono", monospace;
   font-weight: 400;
   line-height: 1.4;
+}
+
+.cursor {
+  font-family: "Inter", sans-serif;
+  font-weight: 200;
+  font-size: smaller;
+  vertical-align: bottom;
+  margin-left: -8px;
+  animation: blink 1s steps(2, start) infinite;
+}
+
+@keyframes blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  51%,
+  100% {
+    opacity: 0;
+  }
 }
