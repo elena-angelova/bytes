@@ -5,8 +5,7 @@ import { AuthService } from "../../services/auth.service";
 import { UserService } from "../../services/user.service";
 import { Timestamp } from "firebase/firestore";
 import { ArticleService } from "../../services/article.service";
-import { combineLatest, filter, Subscription, switchMap, tap } from "rxjs";
-import { User as FirebaseUser } from "firebase/auth";
+import { combineLatest, EMPTY, Subscription, switchMap } from "rxjs";
 import { LoaderComponent } from "../../shared/loader/loader";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { SectionTitleComponent } from "../../shared/section-title/section-title";
@@ -67,20 +66,25 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.currentUserSub = this.authService.currentUser$
       .pipe(
-        filter((currentUser): currentUser is FirebaseUser => !!currentUser), //! Handle if there's no currentUser
-        tap((currentUser) => {
+        switchMap((currentUser) => {
+          if (!currentUser) {
+            const errorCode = "unauthenticated";
+            this.errorService.handleError(this, errorCode, customErrorMessages);
+            this.isLoadingPage = false;
+            return EMPTY;
+          }
+
           // Store current user's info from Firebase Auth
           this.displayName = currentUser.displayName;
           this.email = currentUser.email;
           this.currentUserId = currentUser.uid;
-        }),
-        switchMap((currentUser) =>
+
           // Fetch current user's profile and the articles they have written
-          combineLatest([
+          return combineLatest([
             this.userService.getUserData(currentUser.uid),
             this.articleService.getOwnArticles(currentUser.uid),
-          ])
-        )
+          ]);
+        })
       )
       .subscribe({
         next: ([userData, articles]) => {
