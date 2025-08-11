@@ -10,7 +10,6 @@
 - [Application structure](#application-structure)
 - [Folder structure](#folder-structure)
 
----
 
 ## How to run
 
@@ -56,7 +55,7 @@ All necessary configuration for Firebase and Cloudinary, including API keys, are
 - Email: **stephen@example.com**
 - Password: **123Test-**
 
----
+
 
 ## Technologies & libraries
 
@@ -71,7 +70,7 @@ All necessary configuration for Firebase and Cloudinary, including API keys, are
 - Cloudinary API (for image uploads)
 - Vector graphics (HTML5 SVG icons)
 
----
+
 
 ## Features
 
@@ -88,7 +87,7 @@ All necessary configuration for Firebase and Cloudinary, including API keys, are
 - **Error handling**: Centralized error handling service provides user-friendly messages for validation, Firebase, Cloudinary, and general application errors. Errors are communicated via toast notifications.
 - **Dark mode**: Supports theme switching to dark mode.
 
----
+
 
 ## Application structure
 
@@ -104,11 +103,10 @@ The app also integrates Cloudinary via its API for image uploads.
 
 #### Collections
 
-- **articles**: Contains blog articles with rich text content, metadata (author, categories, created at timestamp), likes, and cover image.
-- **users**: Stores user profiles - personal information like first and last name, bio, current role, tech stack, join date, and reading list.
+- `articles` Contains blog articles with rich text content, metadata (author, categories, created at timestamp), likes, and cover image.
+- `users` Stores user profiles - personal information like first and last name, bio, current role, tech stack, join date, and reading list.
 
 ### Public part
-
 Accessible without authentication. Guest users can browse articles and author information but cannot interact with articles (like, bookmark). They can only copy the article URL to share.
 
 Includes:
@@ -121,9 +119,10 @@ Includes:
 - Author profiles
 - Category browsing
 - Search
+- Terms of use
+- Privacy policy
 
 ### Private part
-
 Available after successful login via Firebase Authentication. Users can create articles, edit/delete their already existing articles, like and bookmark articles by other authors, and customize their profile settings.
 
 Includes:
@@ -136,18 +135,45 @@ Includes:
 
 Users remain logged in after refreshing the page thanks to Firebase session persistence.
 
-### Dynamic pages
 
-- **Articles**: Lists all articles with pagination.
-- **Category**: Displays all articles in a specific category with pagination.
-- **Article details**: Displays the full article content, metadata, and interaction buttons (like, bookmark, share, edit, delete) shown based on user authentication and permissions.
-- **Author profile**: Shows author details - including bio, current role, tech stack, and join date - along with their articles, loaded with pagination.
-- **Reading list**: Shows articles the user has saved to read later, loaded with pagination.
-- **Settings**: Allows users to view and edit their bio, current role, and tech stack; see their email and join date; and view stats like the number of articles published, total likes received, and the category they write about the most.
-- **Article edit**: Fetches and loads the selected article's details into the text editor for editing.
+### Dynamic pages
+- **Articles**: Lists all articles.
+- **Category**: Displays all articles in a specific category.
+- **Article details**: Displays the full article content and metadata.
+- **Author profile**: Shows author details along with their articles.
+- **Reading list**: Shows articles the user has saved to read later.
+- **Settings**: Allows users to edit their profile details and view article stats.
+- **Article edit**: Fetches and loads the selected article's details into the text editor.
 - **Search results**: Fetches and displays articles matching the user's query.
 
----
+
+### Routing & guards
+Client-side routing is implemented via Angular Router:
+
+- /
+- /about
+- /privacy-policy
+- /terms-of-use
+- /articles
+- /articles/category/`:category`
+- /articles/create
+- /articles/`:articleId`
+- /articles/`:articleId`/edit
+- /users/`:userId`
+- /settings
+- /reading-list
+- /search (with query parameters)
+- /not-found
+
+
+Login, register and article delete are implemented as modal dialogs using Angular Material’s `MatDialog` service.
+
+Route guards restrict access:  
+- `auth guard` Restricts access to private user areas to authenticated users only.
+- `owner guard` Restricts access to article management areas to the article’s owner only.
+
+Since login, register and article delete are implemented as modal dialogs rather than as navigable routes, to prevent logged-in users or non-owners from opening them, the guard logic is instead applied at the point where the dialog is triggered.
+
 
 ## Folder structure
 
