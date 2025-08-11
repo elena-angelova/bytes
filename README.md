@@ -103,7 +103,7 @@ The app also integrates Cloudinary via its API for image uploads.
 
 #### Collections
 
-- `articles` Contains blog articles with rich text content, metadata (author, categories, created at timestamp), likes, and cover image.
+- `articles` Contains blog articles with rich text content, metadata (author, category, created at timestamp), likes, and cover image.
 - `users` Stores user profiles - personal information like first and last name, bio, current role, tech stack, join date, and reading list.
 
 ### Public part
@@ -166,11 +166,11 @@ Client-side routing is implemented via Angular Router:
 - /not-found
 
 
-Login, register and article delete are implemented as modal dialogs using Angular Material’s `MatDialog` service.
+Login, register and article delete are implemented as modal dialogs using Angular Material's `MatDialog` service.
 
 Route guards restrict access:  
 - `auth guard` Restricts access to private user areas to authenticated users only.
-- `owner guard` Restricts access to article management areas to the article’s owner only.
+- `owner guard` Restricts access to article management areas to the article's owner only.
 
 Since login, register and article delete are implemented as modal dialogs rather than as navigable routes, to prevent logged-in users or non-owners from opening them, the guard logic is instead applied at the point where the dialog is triggered.
 
