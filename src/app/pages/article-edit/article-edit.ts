@@ -154,6 +154,7 @@ export class ArticleEditComponent implements OnInit, OnDestroy {
     // Check if form is valid
     if (!this.editArticleForm.valid) {
       this.isFormInvalid = true;
+      setTimeout(() => (this.isFormInvalid = false), 3000);
       this.editArticleForm.markAllAsTouched();
       return;
     }
