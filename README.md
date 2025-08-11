@@ -10,6 +10,7 @@
 - [Application structure](#application-structure)
 - [Folder structure](#folder-structure)
 
+
 ## How to run
 
 The app is deployed at [bytes-5f133.web.app](https://bytes-5f133.web.app).
@@ -20,8 +21,7 @@ To run in development mode:
 
    ```bash
    git clone https://github.com/elena-angelova/bytes.git
-   ```
-
+    ```
    ```bash
    cd bytes
    ```
@@ -36,26 +36,26 @@ To run in development mode:
    ```bash
    npm start
    ```
-   App runs at `http://localhost:4200`
+    App runs at `http://localhost:4200`
 
 All necessary configuration for Firebase and Cloudinary, including API keys, are already included within the project repository.
+
 
 ### Test user credentials:
 
 **User 1**
-
 - Email: **john@example.com**
 - Password: **123Test-**
 
 **User 2**
-
 - Email: **anna@example.com**
 - Password: **123Test-**
 
 **User 3**
-
 - Email: **stephen@example.com**
 - Password: **123Test-**
+
+
 
 ## Technologies & libraries
 
@@ -69,6 +69,8 @@ All necessary configuration for Firebase and Cloudinary, including API keys, are
 - DOMPurify (sanitizing HTML content)
 - Cloudinary API (for image uploads)
 - Vector graphics (HTML5 SVG icons)
+
+
 
 ## Features
 
@@ -85,12 +87,13 @@ All necessary configuration for Firebase and Cloudinary, including API keys, are
 - **Error handling**: Centralized error handling service provides user-friendly messages for validation, Firebase, Cloudinary, and general application errors. Errors are communicated via toast notifications.
 - **Dark mode**: Supports theme switching to dark mode.
 
+
+
 ## Application structure
 
 ### Backend overview
 
 The backend of the application is powered by Firebase:
-
 - **Cloud Firestore** is used as the primary database to store and manage articles and user profiles.
 - **Firebase Authentication** handles user registration, login, logout and session management.
 
@@ -104,11 +107,9 @@ The app also integrates Cloudinary via its API for image uploads.
 - `users` Stores user profiles - personal information like first and last name, bio, current role, tech stack, join date, and reading list.
 
 ### Public part
-
 Accessible without authentication. Guest users can browse articles and author information but cannot interact with articles (like, bookmark). They can only copy the article URL to share.
 
 Includes:
-
 - Home
 - About
 - Login modal
@@ -122,11 +123,9 @@ Includes:
 - Privacy policy
 
 ### Private part
-
 Available after successful login via Firebase Authentication. Users can create articles, edit/delete their already existing articles, like and bookmark articles by other authors, and customize their profile settings.
 
 Includes:
-
 - View profile
 - Reading list
 - Settings
@@ -136,8 +135,8 @@ Includes:
 
 Users remain logged in after refreshing the page thanks to Firebase session persistence.
 
-### Dynamic pages
 
+### Dynamic pages
 - **Articles**: Lists all articles.
 - **Category**: Displays all articles in a specific category.
 - **Article details**: Displays the full article content and metadata.
@@ -147,8 +146,8 @@ Users remain logged in after refreshing the page thanks to Firebase session pers
 - **Article edit**: Fetches and loads the selected article's details into the text editor.
 - **Search results**: Fetches and displays articles matching the user's query.
 
-### Routing & guards
 
+### Routing & guards
 Client-side routing is implemented via Angular Router:
 
 - /
@@ -166,14 +165,15 @@ Client-side routing is implemented via Angular Router:
 - /search (with query parameters)
 - /not-found
 
+
 Login, register and article delete are implemented as modal dialogs using Angular Material's `MatDialog` service.
 
-Route guards restrict access:
-
+Route guards restrict access:  
 - `auth guard` Restricts access to private user areas to authenticated users only.
 - `owner guard` Restricts access to article management areas to the article's owner only.
 
 Since login, register and article delete are implemented as modal dialogs rather than as navigable routes, to prevent logged-in users or non-owners from opening them, the guard logic is instead applied at the point where the dialog is triggered.
+
 
 ## Folder structure
 
