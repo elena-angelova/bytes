@@ -13,6 +13,7 @@ export class UploadService {
   constructor(private http: HttpClient) {}
 
   upload(file: File): Observable<CloudinaryUploadResponse> {
+    // Send the data in a form as Cloudinary's API expects multipart/form-data format for image uploads
     const formData = new FormData();
     formData.append("file", file);
     formData.append("upload_preset", this.uploadPreset);

@@ -21,10 +21,11 @@ export class ModalService {
   open<T>(modal: ComponentType<T>, data?: unknown) {
     this.dialog.open(modal, {
       data,
-      scrollStrategy: this.overlay.scrollStrategies.noop(),
+      scrollStrategy: this.overlay.scrollStrategies.noop(), // Prevent automatic scrolling adjustments when modal is open
     });
   }
 
+  // Open the login modal only if there's no logged-in user
   openLoginModal(): void {
     this.authService.currentUser$.pipe(take(1)).subscribe((user) => {
       if (user) {
@@ -35,6 +36,7 @@ export class ModalService {
     });
   }
 
+  // Open the registration modal only if there's no logged-in user
   openRegisterModal(): void {
     this.authService.currentUser$.pipe(take(1)).subscribe((user) => {
       if (user) {
@@ -45,6 +47,7 @@ export class ModalService {
     });
   }
 
+  // Open the article delete confirmation modal only if the logged-in user is the article's author
   openArticleDeleteModal(articleData: Partial<Article>): void {
     this.authService.currentUser$.pipe(take(1)).subscribe((user) => {
       if (user?.uid !== articleData.authorId) {

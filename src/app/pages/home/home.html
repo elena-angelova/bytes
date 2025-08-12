@@ -1,1 +1,27 @@
-<app-home-hero></app-home-hero>
+<section class="hero">
+  <div class="typewriter">
+    <h1>
+      <span>{{ displayedLine1 }}</span>
+      @if (currentLine === 1) {
+      <span class="cursor">|</span>
+      }
+    </h1>
+
+    <h1>
+      <span>{{ displayedLine2Part1 }}</span>
+      <span class="special-text">{{ displayedLine2Part2 }}</span>
+      @if (currentLine === 2) {
+      <span class="cursor">|</span>
+      }
+    </h1>
+  </div>
+
+  <h5>
+    A home for developers to share insights, ideas, and the stories behind the
+    code
+  </h5>
+  <app-cta-button
+    [textContent]="'Read now'"
+    routerLink="/articles"
+  ></app-cta-button>
+</section>

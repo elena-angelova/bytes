@@ -57,29 +57,35 @@ export class ArticleService {
     ) as DocumentReference<Article>;
   }
 
+  // Build the query and fetch articles
   private fetchArticles(
     filters: FirestoreFilter,
     pageSize: number
   ): Observable<Article[]> {
     let baseQuery: Query<Article> = this.articlesRef;
 
+    // Apply filter if any (category or authorId)
     if (filters.length === 3) {
       const [field, operator, value] = filters;
       baseQuery = query(this.articlesRef, where(field, operator, value));
     }
 
+    // Order by creation date (newest first)
     baseQuery = query(baseQuery, orderBy("createdAt", "desc"));
 
+    // If there's a last document snapshot, start after it (for pagination)
     if (this.lastDoc) {
       baseQuery = query(baseQuery, startAfter(this.lastDoc));
     }
 
+    // Limit results to the requested page size
     baseQuery = query(baseQuery, limit(pageSize));
 
     return from(getDocs(baseQuery)).pipe(
       map((snapshot) => {
         const docs = snapshot.docs;
 
+        // Store the last document snapshot for next page
         if (docs.length > 0) {
           this.lastDoc = docs[docs.length - 1];
         }
@@ -133,6 +139,7 @@ export class ArticleService {
     return collectionData(authorQuery, { idField: "id" });
   }
 
+  // Search articles by title and category fields (case-sensitive prefix)
   searchArticles(q: string): Observable<Article[]> {
     const queryTitle = query(
       this.articlesRef,
@@ -164,6 +171,7 @@ export class ArticleService {
           ...doc.data(),
         }));
 
+        // Merge results and remove duplicate articles that were returned by both queries
         const mergedMap = new Map<string, Article>();
 
         titleResults.forEach((item) => mergedMap.set(item.id, item));
@@ -211,6 +219,7 @@ export class ArticleService {
     return deleteDoc(articleDocRef);
   }
 
+  // Resets pagination so that the next fetch starts from the first page
   resetPagination(): void {
     this.lastDoc = null;
   }
