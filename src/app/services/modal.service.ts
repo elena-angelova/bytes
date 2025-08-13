@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { MatDialog } from "@angular/material/dialog";
 import { LoginModalComponent } from "../modals/login/login";
-import { ComponentType, Overlay } from "@angular/cdk/overlay";
+import { ComponentType } from "@angular/cdk/overlay";
 import { RegisterModalComponent } from "../modals/register/register";
 import { ArticleDeleteModalComponent } from "../modals/article-delete/article-delete";
 import { Article } from "../types";
@@ -12,17 +12,10 @@ import { AuthService } from "./auth.service";
   providedIn: "root",
 })
 export class ModalService {
-  constructor(
-    private dialog: MatDialog,
-    private authService: AuthService,
-    private overlay: Overlay
-  ) {}
+  constructor(private dialog: MatDialog, private authService: AuthService) {}
 
   open<T>(modal: ComponentType<T>, data?: unknown) {
-    this.dialog.open(modal, {
-      data,
-      scrollStrategy: this.overlay.scrollStrategies.noop(), // Prevent automatic scrolling adjustments when modal is open
-    });
+    this.dialog.open(modal, { data });
   }
 
   // Open the login modal only if there's no logged-in user
