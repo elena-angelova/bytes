@@ -21,7 +21,7 @@ export class ArticleDeleteModalComponent implements OnDestroy {
   btnText: string = "Confirm";
 
   confirmationMessage: string = `Are you sure you want to delete this article?<br>This action is permanent and <strong>cannot be undone</strong>.`;
-  serverErrorMessage!: string;
+  serverErrorMessage: string = "";
   isLoading: boolean = false;
 
   private currentUserSub?: Subscription;
@@ -36,6 +36,7 @@ export class ArticleDeleteModalComponent implements OnDestroy {
   ) {}
 
   async onSubmit() {
+    this.serverErrorMessage = "";
     this.isLoading = true;
 
     this.currentUserSub = this.authService.currentUser$

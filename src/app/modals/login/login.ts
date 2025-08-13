@@ -22,7 +22,7 @@ export class LoginModalComponent {
   title: string = "Log in";
   btnText: string = "Log in";
   fieldLayout: string = "column-layout";
-  serverErrorMessage!: string;
+  serverErrorMessage: string = "";
   isLoading: boolean = false;
   isFormInvalid: boolean = false;
   errorMessages: string[] = [];
@@ -53,6 +53,7 @@ export class LoginModalComponent {
   }
 
   onFormSubmit(): void {
+    this.serverErrorMessage = "";
     this.errorMessages = [];
     const formErrors: { [key: string]: ValidationErrors } = {};
 

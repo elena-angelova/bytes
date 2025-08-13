@@ -9,7 +9,6 @@ import { combineLatest, EMPTY, Subscription, switchMap } from "rxjs";
 import { LoaderComponent } from "../../shared/loader/loader";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { SectionTitleComponent } from "../../shared/section-title/section-title";
-import { User } from "../../types";
 import { ErrorService } from "../../services/error.service";
 import { customErrorMessages, firebaseErrorMessages } from "../../config";
 import { ToastNotificationComponent } from "../../shared/toast-notification/toast-notification";

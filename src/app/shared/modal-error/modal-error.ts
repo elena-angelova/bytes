@@ -3,12 +3,12 @@ import { Component, Input } from "@angular/core";
 @Component({
   selector: "app-error-message",
   imports: [],
-  templateUrl: "./error-message.html",
-  styleUrl: "./error-message.css",
+  templateUrl: "./modal-error.html",
+  styleUrl: "./modal-error.css",
 })
-export class ErrorMessageComponent {
+export class ModalErrorComponent {
   @Input() errorMessages: string[] = [];
-  @Input() serverErrorMessage!: string;
+  @Input() serverErrorMessage: string = "";
 
   // Getter to return the validation or server error messages
   get errors(): string[] {

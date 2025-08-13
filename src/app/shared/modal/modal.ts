@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormFields } from "../../types";
 import { PrimaryButtonComponent } from "../buttons/primary-button/primary-button";
 import { ReactiveFormsModule, FormGroup } from "@angular/forms";
-import { ErrorMessageComponent } from "../error-message/error-message";
+import { ModalErrorComponent } from "../modal-error/modal-error";
 import { KeyValuePipe } from "@angular/common";
 import { SecondaryButtonComponent } from "../buttons/secondary-button/secondary-button";
 
@@ -12,7 +12,7 @@ import { SecondaryButtonComponent } from "../buttons/secondary-button/secondary-
     ReactiveFormsModule,
     PrimaryButtonComponent,
     SecondaryButtonComponent,
-    ErrorMessageComponent,
+    ModalErrorComponent,
     KeyValuePipe,
   ],
   templateUrl: "./modal.html",

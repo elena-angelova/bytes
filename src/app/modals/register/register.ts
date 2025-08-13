@@ -22,7 +22,7 @@ export class RegisterModalComponent {
   title: string = "Create an account";
   btnText: string = "Sign up";
   fieldLayout: string = "row-layout";
-  serverErrorMessage!: string;
+  serverErrorMessage: string = "";
   isLoading: boolean = false;
   isFormInvalid: boolean = false;
   errorMessages: string[] = [];
@@ -81,6 +81,7 @@ export class RegisterModalComponent {
   }
 
   onFormSubmit(): void {
+    this.serverErrorMessage = "";
     this.errorMessages = [];
     const formErrors: Record<string, ValidationErrors> = {};
 
