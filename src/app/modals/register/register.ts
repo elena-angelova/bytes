@@ -62,7 +62,7 @@ export class RegisterModalComponent {
   );
 
   constructor(
-    private auth: AuthService,
+    private authService: AuthService,
     private modalService: ModalService,
     private errorService: ErrorService
   ) {}
@@ -122,7 +122,7 @@ export class RegisterModalComponent {
     try {
       this.isLoading = true;
 
-      await this.auth.register(
+      await this.authService.register(
         formData.email,
         formData.password,
         formData.firstName,

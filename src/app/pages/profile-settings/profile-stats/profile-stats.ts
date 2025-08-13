@@ -9,10 +9,9 @@ import { Timestamp } from "firebase/firestore";
   styleUrl: "./profile-stats.css",
 })
 export class ProfileStatsComponent {
-  @Input() displayName!: string | null;
-  @Input() email!: string | null;
-  @Input() dateJoined!: Timestamp;
-  @Input() articleCount!: number;
-  @Input() favoriteCategory!: string;
-  @Input() totalLikes!: number;
+  @Input() email: string | null = null;
+  @Input() dateJoined: Timestamp | null = null;
+  @Input() articleCount: number | null = null;
+  @Input() favoriteCategory: string | null = null;
+  @Input() totalLikes: number | null = null;
 }

@@ -11,11 +11,11 @@ import { User } from "../../../types";
 })
 export class ProfileDetailsFormComponent {
   @Input() form!: FormGroup;
-  @Input() bio!: string | null;
-  @Input() currentRole!: string | null;
-  @Input() techStack!: string | null;
-  @Input() isEditing!: boolean;
-  @Input() isLoading!: boolean;
+  @Input() bio: string | null = null;
+  @Input() currentRole: string | null = null;
+  @Input() techStack: string | null = null;
+  @Input() isEditing: boolean = false;
+  @Input() isLoading: boolean = false;
 
   @Output() submit = new EventEmitter<void>();
   @Output() editingChange = new EventEmitter<boolean>();

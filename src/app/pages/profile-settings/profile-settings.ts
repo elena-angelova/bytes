@@ -26,17 +26,17 @@ import { ToastNotificationComponent } from "../../shared/toast-notification/toas
   styleUrl: "./profile-settings.css",
 })
 export class ProfileSettingsComponent implements OnInit, OnDestroy {
-  currentUserId!: string;
-  displayName!: string | null;
-  email!: string | null;
-  bio!: string | null;
-  currentRole!: string | null;
-  techStack!: string | null;
-  dateJoined!: Timestamp;
+  currentUserId: string | null = null;
+  displayName: string | null = null;
+  email: string | null = null;
+  bio: string | null = null;
+  currentRole: string | null = null;
+  techStack: string | null = null;
+  dateJoined: Timestamp | null = null;
 
-  articleCount!: number;
-  totalLikes!: number;
-  favoriteCategory!: string;
+  articleCount: number | null = null;
+  totalLikes: number | null = null;
+  favoriteCategory: string | null = null;
 
   isLoadingPage: boolean = true;
   isSaving: boolean = false;
@@ -89,6 +89,17 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
         next: ([userData, articles]) => {
           // If profile doesn't exist, show an error message
           if (!userData) {
+            console.log(this.displayName);
+            console.log(this.email);
+            console.log(this.dateJoined);
+            console.log(this.articleCount);
+            console.log(this.favoriteCategory);
+            console.log(this.totalLikes);
+
+            console.log(this.bio);
+            console.log(this.currentRole);
+            console.log(this.techStack);
+
             const errorCode = "user/not-found";
             this.errorService.handleError(this, errorCode, customErrorMessages);
             this.isLoadingPage = false;
@@ -163,6 +174,13 @@ export class ProfileSettingsComponent implements OnInit, OnDestroy {
 
     const filteredDataObj: Record<string, string> =
       Object.fromEntries(filteredEntries);
+
+    if (!this.currentUserId) {
+      const errorCode = "unauthenticated";
+      this.errorService.handleError(this, errorCode, customErrorMessages);
+      this.isSaving = false;
+      return;
+    }
 
     // Call service to update the profile data
     this.userSub = this.userService

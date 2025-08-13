@@ -2,22 +2,24 @@
   <dl>
     <div class="item">
       <dt>Email address</dt>
-      <dd>{{ email }}</dd>
+      <dd>{{ email ? email : "—" }}</dd>
     </div>
 
     <div class="item">
       <dt>Joined</dt>
-      <dd>{{ dateJoined.toDate() | date : "MMM d, y" }}</dd>
+      <dd>
+        {{ dateJoined ? (dateJoined.toDate() | date : "MMM d, y") : "—" }}
+      </dd>
     </div>
 
     <div class="item">
       <dt>Published articles</dt>
-      <dd>{{ articleCount }}</dd>
+      <dd>{{ articleCount ? articleCount : 0 }}</dd>
     </div>
 
     <div class="item">
       <dt>Hearts received</dt>
-      <dd>{{ totalLikes }}</dd>
+      <dd>{{ totalLikes ? totalLikes : 0 }}</dd>
     </div>
 
     <div class="item">

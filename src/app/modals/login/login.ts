@@ -42,7 +42,7 @@ export class LoginModalComponent {
 
   constructor(
     private modalService: ModalService,
-    private auth: AuthService,
+    private authService: AuthService,
     private errorService: ErrorService
   ) {}
 
@@ -88,7 +88,7 @@ export class LoginModalComponent {
   async onLogin(formData: LoginFormValues) {
     try {
       this.isLoading = true;
-      await this.auth.login(formData.email, formData.password);
+      await this.authService.login(formData.email, formData.password);
       this.loginForm.reset();
       this.modalService.closeAll();
     } catch (error: any) {
